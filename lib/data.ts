@@ -6,6 +6,7 @@ const img = (id: string) =>
 export const categories: Category[] = [
   {
     id: "cat-veneer",
+    catalogueId: null,
     name: "Veneers",
     slug: "veneers",
     description: "Natural and engineered veneers for refined architectural surfaces.",
@@ -15,6 +16,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-doors",
+    catalogueId: null,
     name: "Doors",
     slug: "doors",
     description: "Premium door surfaces and matching systems for interior projects.",
@@ -24,6 +26,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-plywood",
+    catalogueId: null,
     name: "Plywood",
     slug: "plywood",
     description: "Dependable substrates for contractors and production teams.",
@@ -33,6 +36,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-flooring",
+    catalogueId: null,
     name: "Flooring",
     slug: "flooring",
     description: "Architectural flooring textures with commercial-grade performance.",
@@ -42,6 +46,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-panels",
+    catalogueId: null,
     name: "Wall Panels",
     slug: "wall-panels",
     description: "Statement walls, acoustic surfaces, and warm interior cladding.",
@@ -51,6 +56,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-louvers",
+    catalogueId: null,
     name: "Louvers",
     slug: "louvers",
     description: "Linear systems that bring rhythm, depth, and concealment.",
@@ -60,6 +66,7 @@ export const categories: Category[] = [
   },
   {
     id: "cat-laminates",
+    catalogueId: null,
     name: "Laminates",
     slug: "laminates",
     description: "Durable decorative laminates for fast-moving specification work.",

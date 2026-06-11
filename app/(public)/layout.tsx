@@ -6,16 +6,17 @@ import { EnquiryDrawer } from "@/components/enquiry/EnquiryDrawer";
 import { EnquiryCartFab } from "@/components/enquiry/EnquiryCartFab";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const { categories, collections } = await getNavigationData();
+  const { catalogues, categories, collections } = await getNavigationData();
 
   return (
     <>
-      <Header categories={categories} collections={collections} />
+      <Header catalogues={catalogues} categories={categories} collections={collections} />
       <main>{children}</main>
-      <Footer categories={categories} collections={collections} />
+      <Footer catalogues={catalogues} categories={categories} collections={collections} />
       <EnquiryDrawer />
       <EnquiryCartFab />
       <QuickInquiryFab />
     </>
   );
 }
+

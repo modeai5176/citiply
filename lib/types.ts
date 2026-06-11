@@ -1,5 +1,18 @@
+export type Catalogue = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  imageUrl: string;
+  sortOrder: number;
+  isActive: boolean;
+};
+
 export type Category = {
   id: string;
+  catalogueId: string | null;
+  catalogueName?: string;
+  catalogueSlug?: string;
   name: string;
   slug: string;
   description: string;

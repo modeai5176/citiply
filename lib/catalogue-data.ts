@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Category, Collection, Product, ProductImage } from "@/lib/types";
-import type { CategoryRow, CollectionRow, ProductImageRow, ProductRow, ProductSpecRow } from "@/lib/supabase/types";
+import type { Catalogue, Category, Collection, Product, ProductImage } from "@/lib/types";
+import type { CatalogueRow, CategoryRow, CollectionRow, ProductImageRow, ProductRow, ProductSpecRow } from "@/lib/supabase/types";
 
 const fallbackImage = "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=82";
 const fallbackBlur = "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
@@ -12,9 +12,28 @@ type ProductWithRelations = ProductRow & {
   collections?: { name?: string | null } | null;
 };
 
-function mapCategory(row: CategoryRow): Category {
+type CategoryWithCatalogue = CategoryRow & {
+  catalogues?: { name?: string | null; slug?: string | null } | null;
+};
+
+function mapCatalogue(row: CatalogueRow): Catalogue {
   return {
     id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description ?? "",
+    imageUrl: row.image_url || fallbackImage,
+    sortOrder: row.sort_order ?? 0,
+    isActive: row.is_active
+  };
+}
+
+function mapCategory(row: CategoryWithCatalogue): Category {
+  return {
+    id: row.id,
+    catalogueId: row.catalogue_id ?? null,
+    catalogueName: row.catalogues?.name ?? undefined,
+    catalogueSlug: row.catalogues?.slug ?? undefined,
     name: row.name,
     slug: row.slug,
     description: row.description ?? "",
@@ -110,29 +129,57 @@ async function getCollectionCounts(collectionIds: string[]) {
   }, new Map<string, number>());
 }
 
-export async function getCategories() {
+export async function getCatalogues() {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("categories")
+    .from("catalogues")
     .select("*")
     .eq("is_active", true)
     .order("sort_order", { ascending: true });
 
   if (error) throw new Error(error.message);
-  return (data ?? []).map(mapCategory);
+  return (data ?? []).map(mapCatalogue);
 }
 
-export async function getCategoryBySlug(slug: string) {
+export async function getCatalogueBySlug(slug: string) {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("categories")
+    .from("catalogues")
     .select("*")
     .eq("slug", slug)
     .eq("is_active", true)
     .maybeSingle();
 
   if (error) throw new Error(error.message);
-  return data ? mapCategory(data) : null;
+  return data ? mapCatalogue(data) : null;
+}
+
+export async function getCategories(options: { catalogueId?: string } = {}) {
+  const supabase = createAdminClient();
+  let query = supabase
+    .from("categories")
+    .select("*, catalogues(name, slug)")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+
+  if (options.catalogueId) query = query.eq("catalogue_id", options.catalogueId);
+
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return ((data ?? []) as CategoryWithCatalogue[]).map(mapCategory);
+}
+
+export async function getCategoryBySlug(slug: string) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*, catalogues(name, slug)")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data ? mapCategory(data as CategoryWithCatalogue) : null;
 }
 
 export async function getCollections(options: { categoryId?: string; featuredOnly?: boolean; limit?: number; withCounts?: boolean; newest?: boolean } = {}) {
@@ -217,10 +264,11 @@ export async function getProductStaticParams(limit = 200) {
 }
 
 export async function getNavigationData() {
-  const [categories, collections] = await Promise.all([
+  const [catalogues, categories, collections] = await Promise.all([
+    getCatalogues(),
     getCategories(),
     getCollections({ featuredOnly: true, limit: 4 })
   ]);
 
-  return { categories, collections };
+  return { catalogues, categories, collections };
 }

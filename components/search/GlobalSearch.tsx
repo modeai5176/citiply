@@ -107,7 +107,7 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFoc
           onFocus={() => query.length >= 2 && results && setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search product name, SKU, finish, collection..."
-          className="h-14 w-full rounded-full border border-border bg-white pl-12 pr-12 text-base text-text-primary shadow-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+          className="h-12 w-full rounded-full border border-border bg-white pl-11 pr-11 text-sm text-text-primary shadow-sm outline-none transition placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 sm:h-14 sm:pl-12 sm:pr-12 sm:text-base"
         />
         {query ? (
           <button className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-text-muted transition hover:text-text-primary" onClick={clearSearch} aria-label="Clear search">
@@ -117,7 +117,7 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFoc
       </div>
 
       {open && results ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[520px] overflow-y-auto rounded-xl border border-border bg-white shadow-2xl">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-white shadow-2xl sm:max-h-[520px]">
           {loading ? (
             <div className="grid gap-3 p-4">
               {[1, 2, 3].map((item) => <div className="h-14 animate-pulse rounded-lg bg-surface" key={item} />)}
@@ -137,7 +137,7 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFoc
                     <ResultLink href={`/products/${product.sku}`} active={activeIndex === flatIndex} onClick={() => setOpen(false)} key={product.id}>
                       <Thumb src={thumb} alt={product.name} />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
                           <span className="truncate text-sm font-medium text-text-primary">{product.name}</span>
                           <span className="shrink-0 rounded bg-surface px-1.5 py-0.5 font-mono text-xs text-text-muted">{product.sku}</span>
                         </div>

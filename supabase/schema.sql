@@ -1,7 +1,19 @@
 create extension if not exists "pgcrypto";
 
+create table if not exists public.catalogues (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  description text,
+  image_url text,
+  sort_order integer not null default 0,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.categories (
   id uuid primary key default gen_random_uuid(),
+  catalogue_id uuid references public.catalogues(id) on delete set null,
   name text not null,
   slug text not null unique,
   description text,
@@ -103,6 +115,8 @@ create table if not exists public.enquiry_items (
   note text
 );
 
+alter table public.categories add column if not exists catalogue_id uuid references public.catalogues(id) on delete set null;
+
 alter table public.collections add column if not exists tagline text;
 alter table public.collections add column if not exists logo_url text;
 alter table public.collections add column if not exists is_active boolean default true;
@@ -126,6 +140,20 @@ alter table public.quote_requests add column if not exists quantity text;
 alter table public.categories add column if not exists sort_order int4 default 0;
 alter table public.categories add column if not exists is_active boolean default true;
 
+create index if not exists idx_catalogues_active_sort on public.catalogues (is_active, sort_order, name);
+create index if not exists idx_categories_catalogue_id on public.categories (catalogue_id);
+create index if not exists idx_categories_active_sort on public.categories (is_active, sort_order, name);
+create index if not exists idx_collections_category_id on public.collections (category_id);
+create index if not exists idx_collections_active_featured on public.collections (is_active, is_featured, name);
+create index if not exists idx_products_category_id on public.products (category_id);
+create index if not exists idx_products_collection_id on public.products (collection_id);
+create index if not exists idx_products_active_name on public.products (is_active, name);
+create index if not exists idx_products_filter_finish on public.products (finish);
+create index if not exists idx_products_filter_base_material on public.products (base_material);
+create index if not exists idx_products_filter_color_tone on public.products (color_tone);
+create index if not exists idx_products_filter_thickness on public.products (thickness);
+
+alter table public.catalogues enable row level security;
 alter table public.categories enable row level security;
 alter table public.collections enable row level security;
 alter table public.products enable row level security;
@@ -135,6 +163,8 @@ alter table public.quote_requests enable row level security;
 alter table public.enquiry_sessions enable row level security;
 alter table public.enquiry_items enable row level security;
 
+drop policy if exists public_read_catalogues on public.catalogues;
+create policy public_read_catalogues on public.catalogues for select using (is_active = true);
 drop policy if exists public_read_categories on public.categories;
 create policy public_read_categories on public.categories for select using (is_active = true);
 drop policy if exists public_read_collections on public.collections;
@@ -147,6 +177,8 @@ drop policy if exists public_read_product_specs on public.product_specs;
 create policy public_read_product_specs on public.product_specs for select using (true);
 drop policy if exists public_insert_quotes on public.quote_requests;
 create policy public_insert_quotes on public.quote_requests for insert with check (true);
+drop policy if exists admin_all_catalogues on public.catalogues;
+create policy admin_all_catalogues on public.catalogues for all using (auth.role() = 'authenticated');
 drop policy if exists admin_all_categories on public.categories;
 create policy admin_all_categories on public.categories for all using (auth.role() = 'authenticated');
 drop policy if exists admin_all_collections on public.collections;
@@ -169,8 +201,8 @@ drop policy if exists admin_all_enquiry_items on public.enquiry_items;
 create policy admin_all_enquiry_items on public.enquiry_items for all using (auth.role() = 'authenticated');
 
 grant usage on schema public to anon, authenticated, service_role;
-grant select on public.categories, public.collections, public.products, public.product_images, public.product_specs to anon, authenticated, service_role;
+grant select on public.catalogues, public.categories, public.collections, public.products, public.product_images, public.product_specs to anon, authenticated, service_role;
 grant insert on public.quote_requests to anon, authenticated, service_role;
 grant insert on public.enquiry_sessions, public.enquiry_items to anon, authenticated, service_role;
-grant select, insert, update, delete on public.categories, public.collections, public.products, public.product_images, public.product_specs, public.quote_requests, public.enquiry_sessions, public.enquiry_items to authenticated, service_role;
+grant select, insert, update, delete on public.catalogues, public.categories, public.collections, public.products, public.product_images, public.product_specs, public.quote_requests, public.enquiry_sessions, public.enquiry_items to authenticated, service_role;
 grant usage, select on all sequences in schema public to authenticated, service_role;

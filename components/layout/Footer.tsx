@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
-import type { Category, Collection } from "@/lib/types";
+import type { Catalogue, Category, Collection } from "@/lib/types";
 
-export function Footer({ categories, collections }: { categories: Category[]; collections: Collection[] }) {
+export function Footer({ catalogues, categories, collections }: { catalogues: Catalogue[]; categories: Category[]; collections: Collection[] }) {
   return (
     <footer className="bg-dark text-white">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="mb-10 text-2xl font-semibold tracking-[0.18em] text-white">CITIPLY</div>
-        <div className="grid gap-10 md:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <p className="text-sm leading-6 text-white/65">Premium architectural materials catalogue for architects, interior designers, and contractors.</p>
           </div>
+          {catalogues.length > 0 ? (
+            <div>
+              <h3 className="mb-4 text-sm font-semibold text-accent">Catalogues</h3>
+              <div className="grid gap-2 text-sm text-white/65">
+                {catalogues.slice(0, 5).map((catalogue) => <Link className="hover:text-white" href={`/catalogues/${catalogue.slug}`} key={catalogue.id}>{catalogue.name}</Link>)}
+              </div>
+            </div>
+          ) : null}
           <div>
             <h3 className="mb-4 text-sm font-semibold text-accent">Categories</h3>
             <div className="grid gap-2 text-sm text-white/65">

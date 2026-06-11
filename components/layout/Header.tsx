@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/Button";
 import { MegaMenu } from "@/components/layout/MegaMenu";
 import { UtilityBar } from "@/components/layout/UtilityBar";
 import { useQuoteModal } from "@/components/catalogue/QuoteModal";
-import type { Category, Collection } from "@/lib/types";
+import type { Catalogue, Category, Collection } from "@/lib/types";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 
-export function Header({ categories, collections }: { categories: Category[]; collections: Collection[] }) {
+export function Header({ catalogues, categories, collections }: { catalogues: Catalogue[]; categories: Category[]; collections: Collection[] }) {
   const { openQuote } = useQuoteModal();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -24,8 +24,8 @@ export function Header({ categories, collections }: { categories: Category[]; co
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur">
       <UtilityBar />
       <div className="border-b border-border">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="text-2xl font-semibold tracking-[0.18em]">CITIPLY</Link>
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
+          <Link href="/" className="shrink-0 text-xl font-semibold tracking-[0.14em] sm:text-2xl sm:tracking-[0.18em]">CITIPLY</Link>
           <nav className="hidden items-center gap-1 lg:flex">
             <MegaMenu categories={categories} collections={collections} />
             <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/categories">Categories</Link>
@@ -36,7 +36,7 @@ export function Header({ categories, collections }: { categories: Category[]; co
           <div className="hidden w-72 xl:block">
             <GlobalSearch />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Button className="hidden sm:inline-flex" onClick={() => openQuote()}>Request Quote</Button>
             <button
               className="cursor-pointer rounded-full border border-border p-2 transition hover:border-accent hover:text-accent lg:hidden"
@@ -70,8 +70,25 @@ export function Header({ categories, collections }: { categories: Category[]; co
           </div>
         ) : null}
         {mobileNavOpen ? (
-          <nav id="mobile-header-nav" className="border-t border-border bg-white px-4 py-4 shadow-lg sm:px-6 lg:hidden" aria-label="Mobile navigation">
+          <nav id="mobile-header-nav" className="max-h-[calc(100vh-104px)] overflow-y-auto border-t border-border bg-white px-4 py-4 shadow-lg sm:max-h-[calc(100vh-120px)] sm:px-6 lg:hidden" aria-label="Mobile navigation">
             <div className="grid gap-1">
+              {catalogues.length > 0 ? (
+                <div className="rounded-lg border border-border p-3">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Catalogues</p>
+                  <div className="grid gap-1">
+                    {catalogues.map((catalogue) => (
+                      <Link
+                        className="rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface hover:text-accent"
+                        href={`/catalogues/${catalogue.slug}`}
+                        key={catalogue.id}
+                        onClick={closeMobilePanels}
+                      >
+                        {catalogue.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/categories" onClick={closeMobilePanels}>
                 Categories
               </Link>

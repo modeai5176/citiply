@@ -1,54 +1,45 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { slugify } from "@/lib/admin/slug";
-import type { CatalogueRow, CategoryRow } from "@/lib/supabase/types";
+import type { CatalogueRow } from "@/lib/supabase/types";
 
-const categorySchema = z.object({
+const catalogueSchema = z.object({
   name: z.string().min(1, "Name is required"),
   slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Lowercase, numbers and hyphens only"),
-  catalogue_id: z.string().min(1, "Catalogue is required"),
   description: z.string().optional(),
   sort_order: z.coerce.number().int().default(0),
   is_active: z.boolean().default(true)
 });
 
-type CategoryFormValues = z.infer<typeof categorySchema>;
+type CatalogueFormValues = z.infer<typeof catalogueSchema>;
 
-export function CategoryForm({ initial, onSaved, onCancel }: { initial?: CategoryRow | null; onSaved: () => void; onCancel: () => void }) {
-  const [catalogues, setCatalogues] = useState<CatalogueRow[]>([]);
+export function CatalogueForm({ initial, onSaved, onCancel }: { initial?: CatalogueRow | null; onSaved: () => void; onCancel: () => void }) {
   const [imageUrl, setImageUrl] = useState(initial?.image_url ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema),
+  const form = useForm<CatalogueFormValues>({
+    resolver: zodResolver(catalogueSchema),
     defaultValues: {
       name: initial?.name ?? "",
       slug: initial?.slug ?? "",
-      catalogue_id: initial?.catalogue_id ?? "",
       description: initial?.description ?? "",
       sort_order: initial?.sort_order ?? 0,
       is_active: initial?.is_active ?? true
     }
   });
 
-  useEffect(() => {
-    void fetch("/api/admin/catalogues", { cache: "no-store" })
-      .then((response) => response.json() as Promise<{ data?: CatalogueRow[] }>)
-      .then((json) => setCatalogues(json.data ?? []));
-  }, []);
-
-  async function onSubmit(values: CategoryFormValues) {
+  async function onSubmit(values: CatalogueFormValues) {
     setSaving(true);
     setError("");
     const payload = { ...values, image_url: imageUrl || null };
-    const response = await fetch(initial ? `/api/admin/categories/${initial.id}` : "/api/admin/categories", {
+    const response = await fetch(initial ? `/api/admin/catalogues/${initial.id}` : "/api/admin/catalogues", {
       method: initial ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -56,7 +47,7 @@ export function CategoryForm({ initial, onSaved, onCancel }: { initial?: Categor
     setSaving(false);
     if (!response.ok) {
       const json = (await response.json()) as { error?: string };
-      setError(json.error ?? "Could not save category");
+      setError(json.error ?? "Could not save catalogue");
       return;
     }
     onSaved();
@@ -64,7 +55,7 @@ export function CategoryForm({ initial, onSaved, onCancel }: { initial?: Categor
 
   return (
     <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
-      <h2 className="pr-10 text-2xl font-semibold">{initial ? "Edit" : "Add"} Category</h2>
+      <h2 className="pr-10 text-2xl font-semibold">{initial ? "Edit" : "Add"} Catalogue</h2>
       <Input
         label="Name *"
         {...form.register("name")}
@@ -74,14 +65,6 @@ export function CategoryForm({ initial, onSaved, onCancel }: { initial?: Categor
         }}
       />
       <Input label="Slug *" className="font-mono text-sm" {...form.register("slug")} error={form.formState.errors.slug?.message} />
-      <label className="grid gap-2 text-sm text-text-secondary">
-        Catalogue *
-        <select className="h-11 rounded-lg border border-border bg-white px-3 text-text-primary" {...form.register("catalogue_id")}>
-          <option value="">Select catalogue</option>
-          {catalogues.map((catalogue) => <option value={catalogue.id} key={catalogue.id}>{catalogue.name}</option>)}
-        </select>
-        {form.formState.errors.catalogue_id?.message ? <span className="text-xs text-red-600">{form.formState.errors.catalogue_id.message}</span> : null}
-      </label>
       <Textarea label="Description" {...form.register("description")} />
       <Input label="Sort Order" type="number" {...form.register("sort_order")} error={form.formState.errors.sort_order?.message} />
       <label className="flex items-center gap-2 text-sm text-text-secondary">
@@ -89,8 +72,8 @@ export function CategoryForm({ initial, onSaved, onCancel }: { initial?: Categor
         Active
       </label>
       <div>
-        <p className="mb-2 text-sm text-text-secondary">Category Image</p>
-        <ImageUploadField value={imageUrl} onChange={setImageUrl} folder="categories" filename={form.watch("slug") || "category"} />
+        <p className="mb-2 text-sm text-text-secondary">Catalogue Image</p>
+        <ImageUploadField value={imageUrl} onChange={setImageUrl} folder="catalogues" filename={form.watch("slug") || "catalogue"} />
       </div>
       {error ? <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
       <div className="flex gap-3">
