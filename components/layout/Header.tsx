@@ -27,6 +27,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
           <Link href="/" className="shrink-0 text-xl font-semibold tracking-[0.14em] sm:text-2xl sm:tracking-[0.18em]">CITIPLY</Link>
           <nav className="hidden items-center gap-1 lg:flex">
+            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/catalogues">Catalogues</Link>
             <MegaMenu categories={categories} collections={collections} />
             <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/categories">Categories</Link>
             <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/downloads">Downloads</Link>
@@ -72,6 +73,9 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
         {mobileNavOpen ? (
           <nav id="mobile-header-nav" className="max-h-[calc(100vh-104px)] overflow-y-auto border-t border-border bg-white px-4 py-4 shadow-lg sm:max-h-[calc(100vh-120px)] sm:px-6 lg:hidden" aria-label="Mobile navigation">
             <div className="grid gap-1">
+              <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/catalogues" onClick={closeMobilePanels}>
+                Catalogues
+              </Link>
               {catalogues.length > 0 ? (
                 <div className="rounded-lg border border-border p-3">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Catalogues</p>
