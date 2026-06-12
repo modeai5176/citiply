@@ -9,8 +9,20 @@ type Table<Row extends DbRecord, Insert extends DbRecord, Update extends DbRecor
   Relationships: [];
 };
 
+export type CatalogueRow = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  image_url: string | null;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+} & DbRecord;
+
 export type CategoryRow = {
   id: string;
+  catalogue_id: string | null;
   name: string;
   slug: string;
   description: string | null;
@@ -112,6 +124,7 @@ export type EnquiryItemRow = {
   note: string | null;
 } & DbRecord;
 
+export type CatalogueInsert = Omit<CatalogueRow, "id" | "created_at"> & { id?: string; created_at?: string };
 export type CategoryInsert = Omit<CategoryRow, "id" | "created_at"> & { id?: string; created_at?: string };
 export type CollectionInsert = Omit<CollectionRow, "id" | "created_at"> & { id?: string; created_at?: string };
 export type ProductInsert = Omit<ProductRow, "id" | "created_at"> & { id?: string; created_at?: string };
@@ -132,6 +145,7 @@ export type EnquiryItemInsert = Omit<EnquiryItemRow, "id"> & { id?: string };
 export type Database = {
   public: {
     Tables: {
+      catalogues: Table<CatalogueRow, CatalogueInsert>;
       categories: Table<CategoryRow, CategoryInsert>;
       collections: Table<CollectionRow, CollectionInsert>;
       products: Table<ProductRow, ProductInsert>;

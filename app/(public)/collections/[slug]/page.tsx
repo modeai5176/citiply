@@ -20,7 +20,13 @@ export default async function CollectionListingPage({ params }: { params: { slug
 
   return (
     <>
-      <Breadcrumb items={[{ label: category?.name ?? "Category", href: category ? `/categories/${category.slug}` : undefined }, { label: collection.name }]} />
+      <Breadcrumb
+        items={[
+          ...(category?.catalogueName && category.catalogueSlug ? [{ label: category.catalogueName, href: `/catalogues/${category.catalogueSlug}` }] : []),
+          { label: category?.name ?? "Category", href: category ? `/categories/${category.slug}` : undefined },
+          { label: collection.name }
+        ]}
+      />
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="relative mb-10 min-h-[50vh] overflow-hidden rounded-xl bg-dark">
           <Image src={collection.bannerUrl} alt={collection.name} fill priority sizes="100vw" className="object-cover" />

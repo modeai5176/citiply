@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BarChart3, FolderTree, Images, Inbox, LayoutDashboard, LogOut, Package, Quote, Sparkles } from "lucide-react";
+import { BarChart3, BookOpen, FolderTree, Images, Inbox, LayoutDashboard, LogOut, Package, Quote, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 const links = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Catalogues", href: "/admin/catalogues", icon: BookOpen },
   { label: "Categories", href: "/admin/categories", icon: FolderTree },
   { label: "Collections", href: "/admin/collections", icon: BarChart3 },
   { label: "Products", href: "/admin/products", icon: Package },

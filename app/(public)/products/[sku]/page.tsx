@@ -30,7 +30,14 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
 
   return (
     <>
-      <Breadcrumb items={[{ label: category?.name ?? "Category", href: category ? `/categories/${category.slug}` : undefined }, { label: collection?.name ?? "Collection", href: collection ? `/collections/${collection.slug}` : undefined }, { label: product.sku }]} />
+      <Breadcrumb
+        items={[
+          ...(category?.catalogueName && category.catalogueSlug ? [{ label: category.catalogueName, href: `/catalogues/${category.catalogueSlug}` }] : []),
+          { label: category?.name ?? "Category", href: category ? `/categories/${category.slug}` : undefined },
+          { label: collection?.name ?? "Collection", href: collection ? `/collections/${collection.slug}` : undefined },
+          { label: product.sku }
+        ]}
+      />
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(360px,2fr)]">
           <ImageGallery images={product.images} />

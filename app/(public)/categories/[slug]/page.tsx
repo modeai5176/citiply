@@ -13,7 +13,12 @@ export default async function CategoryCollectionsPage({ params }: { params: { sl
 
   return (
     <>
-      <Breadcrumb items={[{ label: category.name }]} />
+      <Breadcrumb
+        items={[
+          ...(category.catalogueName && category.catalogueSlug ? [{ label: category.catalogueName, href: `/catalogues/${category.catalogueSlug}` }] : []),
+          { label: category.name }
+        ]}
+      />
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="relative min-h-[44vh] overflow-hidden rounded-xl bg-dark">
           <Image src={category.imageUrl} alt={category.name} fill priority sizes="100vw" className="object-cover" />

@@ -9,7 +9,7 @@ export function MegaMenu({ categories, collections }: { categories: Category[]; 
   return (
     <div className="group relative hidden lg:block">
       <button className="cursor-pointer px-3 py-7 text-sm font-medium text-text-primary transition hover:text-accent">Collections</button>
-      <div className="pointer-events-none absolute left-1/2 top-full z-50 w-[920px] -translate-x-1/2 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="pointer-events-none fixed left-1/2 top-[120px] z-50 w-[min(920px,calc(100vw-2rem))] -translate-x-1/2 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
         <div className="grid grid-cols-[220px_1fr] overflow-hidden rounded-b-xl border border-border bg-white shadow-xl">
           <div className="bg-surface p-5">
             <p className="mb-4 text-xs uppercase tracking-[0.25em] text-text-muted">Product Families</p>
