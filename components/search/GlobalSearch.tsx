@@ -21,7 +21,7 @@ type ProductResult = {
 };
 type SearchResults = { categories: CategoryResult[]; collections: CollectionResult[]; products: ProductResult[] };
 
-export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFocus?: boolean; defaultQuery?: string }) {
+export function GlobalSearch({ autoFocus = false, defaultQuery = "", isTransparent = false }: { autoFocus?: boolean; defaultQuery?: string; isTransparent?: boolean }) {
   const [query, setQuery] = useState(defaultQuery);
   const [results, setResults] = useState<SearchResults | null>(null);
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFoc
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" />
+        <Search className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transition-colors duration-500 ${isTransparent ? 'text-white/70' : 'text-text-muted'}`} />
         <input
           ref={inputRef}
           autoFocus={autoFocus}
@@ -107,7 +107,11 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "" }: { autoFoc
           onFocus={() => query.length >= 2 && results && setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search product name, SKU, finish, collection..."
-          className="h-12 w-full rounded-full border border-border bg-white pl-11 pr-11 text-sm text-text-primary shadow-sm outline-none transition placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 sm:h-14 sm:pl-12 sm:pr-12 sm:text-base"
+          className={`h-12 w-full rounded-full border pl-11 pr-11 text-sm shadow-sm outline-none transition-all duration-500 focus:border-accent focus:ring-2 focus:ring-accent/20 sm:h-14 sm:pl-12 sm:pr-12 sm:text-base ${
+            isTransparent
+              ? "bg-[rgba(247,243,236,0.08)] border-[rgba(247,243,236,0.15)] text-[rgba(247,243,236,0.95)] placeholder:text-[rgba(247,243,236,0.55)] backdrop-blur-md"
+              : "bg-white border-border text-text-primary placeholder:text-text-muted"
+          }`}
         />
         {query ? (
           <button className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-text-muted transition hover:text-text-primary" onClick={clearSearch} aria-label="Clear search">

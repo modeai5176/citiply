@@ -2,22 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════
+   CITIPLY DESIGN SYSTEM — CSS Custom Properties
+   ═══════════════════════════════════════════════ */
+
 :root {
   color-scheme: light;
+
+  /* ── Color Tokens ── */
+  --color-ivory: #F7F3EC;
+  --color-beige: #EAE0D0;
+  --color-sand: #D9C7A8;
+  --color-stone: #BDB0A0;
+  --color-soft-grey: #C7C2B8;
+  --color-charcoal: #1E1B18;
+  --color-espresso: #2A1B12;
+  --color-deep-brown: #3B2A1E;
+  --color-gold: #B8924C;
+
+  /* ── Typography Scale (fluid clamp) ── */
+  --text-display: clamp(3rem, 7vw, 7rem);
+  --text-h2: clamp(2rem, 4vw, 3.5rem);
+  --text-h3: clamp(1.5rem, 2.5vw, 2.25rem);
+  --text-body: 1.0625rem;
+  --text-eyebrow: 0.75rem;
+
+  /* ── Spacing ── */
+  --section-py: clamp(4.5rem, 8vw, 9rem);
+  --content-max: 1400px;
+
+  /* ── Motion ── */
+  --ease-entrance: cubic-bezier(0.33, 1, 0.68, 1);   /* power3.out approx */
+  --ease-hero: cubic-bezier(0.16, 1, 0.3, 1);         /* expo.out approx */
+  --ease-scrub: cubic-bezier(0.45, 0, 0.55, 1);       /* power2.inOut approx */
+  --reveal-duration: 1.2s;
+  --hover-duration: 0.5s;
 }
 
+/* ── Base Reset ── */
 * {
   box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* remove native smooth scroll — Lenis handles it */
+  scroll-behavior: auto;
 }
 
 body {
   margin: 0;
-  background: #fafaf8;
-  color: #1a1a1a;
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-general-sans), system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.7;
+  font-weight: 400;
+  overflow-x: hidden;
 }
 
 button,
@@ -26,6 +68,185 @@ a {
 }
 
 ::selection {
-  background: #c9a96e;
+  background: var(--color-gold);
   color: #ffffff;
+}
+
+/* ── Typography Utility Classes ── */
+.text-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+}
+
+.text-h2 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: var(--text-h2);
+  font-weight: 400;
+  line-height: 1.05;
+  font-optical-sizing: auto;
+}
+
+.text-h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: var(--text-h3);
+  font-weight: 400;
+  font-optical-sizing: auto;
+}
+
+.text-eyebrow {
+  font-family: var(--font-general-sans), system-ui, sans-serif;
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.font-serif {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.font-sans {
+  font-family: var(--font-general-sans), system-ui, sans-serif;
+}
+
+/* ── Section Spacing ── */
+.section-padding {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+/* ── Content Container ── */
+.content-container {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.25rem, 4vw, 3rem);
+  padding-right: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ── Gold Divider ── */
+.gold-rule {
+  height: 1px;
+  background: var(--color-gold);
+  border: none;
+  transform-origin: left center;
+}
+
+/* ── Animated Underline (CTA links) ── */
+.cta-underline {
+  position: relative;
+  display: inline-block;
+  color: var(--color-ivory);
+  text-decoration: none;
+  font-family: var(--font-general-sans), system-ui, sans-serif;
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--hover-duration) var(--ease-entrance);
+}
+
+.cta-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ── Scroll Cue (pulsing vertical line) ── */
+.scroll-cue {
+  width: 1px;
+  height: 48px;
+  background: var(--color-ivory);
+  opacity: 0.5;
+  animation: scroll-cue-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 0.7; transform: scaleY(1.2); }
+}
+
+/* ── Hotspot Marker ── */
+.hotspot-marker {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.hotspot-marker .ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 50%;
+  animation: hotspot-pulse 2.4s ease-in-out infinite;
+}
+
+.hotspot-marker .dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--color-gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes hotspot-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* ── Prefers Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue,
+  .hotspot-marker .ring {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  .cta-underline::after {
+    transition: none;
+  }
+
+  /* Hint for JS: we add a class to detect this */
+  html {
+    --reduced-motion: 1;
+  }
+}
+
+/* ── Lenis Overrides ── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

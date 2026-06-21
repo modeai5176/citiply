@@ -5,10 +5,17 @@ import Link from "next/link";
 import { Download, Grid3X3 } from "lucide-react";
 import type { Category, Collection } from "@/lib/types";
 
-export function MegaMenu({ categories, collections }: { categories: Category[]; collections: Collection[] }) {
+export function MegaMenu({ categories, collections, isTransparent = false }: { categories: Category[]; collections: Collection[]; isTransparent?: boolean }) {
   return (
     <div className="group relative hidden lg:block">
-      <button className="cursor-pointer px-3 py-7 text-sm font-medium text-text-primary transition hover:text-accent">Collections</button>
+      <button 
+        className="cursor-pointer px-3 py-7 text-sm font-medium transition-colors duration-500"
+        style={{ color: isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)' }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-gold)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)'; }}
+      >
+        Collections
+      </button>
       <div className="pointer-events-none fixed left-1/2 top-[120px] z-50 w-[min(920px,calc(100vw-2rem))] -translate-x-1/2 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
         <div className="grid grid-cols-[220px_1fr] overflow-hidden rounded-b-xl border border-border bg-white shadow-xl">
           <div className="bg-surface p-5">

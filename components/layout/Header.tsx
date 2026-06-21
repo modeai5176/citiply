@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -14,33 +14,121 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
   const { openQuote } = useQuoteModal();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  /* ── Transparent → solid transition based on scroll past hero ── */
+  useEffect(() => {
+    function handleScroll() {
+      setIsScrolled(window.scrollY > 60);
+    }
+    handleScroll(); // check initial state
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   function closeMobilePanels() {
     setMobileNavOpen(false);
     setMobileSearchOpen(false);
   }
 
+  /* When over hero (not scrolled): transparent bg, ivory text, no borders, hide utility bar.
+     When scrolled: solid background, normal text, borders visible. */
+  const isTransparent = !isScrolled && !mobileNavOpen && !mobileSearchOpen;
+
   return (
-    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur">
-      <UtilityBar />
-      <div className="border-b border-border">
+    <header
+      className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
+      style={{
+        background: isTransparent ? 'transparent' : 'rgba(247,243,236,0.97)',
+        backdropFilter: isTransparent ? 'none' : 'blur(12px)',
+        WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
+      }}
+    >
+      {/* Utility bar — hidden when transparent */}
+      <div
+        className="transition-all duration-500 overflow-hidden"
+        style={{
+          maxHeight: isTransparent ? '0px' : '40px',
+          opacity: isTransparent ? 0 : 1,
+        }}
+      >
+        <UtilityBar />
+      </div>
+
+      <div
+        className="transition-colors duration-500"
+        style={{
+          borderBottom: isTransparent ? '1px solid rgba(247,243,236,0.12)' : '1px solid var(--color-beige)',
+        }}
+      >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
-          <Link href="/" className="shrink-0 text-xl font-semibold tracking-[0.14em] sm:text-2xl sm:tracking-[0.18em]">CITIPLY</Link>
+          {/* Logo */}
+          <Link
+            href="/"
+            className="shrink-0 text-xl font-semibold tracking-[0.14em] sm:text-2xl sm:tracking-[0.18em] transition-colors duration-500"
+            style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)' }}
+          >
+            CITIPLY
+          </Link>
+
+          {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 lg:flex">
-            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/catalogues">Catalogues</Link>
-            <MegaMenu categories={categories} collections={collections} />
-            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/categories">Categories</Link>
-            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/downloads">Downloads</Link>
-            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/about">About</Link>
-            <Link className="px-3 py-7 text-sm font-medium hover:text-accent" href="/contact">Contact</Link>
+            {[
+              { label: "Catalogues", href: "/catalogues" },
+              { label: "Categories", href: "/categories" },
+              { label: "Downloads", href: "/downloads" },
+              { label: "About", href: "/about" },
+              { label: "Contact", href: "/contact" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                className="px-3 py-7 text-sm font-medium transition-colors duration-500"
+                href={item.href}
+                style={{
+                  color: isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--color-gold)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isTransparent
+                    ? 'rgba(247,243,236,0.85)'
+                    : 'var(--color-charcoal)';
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+            {/* MegaMenu trigger — Collections link style handled internally */}
+            <MegaMenu categories={categories} collections={collections} isTransparent={isTransparent} />
           </nav>
-          <div className="hidden w-72 xl:block">
-            <GlobalSearch />
+
+          {/* Search (desktop) */}
+          <div className="hidden w-72 xl:block transition-all duration-500">
+            <GlobalSearch isTransparent={isTransparent} />
           </div>
+
+          {/* Actions */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <Button className="hidden sm:inline-flex" onClick={() => openQuote()}>Request Quote</Button>
+            <Button
+              className="hidden sm:inline-flex transition-all duration-500"
+              style={isTransparent ? {
+                backgroundColor: 'rgba(183, 150, 87, 0.25)', // glassy gold
+                border: '1px solid rgba(183, 150, 87, 0.4)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                color: 'rgba(247,243,236,0.95)',
+              } : undefined}
+              onClick={() => openQuote()}
+            >
+              Request Quote
+            </Button>
             <button
-              className="cursor-pointer rounded-full border border-border p-2 transition hover:border-accent hover:text-accent lg:hidden"
+              className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
+              style={{
+                border: `1px solid ${isTransparent ? 'rgba(247,243,236,0.25)' : 'var(--color-beige)'}`,
+                color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
+              }}
               aria-label={mobileSearchOpen ? "Close search" : "Open search"}
               aria-expanded={mobileSearchOpen}
               aria-controls="mobile-header-search"
@@ -52,7 +140,11 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
               {mobileSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
             </button>
             <button
-              className="cursor-pointer rounded-full border border-border p-2 transition hover:border-accent hover:text-accent lg:hidden"
+              className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
+              style={{
+                border: `1px solid ${isTransparent ? 'rgba(247,243,236,0.25)' : 'var(--color-beige)'}`,
+                color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
+              }}
               aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={mobileNavOpen}
               aria-controls="mobile-header-nav"

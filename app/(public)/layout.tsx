@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import { HeaderSpacer } from "@/components/layout/HeaderSpacer";
 import { Footer } from "@/components/layout/Footer";
 import { QuickInquiryFab } from "@/components/catalogue/QuickInquiryFab";
 import { getNavigationData } from "@/lib/catalogue-data";
@@ -11,6 +12,7 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <>
       <Header catalogues={catalogues} categories={categories} collections={collections} />
+      <HeaderSpacer />
       <main>{children}</main>
       <Footer catalogues={catalogues} categories={categories} collections={collections} />
       <EnquiryDrawer />
