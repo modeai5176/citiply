@@ -87,7 +87,7 @@ export function WarmEnquiry() {
         {/* Soft gradient wash on top so the form remains highly readable */}
         {/* <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(to bottom, rgba(247,243,236,0.1) 0%, rgba(247,243,236,0.85) 100%)', pointerEvents: 'none' }}
+          style={{ background: 'linear-gradient(to bottom, rgb(var(--color-ivory-rgb) / 0.1) 0%, rgb(var(--color-ivory-rgb) / 0.85) 100%)', pointerEvents: 'none' }}
         /> */}
       </div>
 

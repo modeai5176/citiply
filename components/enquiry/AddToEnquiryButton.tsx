@@ -14,7 +14,7 @@ export function AddToEnquiryButton({ product, variant = "card" }: { product: Pro
       className={cn(
         "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-accent/25",
         variant === "detail" ? "w-full py-3" : "w-full",
-        added ? "border-green-200 bg-green-50 text-green-700 hover:bg-green-100" : "border-text-primary bg-text-primary text-white hover:bg-black"
+        added ? "border-green-200 bg-green-50 text-green-700 hover:bg-green-100" : "border-text-primary bg-text-primary text-[rgb(var(--color-ivory-rgb))] hover:opacity-90"
       )}
       onClick={() => {
         if (added) {

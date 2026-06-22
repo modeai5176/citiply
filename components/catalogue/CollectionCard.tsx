@@ -8,7 +8,7 @@ export function CollectionCard({ collection }: { collection: Collection }) {
   const count = collection.productCount ?? 0;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm transition hover:shadow-md">
+    <div className="overflow-hidden rounded-xl border border-border bg-ivory shadow-sm transition hover:shadow-md">
       <div className="relative aspect-[16/9]">
         <Image src={collection.bannerUrl} alt={collection.name} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
       </div>

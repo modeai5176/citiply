@@ -30,11 +30,11 @@ export default async function CollectionListingPage({ params }: { params: { slug
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="relative mb-10 min-h-[50vh] overflow-hidden rounded-xl bg-dark">
           <Image src={collection.bannerUrl} alt={collection.name} fill priority sizes="100vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/28 to-black/5" />
-          <div className="absolute bottom-0 max-w-2xl p-8 text-white">
-            <p className="text-sm uppercase tracking-[0.24em] text-white/60">{category?.name}</p>
+          <div className="absolute inset-0 bg-gradient-to-r from-[rgb(var(--scrim)/0.72)] via-[rgb(var(--scrim)/0.28)] to-[rgb(var(--scrim)/0.05)]" />
+          <div className="absolute bottom-0 max-w-2xl p-8 text-[rgb(var(--on-image))]">
+            <p className="text-sm uppercase tracking-[0.24em] text-[rgb(var(--on-image)/0.6)]">{category?.name}</p>
             <h1 className="mt-3 text-5xl font-semibold">{collection.name}</h1>
-            <p className="mt-4 text-xl text-white/80">{collection.tagline}</p>
+            <p className="mt-4 text-xl text-[rgb(var(--on-image)/0.8)]">{collection.tagline}</p>
             {collection.brochureUrl !== "#" ? <Button className="mt-6" href={collection.brochureUrl} target="_blank"><Download className="h-4 w-4" /> Download Brochure</Button> : null}
           </div>
         </div>

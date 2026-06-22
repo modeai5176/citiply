@@ -6,32 +6,111 @@
    CITIPLY DESIGN SYSTEM — CSS Custom Properties
    ═══════════════════════════════════════════════ */
 
-:root {
+:root,
+[data-theme="warm-oak"] {
   color-scheme: light;
 
-  /* ── Color Tokens ── */
-  --color-ivory: #F7F3EC;
-  --color-beige: #EAE0D0;
-  --color-sand: #D9C7A8;
-  --color-stone: #BDB0A0;
-  --color-soft-grey: #C7C2B8;
-  --color-charcoal: #1E1B18;
-  --color-espresso: #2A1B12;
-  --color-deep-brown: #3B2A1E;
-  --color-gold: #B8924C;
+  /* ── Color Tokens (Warm Oak — default) ──
+     Each color has a hex var AND an "-rgb" channel triplet so we can build
+     translucent variants with rgb(var(--x-rgb) / <alpha>) — fully theme-aware. */
+  --color-ivory: #F7F3EC;       --color-ivory-rgb: 247 243 236;
+  --color-beige: #EAE0D0;       --color-beige-rgb: 234 224 208;
+  --color-sand: #D9C7A8;        --color-sand-rgb: 217 199 168;
+  --color-stone: #BDB0A0;       --color-stone-rgb: 189 176 160;
+  --color-soft-grey: #C7C2B8;   --color-soft-grey-rgb: 199 194 184;
+  --color-charcoal: #1E1B18;    --color-charcoal-rgb: 30 27 24;
+  --color-espresso: #2A1B12;    --color-espresso-rgb: 42 27 18;
+  --color-deep-brown: #3B2A1E;  --color-deep-brown-rgb: 59 42 30;
+  --color-gold: #B8924C;        --color-gold-rgb: 184 146 76;
 
-  /* ── Typography Scale (fluid clamp) ── */
+  /* ── Semantic aliases (used by overlays / on-image text) ── */
+  --bg: var(--color-ivory);
+  --surface: #F5F3EF;
+  --border: var(--color-beige);
+  --text-primary: var(--color-charcoal);
+  --text-secondary: #555550;
+  --text-muted: var(--color-stone);
+  --accent: var(--color-gold);
+  --accent-hover: #C9A35B;
+  /* Text that sits on top of dark imagery (hero/loader) — light in every theme */
+  --on-image: 247 243 236;
+  /* Scrim gradient base for image overlays (dark in every theme) */
+  --scrim: 30 27 24;
+}
+
+[data-theme="slate-brass"] {
+  color-scheme: light;
+
+  /* ── Slate & Brass (cool light) ── */
+  --color-ivory: #F4F4F2;       --color-ivory-rgb: 244 244 242;
+  --color-beige: #DEDDD7;       --color-beige-rgb: 222 221 215;
+  --color-sand: #CFCDC4;        --color-sand-rgb: 207 205 196;
+  --color-stone: #9A9A93;       --color-stone-rgb: 154 154 147;
+  --color-soft-grey: #B6B5AE;   --color-soft-grey-rgb: 182 181 174;
+  --color-charcoal: #1C1D1F;    --color-charcoal-rgb: 28 29 31;
+  --color-espresso: #232427;    --color-espresso-rgb: 35 36 39;
+  --color-deep-brown: #33342F;  --color-deep-brown-rgb: 51 52 47;
+  --color-gold: #A8893F;        --color-gold-rgb: 168 137 63;
+
+  --bg: var(--color-ivory);
+  --surface: #ECECE8;
+  --border: var(--color-beige);
+  --text-primary: var(--color-charcoal);
+  --text-secondary: #565752;
+  --text-muted: var(--color-stone);
+  --accent: var(--color-gold);
+  --accent-hover: #BE9C4C;
+  --on-image: 244 244 242;
+  --scrim: 28 29 31;
+}
+
+[data-theme="noir-walnut"] {
+  color-scheme: dark;
+
+  /* ── Noir Walnut (dark) ──
+     bg/surface are now dark and text is light; "ivory" stays the name of the
+     primary surface token so existing bg-ivory / text-charcoal usages invert
+     correctly (charcoal = the light text on dark bg). */
+  --color-ivory: #1A1715;       --color-ivory-rgb: 26 23 21;
+  --color-beige: #332C26;       --color-beige-rgb: 51 44 38;
+  --color-sand: #4A3E33;        --color-sand-rgb: 74 62 51;
+  --color-stone: #A89C8C;       --color-stone-rgb: 168 156 140;
+  --color-soft-grey: #6E665C;   --color-soft-grey-rgb: 110 102 92;
+  --color-charcoal: #F2EDE4;    --color-charcoal-rgb: 242 237 228;
+  --color-espresso: #F2EDE4;    --color-espresso-rgb: 242 237 228;
+  --color-deep-brown: #E8DECE;  --color-deep-brown-rgb: 232 222 206;
+  --color-gold: #C9A75C;        --color-gold-rgb: 201 167 92;
+
+  --bg: var(--color-ivory);
+  --surface: #221E1A;
+  --border: var(--color-beige);
+  --text-primary: var(--color-charcoal);
+  --text-secondary: #C6BCAE;
+  --text-muted: var(--color-stone);
+  --accent: var(--color-gold);
+  --accent-hover: #D9B96E;
+  --on-image: 242 237 228;
+  --scrim: 10 9 8;
+}
+
+/* ── Non-color tokens — shared across ALL themes (typography, spacing, motion).
+   These must live on :root so every theme inherits them; otherwise switching
+   theme would drop layout metrics like --section-py / --text-h2. ── */
+:root {
+  --shadow: 0 0 0;
+
+  /* Typography Scale (fluid clamp) */
   --text-display: clamp(3rem, 7vw, 7rem);
   --text-h2: clamp(2rem, 4vw, 3.5rem);
   --text-h3: clamp(1.5rem, 2.5vw, 2.25rem);
   --text-body: 1.0625rem;
   --text-eyebrow: 0.75rem;
 
-  /* ── Spacing ── */
+  /* Spacing */
   --section-py: clamp(4.5rem, 8vw, 9rem);
   --content-max: 1400px;
 
-  /* ── Motion ── */
+  /* Motion */
   --ease-entrance: cubic-bezier(0.33, 1, 0.68, 1);   /* power3.out approx */
   --ease-hero: cubic-bezier(0.16, 1, 0.3, 1);         /* expo.out approx */
   --ease-scrub: cubic-bezier(0.45, 0, 0.55, 1);       /* power2.inOut approx */
@@ -69,7 +148,7 @@ a {
 
 ::selection {
   background: var(--color-gold);
-  color: #ffffff;
+  color: var(--color-ivory);
 }
 
 /* ── Typography Utility Classes ── */
@@ -114,6 +193,22 @@ a {
   font-family: var(--font-general-sans), system-ui, sans-serif;
 }
 
+/* ── Mood Collections editorial grid ──
+   Mobile: single column stack. md+: original 12-col editorial masonry. */
+.mood-grid {
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(180px, auto);
+}
+@media (min-width: 768px) {
+  .mood-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  .mood-tile-0 { grid-column: 1 / 6;  grid-row: 1 / 3; }
+  .mood-tile-1 { grid-column: 6 / 13; grid-row: 1 / 2; }
+  .mood-tile-2 { grid-column: 6 / 9;  grid-row: 2 / 4; }
+  .mood-tile-3 { grid-column: 9 / 13; grid-row: 2 / 4; }
+}
+
 /* ── Section Spacing ── */
 .section-padding {
   padding-top: var(--section-py);
@@ -141,7 +236,9 @@ a {
 .cta-underline {
   position: relative;
   display: inline-block;
-  color: var(--color-ivory);
+  /* Default sits over hero imagery — keep light in every theme. Other usages
+     (e.g. WarmEnquiry) override this color inline. */
+  color: rgb(var(--on-image));
   text-decoration: none;
   font-family: var(--font-general-sans), system-ui, sans-serif;
   font-size: var(--text-eyebrow);
@@ -189,6 +286,30 @@ a {
   height: 28px;
   cursor: pointer;
   transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.hotspot-marker:hover,
+.hotspot-marker.is-active {
+  z-index: 25;
+}
+
+/* Hide non-active markers while a hotspot is selected */
+.hotspot-marker.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* Counter-scale the marker contents so the dot + callout stay readable
+   while the image is zoomed to 1.9x. 1 / 1.9 ≈ 0.526 */
+.hotspot-marker.is-active .ring,
+.hotspot-marker.is-active .dot,
+.hotspot-marker.is-active .hotspot-callout {
+  transform: scale(0.526);
+}
+.hotspot-marker.is-active .dot {
+  transform: translate(-50%, -50%) scale(0.526);
 }
 
 .hotspot-marker .ring {
@@ -213,6 +334,134 @@ a {
 @keyframes hotspot-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* ── Hotspot callout box + connector ── */
+.hotspot-callout {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* Connector line: a thin diagonal stroke from the dot to the box corner */
+.hotspot-callout-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  height: 1px;
+  background: var(--color-gold);
+  transform-origin: left center;
+  transform: rotate(-40deg);
+}
+
+.hotspot-callout-box {
+  position: absolute;
+  bottom: 28px;
+  left: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  padding: 8px 12px;
+  background: rgb(var(--color-ivory-rgb) / 0.97);
+  border: 1px solid var(--color-beige);
+  border-radius: 4px;
+  box-shadow: 0 6px 20px rgb(var(--scrim) / 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hotspot-callout-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.hotspot-callout-product {
+  font-size: 13px;
+  color: var(--color-charcoal);
+}
+
+/* Flipped variant: box goes to the upper-left so right-side dots stay on screen */
+.hotspot-marker.flip .hotspot-callout {
+  left: auto;
+  right: 50%;
+}
+.hotspot-marker.flip .hotspot-callout-line {
+  left: auto;
+  right: 0;
+  transform-origin: right center;
+  transform: rotate(40deg);
+}
+.hotspot-marker.flip .hotspot-callout-box {
+  left: auto;
+  right: 34px;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Drop variant: box goes BELOW the dot for top-edge dots so it isn't clipped */
+.hotspot-marker.drop .hotspot-callout {
+  bottom: auto;
+  top: 50%;
+}
+.hotspot-marker.drop .hotspot-callout-line {
+  bottom: auto;
+  top: 0;
+  transform-origin: left center;
+  transform: rotate(40deg);
+}
+.hotspot-marker.drop .hotspot-callout-box {
+  bottom: auto;
+  top: 28px;
+}
+/* Drop + flip (top-right dots) */
+.hotspot-marker.drop.flip .hotspot-callout-line {
+  transform-origin: right center;
+  transform: rotate(-40deg);
+}
+
+/* ── Responsive: shrink dots + callouts on small/medium screens so they keep
+   the same desktop layout (image + dotted callouts) without overlapping. ── */
+@media (max-width: 1024px) {
+  .hotspot-callout-line { width: 30px; }
+  .hotspot-callout-box {
+    bottom: 20px;
+    left: 23px;
+    padding: 5px 8px;
+    gap: 1px;
+    border-radius: 3px;
+  }
+  .hotspot-marker.flip .hotspot-callout-box { left: auto; right: 23px; }
+  .hotspot-marker.drop .hotspot-callout-box { bottom: auto; top: 20px; }
+  .hotspot-callout-label { font-size: 8px; letter-spacing: 0.1em; }
+  .hotspot-callout-product { font-size: 10px; }
+}
+
+@media (max-width: 640px) {
+  .hotspot-marker { width: 20px; height: 20px; }
+  .hotspot-callout-line { width: 18px; }
+  .hotspot-callout-box {
+    bottom: 13px;
+    left: 14px;
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+  .hotspot-marker.flip .hotspot-callout-box { left: auto; right: 14px; }
+  .hotspot-marker.drop .hotspot-callout-box { bottom: auto; top: 13px; }
+  .hotspot-callout-label { font-size: 7px; letter-spacing: 0.06em; }
+  /* Hide the product line to reduce clutter — show label only. The full
+     product details appear in the panel on tap. */
+  .hotspot-callout-product { display: none; }
+  /* The active dot's callout shows its product line again for context. */
+  .hotspot-marker.is-active .hotspot-callout-product { display: block; font-size: 9px; }
 }
 
 /* ── Prefers Reduced Motion ── */

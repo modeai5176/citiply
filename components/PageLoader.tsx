@@ -189,7 +189,7 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
         className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 px-6 text-center pointer-events-none sm:gap-6"
         style={{
           opacity: 0,
-          background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 65%)'
+          background: 'radial-gradient(circle at center, rgb(var(--shadow) / 0.3) 0%, rgb(var(--shadow) / 0) 65%)'
         }}
       >
         <h1
@@ -201,8 +201,8 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
             fontSize: 'clamp(2.4rem, 12vw, 10.5rem)',
             fontWeight: 700,
             lineHeight: 0.95,
-            color: 'rgba(255,250,244,0.94)',
-            textShadow: '0 12px 40px rgba(0,0,0,0.6)',
+            color: 'rgb(var(--on-image) / 0.94)',
+            textShadow: '0 12px 40px rgb(var(--shadow) / 0.6)',
             textWrap: 'balance',
           }}
         >
@@ -213,17 +213,17 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
           <span
             ref={dotRef}
             className="block w-2 h-2 rounded-full"
-            style={{ backgroundColor: 'rgba(255,250,244,0.8)', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+            style={{ backgroundColor: 'rgb(var(--on-image) / 0.8)', boxShadow: '0 2px 8px rgb(var(--shadow) / 0.4)' }}
           />
           <span
             style={{
               fontFamily: 'var(--font-general-sans), system-ui, sans-serif',
               fontWeight: 500,
               fontSize: 'clamp(0.72rem, 1.6vw, 0.9rem)',
-              color: 'rgba(255,250,244,0.7)',
+              color: 'rgb(var(--on-image) / 0.7)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
+              textShadow: '0 4px 12px rgb(var(--shadow) / 0.5)',
             }}
           >
             Premium Architectural Veneers
@@ -233,12 +233,12 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
 
       <div
         className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none"
-        style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.15)' }}
+        style={{ height: '1px', backgroundColor: 'rgb(var(--on-image) / 0.15)' }}
       >
         <div
           ref={lineRef}
           className="h-full origin-left"
-          style={{ backgroundColor: 'rgba(255,255,255,0.6)', transform: 'scaleX(0)' }}
+          style={{ backgroundColor: 'rgb(var(--on-image) / 0.6)', transform: 'scaleX(0)' }}
         />
       </div>
 
@@ -251,8 +251,8 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
           fontSize: 'clamp(3.4rem, 18vw, 8rem)',
           letterSpacing: '0',
           lineHeight: 1,
-          color: 'rgba(255,250,244,0.9)',
-          textShadow: '0 8px 32px rgba(0,0,0,0.6)',
+          color: 'rgb(var(--on-image) / 0.9)',
+          textShadow: '0 8px 32px rgb(var(--shadow) / 0.6)',
         }}
       >
         {count}%
@@ -265,9 +265,9 @@ export function PageLoader({ onDone }: { onDone?: () => void }) {
           fontSize: '0.5rem',
           letterSpacing: '0.26em',
           textTransform: 'uppercase',
-          color: 'rgba(255,250,244,0.5)',
+          color: 'rgb(var(--on-image) / 0.5)',
           fontWeight: 500,
-          textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+          textShadow: '0 2px 12px rgb(var(--shadow) / 0.6)',
         }}
       >
         2026

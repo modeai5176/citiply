@@ -51,7 +51,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
           {categoryResults.length ? <div><h2 className="mb-5 text-2xl font-semibold">Categories</h2><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{categoryResults.map((category) => <CategoryCard category={category} key={category.id} />)}</div></div> : null}
         </div>
       ) : (
-        <div className="mt-12 rounded-xl border border-border bg-white p-10 text-center text-text-secondary">Try searching by product code, finish, collection, category, or application.</div>
+        <div className="mt-12 rounded-xl border border-border bg-ivory p-10 text-center text-text-secondary">Try searching by product code, finish, collection, category, or application.</div>
       )}
     </section>
   );

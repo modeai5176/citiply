@@ -10,19 +10,19 @@ export function MegaMenu({ categories, collections, isTransparent = false }: { c
     <div className="group relative hidden lg:block">
       <button 
         className="cursor-pointer px-3 py-7 text-sm font-medium transition-colors duration-500"
-        style={{ color: isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)' }}
+        style={{ color: isTransparent ? 'rgb(var(--on-image) / 0.85)' : 'var(--color-charcoal)' }}
         onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-gold)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = isTransparent ? 'rgb(var(--on-image) / 0.85)' : 'var(--color-charcoal)'; }}
       >
         Collections
       </button>
       <div className="pointer-events-none fixed left-1/2 top-[120px] z-50 w-[min(920px,calc(100vw-2rem))] -translate-x-1/2 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-        <div className="grid grid-cols-[220px_1fr] overflow-hidden rounded-b-xl border border-border bg-white shadow-xl">
+        <div className="grid grid-cols-[220px_1fr] overflow-hidden rounded-b-xl border border-border bg-ivory shadow-xl">
           <div className="bg-surface p-5">
             <p className="mb-4 text-xs uppercase tracking-[0.25em] text-text-muted">Product Families</p>
             <div className="grid gap-2">
               {categories.slice(0, 7).map((category) => (
-                <Link className="rounded-lg px-3 py-2 text-sm text-text-secondary hover:bg-white hover:text-accent" href={`/categories/${category.slug}`} key={category.id}>
+                <Link className="rounded-lg px-3 py-2 text-sm text-text-secondary hover:bg-ivory hover:text-accent" href={`/categories/${category.slug}`} key={category.id}>
                   {category.name}
                 </Link>
               ))}
