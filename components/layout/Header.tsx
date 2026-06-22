@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -9,19 +9,34 @@ import { UtilityBar } from "@/components/layout/UtilityBar";
 import { useQuoteModal } from "@/components/catalogue/QuoteModal";
 import type { Catalogue, Category, Collection } from "@/lib/types";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
+import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 
 export function Header({ catalogues, categories, collections }: { catalogues: Catalogue[]; categories: Category[]; collections: Collection[] }) {
   const { openQuote } = useQuoteModal();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
-  /* ── Transparent → solid transition based on scroll past hero ── */
+  /* ── Transparent → solid transition + hide-on-scroll-down / show-on-scroll-up ── */
   useEffect(() => {
     function handleScroll() {
-      setIsScrolled(window.scrollY > 60);
+      const currentY = window.scrollY;
+      setIsScrolled(currentY > 60);
+
+      // Hide when scrolling down past the header height; show when scrolling up.
+      // Always reveal near the very top so the hero header stays visible.
+      const goingDown = currentY > lastScrollY.current;
+      if (currentY < 80) {
+        setIsHidden(false);
+      } else if (Math.abs(currentY - lastScrollY.current) > 6) {
+        setIsHidden(goingDown);
+      }
+      lastScrollY.current = currentY;
     }
     handleScroll(); // check initial state
+    lastScrollY.current = window.scrollY;
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -35,13 +50,17 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
      When scrolled: solid background, normal text, borders visible. */
   const isTransparent = !isScrolled && !mobileNavOpen && !mobileSearchOpen;
 
+  // Keep the header visible whenever a mobile panel is open, even mid-scroll.
+  const hidden = isHidden && !mobileNavOpen && !mobileSearchOpen;
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
       style={{
-        background: isTransparent ? 'transparent' : 'rgba(247,243,236,0.97)',
+        background: isTransparent ? 'transparent' : 'rgb(var(--color-ivory-rgb) / 0.97)',
         backdropFilter: isTransparent ? 'none' : 'blur(12px)',
         WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
+        transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
       }}
     >
       {/* Utility bar — hidden when transparent */}
@@ -58,7 +77,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
       <div
         className="transition-colors duration-500"
         style={{
-          borderBottom: isTransparent ? '1px solid rgba(247,243,236,0.12)' : '1px solid var(--color-beige)',
+          borderBottom: isTransparent ? '1px solid rgb(var(--on-image) / 0.12)' : '1px solid var(--color-beige)',
         }}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
@@ -85,14 +104,14 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
                 className="px-3 py-7 text-sm font-medium transition-colors duration-500"
                 href={item.href}
                 style={{
-                  color: isTransparent ? 'rgba(247,243,236,0.85)' : 'var(--color-charcoal)',
+                  color: isTransparent ? 'rgb(var(--on-image) / 0.85)' : 'var(--color-charcoal)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--color-gold)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = isTransparent
-                    ? 'rgba(247,243,236,0.85)'
+                    ? 'rgb(var(--on-image) / 0.85)'
                     : 'var(--color-charcoal)';
                 }}
               >
@@ -110,14 +129,15 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
 
           {/* Actions */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <ThemeSwitcher isTransparent={isTransparent} />
             <Button
               className="hidden sm:inline-flex transition-all duration-500"
               style={isTransparent ? {
-                backgroundColor: 'rgba(183, 150, 87, 0.25)', // glassy gold
-                border: '1px solid rgba(183, 150, 87, 0.4)',
+                backgroundColor: 'rgb(var(--color-gold-rgb) / 0.25)', // glassy gold
+                border: '1px solid rgb(var(--color-gold-rgb) / 0.4)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
-                color: 'rgba(247,243,236,0.95)',
+                color: 'rgb(var(--on-image) / 0.95)',
               } : undefined}
               onClick={() => openQuote()}
             >
@@ -126,7 +146,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
             <button
               className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
               style={{
-                border: `1px solid ${isTransparent ? 'rgba(247,243,236,0.25)' : 'var(--color-beige)'}`,
+                border: `1px solid ${isTransparent ? 'rgb(var(--on-image) / 0.25)' : 'var(--color-beige)'}`,
                 color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
               }}
               aria-label={mobileSearchOpen ? "Close search" : "Open search"}
@@ -142,7 +162,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
             <button
               className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
               style={{
-                border: `1px solid ${isTransparent ? 'rgba(247,243,236,0.25)' : 'var(--color-beige)'}`,
+                border: `1px solid ${isTransparent ? 'rgb(var(--on-image) / 0.25)' : 'var(--color-beige)'}`,
                 color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
               }}
               aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
@@ -163,7 +183,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
           </div>
         ) : null}
         {mobileNavOpen ? (
-          <nav id="mobile-header-nav" className="max-h-[calc(100vh-104px)] overflow-y-auto border-t border-border bg-white px-4 py-4 shadow-lg sm:max-h-[calc(100vh-120px)] sm:px-6 lg:hidden" aria-label="Mobile navigation">
+          <nav id="mobile-header-nav" className="max-h-[calc(100vh-104px)] overflow-y-auto border-t border-border bg-ivory px-4 py-4 shadow-lg sm:max-h-[calc(100vh-120px)] sm:px-6 lg:hidden" aria-label="Mobile navigation">
             <div className="grid gap-1">
               <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/catalogues" onClick={closeMobilePanels}>
                 Catalogues

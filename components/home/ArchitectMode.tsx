@@ -81,7 +81,7 @@ export function ArchitectMode() {
             <p
               className="arch-reveal font-sans mb-8"
               style={{
-                color: 'rgba(247,243,236,0.65)',
+                color: 'rgb(var(--color-ivory-rgb) / 0.65)',
                 fontSize: 'var(--text-body)',
                 lineHeight: 1.7,
                 opacity: 0,
@@ -100,7 +100,7 @@ export function ArchitectMode() {
                   className="arch-reveal inline-block py-2.5 px-5 text-sm font-sans font-medium transition-colors duration-300"
                   style={{
                     color: 'var(--color-ivory)',
-                    border: '1px solid rgba(247,243,236,0.2)',
+                    border: '1px solid rgb(var(--color-ivory-rgb) / 0.2)',
                     opacity: 0,
                   }}
                   onMouseEnter={(e) => {
@@ -108,7 +108,7 @@ export function ArchitectMode() {
                     e.currentTarget.style.color = 'var(--color-gold)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(247,243,236,0.2)';
+                    e.currentTarget.style.borderColor = 'rgb(var(--color-ivory-rgb) / 0.2)';
                     e.currentTarget.style.color = 'var(--color-ivory)';
                   }}
                 >

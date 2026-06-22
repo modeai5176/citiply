@@ -19,28 +19,18 @@ const HOTSPOTS: Hotspot[] = [
   {
     id: 'ceiling',
     label: 'Ceiling Panel',
-    x: 35,
-    y: 15,
+    x: 48,
+    y: 4,
     products: [
       { name: 'Linear Oak Panel', type: 'Veneer Panel', finish: 'Matte Natural' },
       { name: 'Slatted Ash', type: 'Acoustic Panel', finish: 'Brushed' },
     ],
   },
   {
-    id: 'door',
-    label: 'Entry Door',
-    x: 18,
-    y: 50,
-    products: [
-      { name: 'Walnut Flush Door', type: 'Interior Door', finish: 'Semi-Gloss' },
-      { name: 'Teak Frame Set', type: 'Door Frame', finish: 'Oiled' },
-    ],
-  },
-  {
     id: 'wall',
     label: 'Feature Wall',
-    x: 68,
-    y: 40,
+    x: 30,
+    y: 35,
     products: [
       { name: 'Ebony Grain Wall', type: 'Wall Veneer', finish: 'High-Gloss' },
       { name: 'Figured Maple Sheet', type: 'Decorative Veneer', finish: 'Satin' },
@@ -48,9 +38,19 @@ const HOTSPOTS: Hotspot[] = [
     ],
   },
   {
+    id: 'door',
+    label: 'Entry Door',
+    x: 70,
+    y: 43,
+    products: [
+      { name: 'Walnut Flush Door', type: 'Interior Door', finish: 'Semi-Gloss' },
+      { name: 'Teak Frame Set', type: 'Door Frame', finish: 'Oiled' },
+    ],
+  },
+  {
     id: 'furniture',
     label: 'Built-in Unit',
-    x: 78,
+    x: 55,
     y: 68,
     products: [
       { name: 'Marine Ply Board', type: 'Plywood', finish: 'Calibrated' },
@@ -60,8 +60,8 @@ const HOTSPOTS: Hotspot[] = [
   {
     id: 'floor',
     label: 'Flooring',
-    x: 50,
-    y: 85,
+    x: 62,
+    y: 90,
     products: [
       { name: 'Herringbone Oak', type: 'Engineered Floor', finish: 'UV Oiled' },
       { name: 'Wide Plank Walnut', type: 'Engineered Floor', finish: 'Brushed Matte' },
@@ -73,6 +73,7 @@ export function RoomDiscovery() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const zoomRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -118,15 +119,51 @@ export function RoomDiscovery() {
     };
   }, []);
 
-  // Panel slide animation
+  // Panel slide animation — slides in from the right on desktop, up from the
+  // bottom (as a sheet) on mobile so the details aren't clipped by the image.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
 
-    if (activeHotspot) {
-      gsap.to(panel, { x: 0, duration: 0.5, ease: 'power3.out' });
+    if (isMobile) {
+      gsap.set(panel, { x: 0 });
+      gsap.to(panel, activeHotspot
+        ? { y: 0, duration: 0.45, ease: 'power3.out' }
+        : { y: '100%', duration: 0.35, ease: 'power3.in' });
     } else {
-      gsap.to(panel, { x: '100%', duration: 0.4, ease: 'power3.in' });
+      gsap.set(panel, { y: 0 });
+      gsap.to(panel, activeHotspot
+        ? { x: 0, duration: 0.5, ease: 'power3.out' }
+        : { x: '100%', duration: 0.4, ease: 'power3.in' });
+    }
+  }, [activeHotspot, isMobile]);
+
+  // Minimal zoom toward the active hotspot's position
+  useEffect(() => {
+    const zoom = zoomRef.current;
+    if (!zoom) return;
+
+    const target = HOTSPOTS.find((h) => h.id === activeHotspot);
+    if (target) {
+      // Pan via translation (not transform-origin) so switching dots while
+      // zoomed eases smoothly from one focal point to the next instead of
+      // jumping. Origin stays centered; we translate the focal point to center.
+      const scale = 1.9;
+      // Clamp the focal point so edge dots don't pan past the image and expose gaps.
+      const maxShift = (1 - 1 / scale) / 2; // furthest the center can move, as a fraction
+      const clamp = (v: number) => Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, v / 100));
+      const xPercent = -(clamp(target.x) - 0.5) * scale * 100;
+      const yPercent = -(clamp(target.y) - 0.5) * scale * 100;
+      gsap.to(zoom, {
+        scale,
+        xPercent,
+        yPercent,
+        transformOrigin: 'center center',
+        duration: 1,
+        ease: 'power2.inOut',
+      });
+    } else {
+      gsap.to(zoom, { scale: 1, xPercent: 0, yPercent: 0, duration: 0.7, ease: 'power2.inOut' });
     }
   }, [activeHotspot]);
 
@@ -150,52 +187,75 @@ export function RoomDiscovery() {
       <div className="relative" style={{ maxWidth: '1600px', margin: '0 auto' }}>
         {/* Room Image */}
         <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
-          <Image
-            src="/images/sections/room-discovery.png"
-            alt="Premium interior room showcasing various wood surfaces and materials"
-            fill
-            className="object-cover scale-[1.1]"
-            sizes="100vw"
-          />
+          <div ref={zoomRef} className="absolute inset-0">
+            <Image
+              src="/images/sections/room-discovery.png"
+              alt="Premium interior room showcasing various wood surfaces and materials"
+              fill
+              className="object-cover scale-[1.1]"
+              sizes="100vw"
+            />
 
-          {/* Backdrop dim when panel open */}
+            {/* Hotspot Markers — inside the zoom wrapper so they pan with the image.
+                Shown on all screen sizes (callouts scale down via CSS media queries). */}
+            {HOTSPOTS.map((hotspot) => {
+                // Flip the callout to the left for dots on the right half so it stays on-screen.
+                const flip = hotspot.x > 55;
+                // Drop the callout below the dot for dots near the top so the box isn't clipped.
+                const drop = hotspot.y < 15;
+                const isActive = activeHotspot === hotspot.id;
+                // Hide the other dots while one is active.
+                const dimmed = activeHotspot !== null && !isActive;
+                return (
+                  <button
+                    key={hotspot.id}
+                    className={`hotspot-marker${isActive ? ' is-active' : ''}${flip ? ' flip' : ''}${drop ? ' drop' : ''}${dimmed ? ' is-hidden' : ''}`}
+                    style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
+                    onClick={() => setActiveHotspot(isActive ? null : hotspot.id)}
+                    aria-label={`Explore ${hotspot.label}`}
+                  >
+                    <span className="ring" />
+                    <span className="dot" />
+                    <span className="hotspot-callout">
+                      <span className="hotspot-callout-line" />
+                      <span className="hotspot-callout-box">
+                        <span className="hotspot-callout-label">{hotspot.label}</span>
+                        <span className="hotspot-callout-product">{hotspot.products[0].name}</span>
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+          </div>
+
+          {/* Backdrop dim when panel open — covers the image on desktop, the
+              whole viewport on mobile (where the panel is a bottom sheet). */}
           {activeHotspot && (
             <div
-              className="absolute inset-0 bg-black/30 transition-opacity duration-500 cursor-pointer"
+              className={`${isMobile ? 'fixed z-40' : 'absolute z-10'} inset-0 bg-[rgb(var(--scrim)/0.3)] transition-opacity duration-500 cursor-pointer`}
               onClick={() => setActiveHotspot(null)}
             />
           )}
-
-          {/* Hotspot Markers (desktop only) */}
-          {!isMobile &&
-            HOTSPOTS.map((hotspot) => (
-              <button
-                key={hotspot.id}
-                className="hotspot-marker"
-                style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
-                onClick={() => setActiveHotspot(activeHotspot === hotspot.id ? null : hotspot.id)}
-                aria-label={`Explore ${hotspot.label}`}
-              >
-                <span className="ring" />
-                <span className="dot" />
-              </button>
-            ))}
         </div>
 
-        {/* Slide-in Panel */}
+        {/* Slide-in Panel — side panel on desktop, bottom sheet on mobile */}
         <div
           ref={panelRef}
-          className="absolute top-0 right-0 h-full overflow-y-auto z-20"
+          className={isMobile
+            ? "fixed bottom-0 left-0 right-0 z-50 overflow-y-auto rounded-t-2xl shadow-2xl"
+            : "absolute top-0 right-0 h-full overflow-y-auto z-20"}
           style={{
             width: isMobile ? '100%' : '400px',
             maxWidth: '100%',
+            maxHeight: isMobile ? '75vh' : undefined,
             background: 'var(--color-ivory)',
-            borderLeft: '1px solid var(--color-beige)',
-            transform: 'translateX(100%)',
+            borderLeft: isMobile ? 'none' : '1px solid var(--color-beige)',
+            borderTop: isMobile ? '1px solid var(--color-beige)' : 'none',
+            transform: isMobile ? 'translateY(100%)' : 'translateX(100%)',
           }}
         >
           {activeData && (
-            <div className="p-8">
+            <div className="p-6 sm:p-8">
               <div className="flex items-center justify-between mb-8">
                 <span className="text-eyebrow" style={{ color: 'var(--color-gold)' }}>
                   {activeData.label}
@@ -233,50 +293,6 @@ export function RoomDiscovery() {
           )}
         </div>
       </div>
-
-      {/* Mobile fallback: tappable list */}
-      {isMobile && (
-        <div className="content-container mt-6">
-          <div className="space-y-3">
-            {HOTSPOTS.map((hotspot) => (
-              <button
-                key={hotspot.id}
-                onClick={() => setActiveHotspot(activeHotspot === hotspot.id ? null : hotspot.id)}
-                className="w-full text-left p-4 transition-colors rounded-sm"
-                style={{
-                  background: activeHotspot === hotspot.id ? 'var(--color-beige)' : 'transparent',
-                  border: '1px solid var(--color-beige)',
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="w-3 h-3 rounded-full" style={{ background: 'var(--color-gold)' }} />
-                  <span className="font-sans text-sm font-medium" style={{ color: 'var(--color-charcoal)' }}>
-                    {hotspot.label}
-                  </span>
-                  <span className="ml-auto text-xs" style={{ color: 'var(--color-stone)' }}>
-                    {hotspot.products.length} products
-                  </span>
-                </div>
-
-                {activeHotspot === hotspot.id && (
-                  <div className="mt-3 pt-3 space-y-3" style={{ borderTop: '1px solid var(--color-sand)' }}>
-                    {hotspot.products.map((product, i) => (
-                      <div key={i}>
-                        <p className="font-serif text-sm" style={{ color: 'var(--color-charcoal)' }}>
-                          {product.name}
-                        </p>
-                        <p className="text-xs" style={{ color: 'var(--color-stone)' }}>
-                          {product.type} · {product.finish}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 }

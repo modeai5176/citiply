@@ -165,6 +165,7 @@ export function HeroSection() {
         ref={overlayRef}
         className="absolute inset-0"
         style={{
+          // Photo legibility scrim (kept dark in all themes; GSAP tweens it on scroll).
           background: 'linear-gradient(to bottom, transparent 0%, rgba(30,27,24,0.55) 100%)',
         }}
       />
@@ -176,14 +177,14 @@ export function HeroSection() {
             <span
               ref={eyebrowRef}
               className="text-eyebrow block mb-5"
-              style={{ color: 'rgba(247,243,236,0.65)', opacity: 0 }}
+              style={{ color: 'rgb(var(--on-image) / 0.65)', opacity: 0 }}
             >
               Premium Architectural Materials
             </span>
             <h1
               ref={headlineRef}
               className="text-display"
-              style={{ color: 'var(--color-ivory)', opacity: 0 }}
+              style={{ color: 'rgb(var(--on-image))', opacity: 0 }}
             >
               Surfaces that shape the mood of a space.
             </h1>

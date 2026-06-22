@@ -85,37 +85,12 @@ export function MoodCollections() {
           Find your mood.
         </h2>
 
-        {/* Editorial Masonry Grid */}
-        <div
-          ref={tilesRef}
-          className="grid gap-4 md:gap-5"
-          style={{
-            gridTemplateColumns: 'repeat(12, 1fr)',
-            gridAutoRows: 'minmax(180px, auto)',
-          }}
-        >
-          {COLLECTIONS.map((collection, i) => {
-            // Masonry-like placement — alternate between tall and wide spans
-            const gridStyles: Record<string, string> = {};
-
-            if (i === 0) {
-              gridStyles.gridColumn = '1 / 6';
-              gridStyles.gridRow = '1 / 3';
-            } else if (i === 1) {
-              gridStyles.gridColumn = '6 / 13';
-              gridStyles.gridRow = '1 / 2';
-            } else if (i === 2) {
-              gridStyles.gridColumn = '6 / 9';
-              gridStyles.gridRow = '2 / 4';
-            } else if (i === 3) {
-              gridStyles.gridColumn = '9 / 13';
-              gridStyles.gridRow = '2 / 4';
-            }
-
-            return (
-              <CollectionTile key={i} collection={collection} style={gridStyles} />
-            );
-          })}
+        {/* Editorial Masonry Grid — single column on mobile, 12-col editorial
+            spans on md+ (placement handled in .mood-grid CSS). */}
+        <div ref={tilesRef} className="mood-grid grid gap-4 md:gap-5">
+          {COLLECTIONS.map((collection, i) => (
+            <CollectionTile key={i} collection={collection} index={i} />
+          ))}
         </div>
       </div>
     </section>
@@ -124,17 +99,17 @@ export function MoodCollections() {
 
 function CollectionTile({
   collection,
-  style,
+  index,
 }: {
   collection: (typeof COLLECTIONS)[number];
-  style: Record<string, string>;
+  index: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="collection-tile relative overflow-hidden cursor-pointer group"
-      style={{ ...style, opacity: 0, minHeight: '220px' }}
+      className={`collection-tile mood-tile-${index} relative overflow-hidden cursor-pointer group`}
+      style={{ opacity: 0, minHeight: '220px' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -151,7 +126,7 @@ function CollectionTile({
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to top, rgba(30,27,24,0.7) 0%, transparent 50%)',
+          background: 'linear-gradient(to top, rgb(var(--scrim) / 0.7) 0%, transparent 50%)',
         }}
       />
 
@@ -159,14 +134,14 @@ function CollectionTile({
       <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
         <h3
           className="font-serif text-lg md:text-xl"
-          style={{ color: 'var(--color-ivory)' }}
+          style={{ color: 'rgb(var(--on-image))' }}
         >
           {collection.name}
         </h3>
         <p
           className="font-sans text-sm mt-1 transition-all duration-500"
           style={{
-            color: 'rgba(247,243,236,0.75)',
+            color: 'rgb(var(--on-image) / 0.75)',
             opacity: isHovered ? 1 : 0,
             transform: isHovered ? 'translateY(0)' : 'translateY(8px)',
           }}

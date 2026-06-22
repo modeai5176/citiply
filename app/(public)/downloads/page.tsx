@@ -23,7 +23,7 @@ export default async function DownloadsPage() {
                 <h2 className="mb-4 text-2xl font-semibold">{category.name}</h2>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {items.filter((collection) => collection.brochureUrl !== "#").map((collection) => (
-                    <div className="rounded-xl border border-border bg-white p-5" key={collection.id}>
+                    <div className="rounded-xl border border-border bg-ivory p-5" key={collection.id}>
                       <FileDown className="h-8 w-8 text-accent" />
                       <h3 className="mt-4 text-xl font-semibold">{collection.name}</h3>
                       <Badge className="mt-3">{category.name}</Badge>

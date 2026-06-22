@@ -22,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <motion.article whileHover={{ y: -4 }} className="group overflow-hidden rounded-xl border border-border bg-white transition hover:shadow-md">
+    <motion.article whileHover={{ y: -4 }} className="group overflow-hidden rounded-xl border border-border bg-ivory transition hover:shadow-md">
       <Link href={`/products/${product.sku}`} className="block">
         <div className="relative aspect-[4/5] bg-surface">
           <Image src={main.thumbnailUrl} alt={main.alt} fill sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw" placeholder="blur" blurDataURL={main.blurDataUrl} className="object-cover" />
@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
           <button
-            className="w-full cursor-pointer rounded-full border border-accent bg-white px-4 py-2 text-sm font-medium text-accent transition hover:bg-accent hover:text-white focus:outline-none focus:ring-2 focus:ring-accent/25"
+            className="w-full cursor-pointer rounded-full border border-accent bg-ivory px-4 py-2 text-sm font-medium text-accent transition hover:bg-accent hover:text-[rgb(var(--on-image))] focus:outline-none focus:ring-2 focus:ring-accent/25"
             onClick={openProductQuote}
           >
             Enquire Now

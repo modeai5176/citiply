@@ -54,7 +54,7 @@ export function EnquiryDrawer() {
   }
 
   return (
-    <div className="fixed inset-0 z-[90] bg-black/45 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[90] bg-[rgb(var(--scrim)/0.45)] backdrop-blur-sm">
       <div className="ml-auto flex h-full w-full max-w-md flex-col bg-background shadow-premium">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div>
@@ -76,7 +76,7 @@ export function EnquiryDrawer() {
               ) : (
                 <div className="grid gap-3">
                   {items.map((item) => (
-                    <div className="rounded-xl border border-border bg-white p-3" key={item.productId}>
+                    <div className="rounded-xl border border-border bg-ivory p-3" key={item.productId}>
                       <div className="flex gap-3">
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-surface">
                           {item.thumbnailUrl ? <Image src={item.thumbnailUrl} alt={item.name} fill sizes="64px" className="object-cover" /> : null}

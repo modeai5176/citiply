@@ -12,9 +12,9 @@ type ButtonProps = BaseProps & ButtonHTMLAttributes<HTMLButtonElement> & { href?
 type LinkProps = BaseProps & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
 
 const styles = {
-  primary: "bg-accent text-white hover:bg-[#b79657]",
-  ghost: "border border-current bg-transparent text-current hover:bg-text-primary hover:text-white",
-  dark: "bg-text-primary text-white hover:bg-black",
+  primary: "bg-accent text-[rgb(var(--on-image))] hover:bg-[var(--accent-hover)]",
+  ghost: "border border-current bg-transparent text-current hover:bg-text-primary hover:text-[rgb(var(--color-ivory-rgb))]",
+  dark: "bg-text-primary text-[rgb(var(--color-ivory-rgb))] hover:opacity-90",
   plain: "text-text-primary hover:text-accent"
 };
 

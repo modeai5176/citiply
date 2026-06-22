@@ -54,7 +54,7 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
                 ["Thickness", product.thickness],
                 ["Color Tone", product.colorTone]
               ].map(([name, value]) => (
-                <div className="rounded-lg border border-border bg-white p-4" key={name}>
+                <div className="rounded-lg border border-border bg-ivory p-4" key={name}>
                   <p className="text-xs uppercase tracking-[0.2em] text-text-muted">{name}</p>
                   <p className="mt-2 font-medium">{value}</p>
                 </div>
@@ -74,7 +74,7 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
         </div>
         <div className="mt-16">
           <h2 className="text-3xl font-semibold">Technical Specs</h2>
-          <div className="mt-5 overflow-hidden rounded-xl border border-border bg-white">
+          <div className="mt-5 overflow-hidden rounded-xl border border-border bg-ivory">
             {product.specs.map((spec) => (
               <div className="grid grid-cols-2 border-b border-border last:border-0" key={spec.name}>
                 <div className="bg-surface p-4 text-sm font-medium">{spec.name}</div>

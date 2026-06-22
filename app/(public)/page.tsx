@@ -8,10 +8,13 @@ import { MoodCollections } from "@/components/home/MoodCollections";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
 import { CatalogueLookbook } from "@/components/home/CatalogueLookbook";
 import { WarmEnquiry } from "@/components/home/WarmEnquiry";
+import { getCatalogues } from "@/lib/catalogue-data";
 
 export const revalidate = 300;
 
-export default function HomePage() {
+export default async function HomePage() {
+  const catalogues = await getCatalogues();
+
   return (
     <>
       <HeroSection />
@@ -22,7 +25,7 @@ export default function HomePage() {
       <RoomDiscovery />
       <MoodCollections />
       <ArchitectMode />
-      <CatalogueLookbook />
+      <CatalogueLookbook catalogues={catalogues} />
       <WarmEnquiry />
     </>
   );

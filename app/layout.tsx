@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import { QuoteModalProvider } from "@/components/catalogue/QuoteModal";
 import { PageLoadProvider } from "@/components/layout/PageLoadProvider";
 import { LenisProvider } from "@/components/layout/LenisProvider";
+import { ThemeProvider, themeInitScript } from "@/components/layout/ThemeProvider";
 
 /* ── Fonts ── */
 const fraunces = Fraunces({
@@ -34,15 +35,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${generalSans.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${generalSans.variable}`} data-theme="warm-oak">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="font-sans antialiased">
-        <LenisProvider>
-          <PageLoadProvider>
-            <QuoteModalProvider>
-              {children}
-            </QuoteModalProvider>
-          </PageLoadProvider>
-        </LenisProvider>
+        <ThemeProvider>
+          <LenisProvider>
+            <PageLoadProvider>
+              <QuoteModalProvider>
+                {children}
+              </QuoteModalProvider>
+            </PageLoadProvider>
+          </LenisProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

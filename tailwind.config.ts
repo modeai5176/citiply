@@ -9,25 +9,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ivory: "#F7F3EC",
-        beige: "#EAE0D0",
-        sand: "#D9C7A8",
-        stone: "#BDB0A0",
-        "soft-grey": "#C7C2B8",
-        charcoal: "#1E1B18",
-        espresso: "#2A1B12",
-        "deep-brown": "#3B2A1E",
-        gold: "#B8924C",
-        /* preserve legacy tokens for existing pages */
-        background: "#F7F3EC",
-        surface: "#F5F3EF",
-        border: "#E5E2DC",
-        accent: "#B8924C",
-        dark: "#1E1B18",
+        /* All colors resolve to CSS variables so themes (data-theme on <html>)
+           re-skin the entire site. The -rgb channel vars enable Tailwind alpha
+           modifiers, e.g. bg-ivory/50. */
+        ivory: "rgb(var(--color-ivory-rgb) / <alpha-value>)",
+        beige: "rgb(var(--color-beige-rgb) / <alpha-value>)",
+        sand: "rgb(var(--color-sand-rgb) / <alpha-value>)",
+        stone: "rgb(var(--color-stone-rgb) / <alpha-value>)",
+        "soft-grey": "rgb(var(--color-soft-grey-rgb) / <alpha-value>)",
+        charcoal: "rgb(var(--color-charcoal-rgb) / <alpha-value>)",
+        espresso: "rgb(var(--color-espresso-rgb) / <alpha-value>)",
+        "deep-brown": "rgb(var(--color-deep-brown-rgb) / <alpha-value>)",
+        gold: "rgb(var(--color-gold-rgb) / <alpha-value>)",
+        /* semantic / legacy tokens — also theme-driven */
+        background: "var(--bg)",
+        surface: "var(--surface)",
+        border: "var(--border)",
+        accent: "rgb(var(--color-gold-rgb) / <alpha-value>)",
+        dark: "rgb(var(--color-charcoal-rgb) / <alpha-value>)",
         text: {
-          primary: "#1A1A1A",
-          secondary: "#555550",
-          muted: "#9A9892"
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          muted: "var(--text-muted)"
         }
       },
       fontFamily: {
