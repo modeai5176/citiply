@@ -15,6 +15,22 @@ export const quoteSchema = z.object({
 
 export type QuoteFormValues = z.infer<typeof quoteSchema>;
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Project brief / lead-gen capture. Only contact details are required so the
+// strip stays low-friction; everything else helps us suggest materials.
+export const projectBriefSchema = z.object({
+  projectType: z.string().optional(),
+  city: z.string().optional(),
+  requiredMaterials: z.string().optional(),
+  finishMood: z.string().optional(),
+  timeline: z.string().optional(),
+  phone: z.string().regex(phonePattern, "Enter a valid phone number"),
+  email: z.string().regex(emailPattern, "Enter a valid email")
+});
+
+export type ProjectBriefValues = z.infer<typeof projectBriefSchema>;
+
 export const productsQuerySchema = z.object({
   category: z.string().optional(),
   collection: z.string().optional(),

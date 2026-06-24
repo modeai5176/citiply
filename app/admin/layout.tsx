@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BarChart3, BookOpen, FolderTree, Images, Inbox, LayoutDashboard, LogOut, Package, Quote, Sparkles } from "lucide-react";
+import { BarChart3, BookOpen, FolderTree, Images, Inbox, LayoutDashboard, LayoutTemplate, LogOut, Package, Quote, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,7 @@ const links = [
   { label: "Categories", href: "/admin/categories", icon: FolderTree },
   { label: "Collections", href: "/admin/collections", icon: BarChart3 },
   { label: "Products", href: "/admin/products", icon: Package },
+  { label: "Projects", href: "/admin/projects", icon: LayoutTemplate },
   { label: "Media", href: "/admin/media", icon: Images },
   { label: "Enquiries", href: "/admin/enquiries", icon: Inbox },
   { label: "Quotes", href: "/admin/quotes", icon: Quote }

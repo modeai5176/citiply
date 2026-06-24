@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Catalogue, Category, Collection, Product, ProductImage } from "@/lib/types";
+import type { Catalogue, Category, Collection, Product, ProductFamily, ProductImage } from "@/lib/types";
 import type { CatalogueRow, CategoryRow, CollectionRow, ProductImageRow, ProductRow, ProductSpecRow } from "@/lib/supabase/types";
 
 const fallbackImage = "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=82";
@@ -263,6 +263,15 @@ export async function getProductStaticParams(limit = 200) {
   return (data ?? []).map((product) => ({ sku: product.sku }));
 }
 
+// Groups categories (filters) under their parent catalogue (Product Family),
+// so the navigation can render the Family → Filter tree in one pass.
+function groupFamilies(catalogues: Catalogue[], categories: Category[]): ProductFamily[] {
+  return catalogues.map((catalogue) => ({
+    ...catalogue,
+    categories: categories.filter((category) => category.catalogueId === catalogue.id)
+  }));
+}
+
 export async function getNavigationData() {
   const [catalogues, categories, collections] = await Promise.all([
     getCatalogues(),
@@ -270,5 +279,7 @@ export async function getNavigationData() {
     getCollections({ featuredOnly: true, limit: 4 })
   ]);
 
-  return { catalogues, categories, collections };
+  const families = groupFamilies(catalogues, categories);
+
+  return { catalogues, categories, collections, families };
 }

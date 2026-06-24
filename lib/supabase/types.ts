@@ -100,6 +100,38 @@ export type QuoteRequestRow = {
   status: "pending" | "contacted" | "closed" | string;
 } & DbRecord;
 
+export type ProjectRow = {
+  id: string;
+  created_at: string;
+  name: string;
+  slug: string;
+  category: string | null;
+  concept: string | null;
+  hero_image: string | null;
+  gallery: Json | null;
+  recommended_materials: Json | null;
+  veneer_tones: Json | null;
+  fluted_panels: Json | null;
+  doors: Json | null;
+  laminates: Json | null;
+  sort_order: number;
+  is_active: boolean;
+} & DbRecord;
+
+export type ProjectLeadRow = {
+  id: string;
+  created_at: string;
+  project_type: string | null;
+  city: string | null;
+  required_materials: string | null;
+  finish_mood: string | null;
+  timeline: string | null;
+  attachment_url: string | null;
+  phone: string;
+  email: string;
+  status: "pending" | "contacted" | "closed" | string;
+} & DbRecord;
+
 export type EnquirySessionRow = {
   id: string;
   created_at: string;
@@ -135,6 +167,15 @@ export type QuoteRequestInsert = Omit<QuoteRequestRow, "id" | "created_at" | "st
   created_at?: string;
   status?: string;
 };
+export type ProjectInsert = Omit<ProjectRow, "id" | "created_at"> & {
+  id?: string;
+  created_at?: string;
+};
+export type ProjectLeadInsert = Omit<ProjectLeadRow, "id" | "created_at" | "status"> & {
+  id?: string;
+  created_at?: string;
+  status?: string;
+};
 export type EnquirySessionInsert = Omit<EnquirySessionRow, "id" | "created_at" | "status"> & {
   id?: string;
   created_at?: string;
@@ -152,6 +193,8 @@ export type Database = {
       product_images: Table<ProductImageRow, ProductImageInsert>;
       product_specs: Table<ProductSpecRow, ProductSpecInsert>;
       quote_requests: Table<QuoteRequestRow, QuoteRequestInsert>;
+      project_leads: Table<ProjectLeadRow, ProjectLeadInsert>;
+      projects: Table<ProjectRow, ProjectInsert>;
       enquiry_sessions: Table<EnquirySessionRow, EnquirySessionInsert>;
       enquiry_items: Table<EnquiryItemRow, EnquiryItemInsert>;
     };

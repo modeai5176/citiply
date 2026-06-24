@@ -8,7 +8,7 @@ export function QuickInquiryFab() {
 
   return (
     <button
-      className="fixed bottom-5 right-5 z-50 inline-flex cursor-pointer items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-[rgb(var(--on-image))] shadow-premium transition hover:bg-[var(--accent-hover)]"
+      className="fixed bottom-20 right-5 z-50 inline-flex cursor-pointer items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-[rgb(var(--on-image))] shadow-premium transition hover:bg-[var(--accent-hover)] sm:bottom-24"
       onClick={() => openQuote()}
     >
       <MessageCircle className="h-5 w-5" />

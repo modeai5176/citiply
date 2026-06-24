@@ -8,6 +8,12 @@ export type Catalogue = {
   isActive: boolean;
 };
 
+// A Product Family (catalogue) with its second-level category filters nested in.
+// Used to render the family-driven navigation (Family → Filter → Collection).
+export type ProductFamily = Catalogue & {
+  categories: Category[];
+};
+
 export type Category = {
   id: string;
   catalogueId: string | null;

@@ -9,10 +9,10 @@ export default async function CataloguesPage() {
 
   return (
     <>
-      <Breadcrumb items={[{ label: "Catalogues" }]} />
+      <Breadcrumb items={[{ label: "Product Families" }]} />
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <h1 className="text-5xl font-semibold">Catalogues</h1>
-        <p className="mt-4 max-w-2xl text-text-secondary">Explore every catalogue and move quickly into the related categories and collections.</p>
+        <h1 className="text-5xl font-semibold">Product Families</h1>
+        <p className="mt-4 max-w-2xl text-text-secondary">Browse by product family, then narrow down by category to reach the right collection.</p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {catalogues.map((catalogue) => <CatalogueCard catalogue={catalogue} key={catalogue.id} />)}
         </div>

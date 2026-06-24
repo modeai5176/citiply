@@ -2,19 +2,20 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Menu, Search, X } from "lucide-react";
+import { ChevronDown, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { MegaMenu } from "@/components/layout/MegaMenu";
+import { FamilyNavItem } from "@/components/layout/MegaMenu";
 import { UtilityBar } from "@/components/layout/UtilityBar";
 import { useQuoteModal } from "@/components/catalogue/QuoteModal";
-import type { Catalogue, Category, Collection } from "@/lib/types";
+import type { ProductFamily } from "@/lib/types";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 
-export function Header({ catalogues, categories, collections }: { catalogues: Catalogue[]; categories: Category[]; collections: Collection[] }) {
+export function Header({ families }: { families: ProductFamily[] }) {
   const { openQuote } = useQuoteModal();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [openFamilyId, setOpenFamilyId] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
@@ -80,7 +81,7 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
           borderBottom: isTransparent ? '1px solid rgb(var(--on-image) / 0.12)' : '1px solid var(--color-beige)',
         }}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-3 sm:h-20 sm:px-4 lg:px-5">
           {/* Logo */}
           <Link
             href="/"
@@ -91,17 +92,20 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-1.5 xl:gap-2 lg:flex">
+            {/* Primary navigation by product family — each opens its category filters */}
+            {families.map((family) => (
+              <FamilyNavItem family={family} isTransparent={isTransparent} key={family.id} />
+            ))}
             {[
-              { label: "Catalogues", href: "/catalogues" },
-              { label: "Categories", href: "/categories" },
+              { label: "Projects", href: "/projects" },
               { label: "Downloads", href: "/downloads" },
               { label: "About", href: "/about" },
               { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Link
                 key={item.href}
-                className="px-3 py-7 text-sm font-medium transition-colors duration-500"
+                className="whitespace-nowrap px-2 py-7 text-sm font-medium transition-colors duration-500"
                 href={item.href}
                 style={{
                   color: isTransparent ? 'rgb(var(--on-image) / 0.85)' : 'var(--color-charcoal)',
@@ -118,12 +122,10 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
                 {item.label}
               </Link>
             ))}
-            {/* MegaMenu trigger — Collections link style handled internally */}
-            <MegaMenu categories={categories} collections={collections} isTransparent={isTransparent} />
           </nav>
 
           {/* Search (desktop) */}
-          <div className="hidden w-72 xl:block transition-all duration-500">
+          <div className="hidden w-44 2xl:w-52 xl:block transition-all duration-500">
             <GlobalSearch isTransparent={isTransparent} />
           </div>
 
@@ -185,59 +187,48 @@ export function Header({ catalogues, categories, collections }: { catalogues: Ca
         {mobileNavOpen ? (
           <nav id="mobile-header-nav" className="max-h-[calc(100vh-104px)] overflow-y-auto border-t border-border bg-ivory px-4 py-4 shadow-lg sm:max-h-[calc(100vh-120px)] sm:px-6 lg:hidden" aria-label="Mobile navigation">
             <div className="grid gap-1">
-              <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/catalogues" onClick={closeMobilePanels}>
-                Catalogues
-              </Link>
-              {catalogues.length > 0 ? (
-                <div className="rounded-lg border border-border p-3">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Catalogues</p>
-                  <div className="grid gap-1">
-                    {catalogues.map((catalogue) => (
-                      <Link
-                        className="rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface hover:text-accent"
-                        href={`/catalogues/${catalogue.slug}`}
-                        key={catalogue.id}
-                        onClick={closeMobilePanels}
-                      >
-                        {catalogue.name}
-                      </Link>
-                    ))}
+              {/* Product Families — each expands to its category filters */}
+              <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Products</p>
+              {families.map((family) => {
+                const isOpen = openFamilyId === family.id;
+                return (
+                  <div key={family.id} className="rounded-lg">
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent"
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenFamilyId((current) => (current === family.id ? null : family.id))}
+                    >
+                      {family.name}
+                      <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {isOpen ? (
+                      <div className="grid gap-1 pb-2 pl-3">
+                        <Link
+                          className="rounded-md px-3 py-2 text-sm font-medium text-accent hover:bg-surface"
+                          href={`/catalogues/${family.slug}`}
+                          onClick={closeMobilePanels}
+                        >
+                          View all {family.name}
+                        </Link>
+                        {family.categories.map((category) => (
+                          <Link
+                            className="rounded-md px-3 py-2 text-sm text-text-secondary hover:bg-surface hover:text-accent"
+                            href={`/categories/${category.slug}`}
+                            key={category.id}
+                            onClick={closeMobilePanels}
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
-                </div>
-              ) : null}
-              <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/categories" onClick={closeMobilePanels}>
-                Categories
+                );
+              })}
+              <Link className="mt-1 rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/projects" onClick={closeMobilePanels}>
+                Projects
               </Link>
-              <div className="rounded-lg border border-border p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Collections</p>
-                <div className="grid gap-1">
-                  {collections.slice(0, 6).map((collection) => (
-                    <Link
-                      className="rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface hover:text-accent"
-                      href={`/collections/${collection.slug}`}
-                      key={collection.id}
-                      onClick={closeMobilePanels}
-                    >
-                      {collection.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-lg border border-border p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">Product Families</p>
-                <div className="grid gap-1">
-                  {categories.slice(0, 6).map((category) => (
-                    <Link
-                      className="rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface hover:text-accent"
-                      href={`/categories/${category.slug}`}
-                      key={category.id}
-                      onClick={closeMobilePanels}
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
               <Link className="rounded-lg px-3 py-3 text-sm font-medium text-text-primary hover:bg-surface hover:text-accent" href="/downloads" onClick={closeMobilePanels}>
                 Downloads
               </Link>

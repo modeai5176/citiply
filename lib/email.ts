@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import type { QuoteFormValues } from "@/lib/validations";
+import type { ProjectBriefValues, QuoteFormValues } from "@/lib/validations";
 
 type QuoteEmailProduct = {
   code?: string;
@@ -38,6 +38,39 @@ export async function sendQuoteEmail(values: QuoteFormValues, product?: QuoteEma
         <p><strong>CITY:</strong> ${values.city}</p>
         <p><strong>QUANTITY:</strong> ${values.quantity || "-"}</p>
         <p><strong>MESSAGE:</strong> ${values.message || "-"}</p>
+        <p><strong>Received:</strong> ${new Date().toISOString()}</p>
+      </div>
+    `
+  });
+
+  return { skipped: false };
+}
+
+export async function sendLeadEmail(values: ProjectBriefValues, attachmentUrl?: string | null) {
+  const recipient = process.env.QUOTE_RECIPIENT_EMAIL ?? process.env.QUOTE_EMAIL_TO;
+  if (!process.env.RESEND_API_KEY || !recipient) {
+    return { skipped: true };
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const subject = `New Project Brief${values.projectType ? ` - ${values.projectType}` : ""}${values.city ? ` - ${values.city}` : ""}`;
+
+  await resend.emails.send({
+    from: "Citiply Catalogue <quotes@citiply.local>",
+    to: recipient,
+    subject,
+    html: `
+      <div style="font-family:Inter,Arial,sans-serif;color:#1A1A1A;line-height:1.6">
+        <h2>New Project Brief</h2>
+        <p><strong>PROJECT TYPE:</strong> ${values.projectType || "-"}</p>
+        <p><strong>CITY:</strong> ${values.city || "-"}</p>
+        <p><strong>REQUIRED MATERIALS:</strong> ${values.requiredMaterials || "-"}</p>
+        <p><strong>FINISH / MOOD:</strong> ${values.finishMood || "-"}</p>
+        <p><strong>TIMELINE:</strong> ${values.timeline || "-"}</p>
+        <hr />
+        <p><strong>PHONE:</strong> ${values.phone}</p>
+        <p><strong>EMAIL:</strong> ${values.email}</p>
+        <p><strong>ATTACHMENT:</strong> ${attachmentUrl ? `<a href="${attachmentUrl}">${attachmentUrl}</a>` : "-"}</p>
         <p><strong>Received:</strong> ${new Date().toISOString()}</p>
       </div>
     `

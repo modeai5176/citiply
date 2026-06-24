@@ -13,7 +13,7 @@ export function Footer({ catalogues, categories, collections }: { catalogues: Ca
           </div>
           {catalogues.length > 0 ? (
             <div>
-              <h3 className="mb-4 text-sm font-semibold text-accent">Catalogues</h3>
+              <h3 className="mb-4 text-sm font-semibold text-accent">Product Families</h3>
               <div className="grid gap-2 text-sm text-[rgb(var(--color-ivory-rgb)/0.65)]">
                 {catalogues.slice(0, 5).map((catalogue) => <Link className="hover:text-[rgb(var(--color-ivory-rgb))]" href={`/catalogues/${catalogue.slug}`} key={catalogue.id}>{catalogue.name}</Link>)}
               </div>
