@@ -30,7 +30,7 @@ export default async function CatalogueDetailPage({ params }: { params: { slug: 
       <Breadcrumb items={[{ label: catalogue.name }]} />
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-10">
-          <p className="text-sm uppercase tracking-[0.22em] text-text-muted">Catalogue</p>
+          <p className="text-sm uppercase tracking-[0.22em] text-text-muted">Product Family</p>
           <h1 className="mt-2 text-4xl font-semibold">{catalogue.name}</h1>
           {catalogue.description ? <p className="mt-3 max-w-2xl text-lg leading-7 text-text-secondary">{catalogue.description}</p> : null}
         </div>

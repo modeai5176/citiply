@@ -21,14 +21,46 @@ const IMAGES = {
   ]
 };
 
+// Product Families = top-level navigation (stored in the `catalogues` table).
+const CATALOGUES_SEED = [
+  { name: "Veneers", slug: "veneers", description: "Natural, exotic, dyed, and textured wood veneers for refined surfaces.", sort_order: 1 },
+  { name: "Panels", slug: "panels", description: "Decorative fluted, grooved, and acoustic wall panels.", sort_order: 2 },
+  { name: "Doors", slug: "doors", description: "Premium door surfaces and matching systems for interiors.", sort_order: 3 },
+  { name: "Plywood", slug: "plywood", description: "Dependable engineered substrates for production teams.", sort_order: 4 },
+  { name: "Laminates", slug: "laminates", description: "Durable decorative laminates for fast specification.", sort_order: 5 },
+  { name: "Flooring", slug: "flooring", description: "Architectural flooring textures with commercial performance.", sort_order: 6 },
+  { name: "Exterior", slug: "exterior", description: "Weather-ready cladding and facade surfaces.", sort_order: 7 },
+  { name: "Millwork", slug: "millwork", description: "Bespoke millwork and architectural solutions.", sort_order: 8 }
+];
+
+// Categories = second-level filters within a Product Family (the `categories` table).
+// `catalogue_slug` links each filter to its parent family.
 const CATEGORIES_SEED = [
-  { name: "Natural Veneers", slug: "natural-veneers", description: "Premium natural wood veneers from around the world", sort_order: 1 },
-  { name: "Exotic Veneers", slug: "exotic-veneers", description: "Rare and specialty exotic wood veneers", sort_order: 2 },
-  { name: "Wall Panels", slug: "wall-panels", description: "Decorative fluted and groove wall panels", sort_order: 3 },
-  { name: "Specialty Series", slug: "specialty-series", description: "Unique surface treatment series", sort_order: 4 },
-  { name: "Coloured Veneers", slug: "coloured-veneers", description: "Pre-finished coloured and dyed veneers", sort_order: 5 },
-  { name: "Textured Veneers", slug: "textured-veneers", description: "Rough cut, torched, and weathered surfaces", sort_order: 6 },
-  { name: "Premium Collections", slug: "premium-collections", description: "Curated premium veneer collections", sort_order: 7 }
+  // Veneers family — real content
+  { name: "Natural", slug: "natural-veneers", catalogue_slug: "veneers", description: "Premium natural wood veneers from around the world", sort_order: 1 },
+  { name: "Exotic", slug: "exotic-veneers", catalogue_slug: "veneers", description: "Rare and specialty exotic wood veneers", sort_order: 2 },
+  { name: "Dyed / Coloured", slug: "coloured-veneers", catalogue_slug: "veneers", description: "Pre-finished coloured and dyed veneers", sort_order: 3 },
+  { name: "Textured", slug: "textured-veneers", catalogue_slug: "veneers", description: "Rough cut, torched, and weathered surfaces", sort_order: 4 },
+  { name: "Smoked / Fumed / Specialty", slug: "specialty-series", catalogue_slug: "veneers", description: "Unique surface treatment and specialty series", sort_order: 5 },
+  { name: "Premium / Limited Collections", slug: "premium-collections", catalogue_slug: "veneers", description: "Curated premium veneer collections", sort_order: 6 },
+  // Panels family — placeholder content
+  { name: "Fluted", slug: "fluted-panels", catalogue_slug: "panels", description: "Decorative fluted wall panels", sort_order: 1 },
+  { name: "Acoustic", slug: "acoustic-panels", catalogue_slug: "panels", description: "Sound-absorbing slat panels", sort_order: 2 },
+  // Doors family — placeholder content
+  { name: "Flush Doors", slug: "flush-doors", catalogue_slug: "doors", description: "Smooth flush door surfaces", sort_order: 1 },
+  { name: "Designer Doors", slug: "designer-doors", catalogue_slug: "doors", description: "Statement designer door faces", sort_order: 2 },
+  // Plywood family — placeholder content
+  { name: "Commercial Plywood", slug: "commercial-plywood", catalogue_slug: "plywood", description: "Everyday commercial-grade plywood", sort_order: 1 },
+  { name: "Marine Plywood", slug: "marine-plywood", catalogue_slug: "plywood", description: "Water-resistant marine plywood", sort_order: 2 },
+  // Laminates family — placeholder content
+  { name: "Solid Laminates", slug: "solid-laminates", catalogue_slug: "laminates", description: "Solid colour decorative laminates", sort_order: 1 },
+  { name: "Woodgrain Laminates", slug: "woodgrain-laminates", catalogue_slug: "laminates", description: "Woodgrain finish laminates", sort_order: 2 },
+  // Flooring family — placeholder content
+  { name: "Engineered Wood", slug: "engineered-wood-flooring", catalogue_slug: "flooring", description: "Engineered wood flooring planks", sort_order: 1 },
+  // Exterior family — placeholder content
+  { name: "Facade Cladding", slug: "facade-cladding", catalogue_slug: "exterior", description: "Weather-ready facade cladding", sort_order: 1 },
+  // Millwork family — placeholder content
+  { name: "Architectural Solutions", slug: "architectural-solutions", catalogue_slug: "millwork", description: "Bespoke architectural millwork", sort_order: 1 }
 ];
 
 const COLLECTIONS_SEED = [
@@ -45,7 +77,19 @@ const COLLECTIONS_SEED = [
   { name: "Metallico", slug: "metallico", category_slug: "specialty-series", tagline: "Dark metal aesthetic.", description: "Deep rich surfaces with metallic undertones for statement interiors." },
   { name: "FADED", slug: "faded", category_slug: "coloured-veneers", tagline: "Soft colour. Natural base.", description: "Dyed veneers with faded antique-inspired palettes." },
   { name: "THUNDER", slug: "thunder", category_slug: "coloured-veneers", tagline: "Gold. Drama. Precision.", description: "Gold inlay and acrylico surfaces for demanding luxury projects." },
-  { name: "Fluted Wall Panels", slug: "fluted-wall-panels", category_slug: "wall-panels", tagline: "Linear walls. Fast specification.", description: "Decorative wall panel references for premium interior surfaces." }
+  { name: "Fluted Wall Panels", slug: "fluted-wall-panels", category_slug: "fluted-panels", tagline: "Linear walls. Fast specification.", description: "Decorative wall panel references for premium interior surfaces." },
+  // Placeholder collections for the non-Veneer families
+  { name: "Reeded Series", slug: "reeded-series", category_slug: "fluted-panels", tagline: "Quiet rhythm.", description: "Reeded fluted panel designs for warm interior walls." },
+  { name: "SoundSlat", slug: "soundslat", category_slug: "acoustic-panels", tagline: "Calm by design.", description: "Acoustic slat panels that absorb sound and add warmth." },
+  { name: "Atelier Flush", slug: "atelier-flush", category_slug: "flush-doors", tagline: "Seamless surfaces.", description: "Flush door faces with veneer and laminate options." },
+  { name: "Signature Doors", slug: "signature-doors", category_slug: "designer-doors", tagline: "First impressions.", description: "Designer door faces for statement entrances." },
+  { name: "BuildPly", slug: "buildply", category_slug: "commercial-plywood", tagline: "Built to last.", description: "Reliable commercial-grade plywood for daily production." },
+  { name: "AquaPly", slug: "aquaply", category_slug: "marine-plywood", tagline: "Water-ready.", description: "Marine plywood engineered for moisture resistance." },
+  { name: "ColourCore", slug: "colourcore", category_slug: "solid-laminates", tagline: "Solid statements.", description: "Solid colour decorative laminates in a full palette." },
+  { name: "GrainLam", slug: "grainlam", category_slug: "woodgrain-laminates", tagline: "Real wood look.", description: "Woodgrain laminates with authentic texture." },
+  { name: "TerraPlank", slug: "terraplank", category_slug: "engineered-wood-flooring", tagline: "Underfoot luxury.", description: "Engineered wood flooring with commercial durability." },
+  { name: "FacadeX", slug: "facadex", category_slug: "facade-cladding", tagline: "Weatherproof beauty.", description: "Exterior facade cladding built for the elements." },
+  { name: "Bespoke Studio", slug: "bespoke-studio", category_slug: "architectural-solutions", tagline: "Made for the brief.", description: "Custom architectural millwork solutions." }
 ];
 
 const PRODUCTS_BY_COLLECTION: Record<string, string[]> = {
@@ -61,11 +105,34 @@ const PRODUCTS_BY_COLLECTION: Record<string, string[]> = {
   torched: ["Torched Charcoal Oak", "Torched Hagburry", "Torched Eucalyptus Figured", "Torched Ironwood", "Torched Tanned Oak", "Torched Yewtree", "Torched Flame Larch", "Torched Flamed Oak", "Torched Tamo Ash", "Torched Poplar Burl", "Torched Flamed Oak Burl", "Torched Exotic Rough White Oak", "Torched Elm", "Torched Maple", "Torched Sycamore", "Torched Ash", "Torched Birch", "Torched Beech", "Torched Red Oak", "Torched Sapeli"],
   faded: ["Faded Antic Oak", "Faded Blue Moon", "Faded Dyed Sycamore", "Faded Dyed Ash", "Faded Dyed Beech", "Faded Dyed Mahogany"],
   thunder: ["Gold Inlay Coffeetree", "Gold Inlay Coffeebin", "Gold Inlay Sassafras", "Acrylico Blackstone", "Acrylico Sassafras"],
-  "fluted-wall-panels": ["Linear Oak", "Linear Walnut", "Reeded Ash", "Groove Teak", "Slimline Ebony"]
+  "fluted-wall-panels": ["Linear Oak", "Linear Walnut", "Reeded Ash", "Groove Teak", "Slimline Ebony"],
+  // Placeholder products for the non-Veneer families
+  "reeded-series": ["Reeded Oak", "Reeded Walnut", "Reeded Teak"],
+  soundslat: ["Slat Oak", "Slat Walnut", "Slat Charcoal"],
+  "atelier-flush": ["Flush Oak", "Flush Walnut", "Flush White"],
+  "signature-doors": ["Signature Teak", "Signature Ebony"],
+  buildply: ["BuildPly 12mm", "BuildPly 18mm"],
+  aquaply: ["AquaPly 12mm", "AquaPly 18mm"],
+  colourcore: ["Snow White", "Graphite", "Terracotta"],
+  grainlam: ["Walnut Grain", "Oak Grain", "Teak Grain"],
+  terraplank: ["Oak Plank", "Walnut Plank", "Smoked Plank"],
+  facadex: ["Cedar Clad", "Charred Clad"],
+  "bespoke-studio": ["Custom Panel", "Custom Reception"]
 };
 
 function getImage(pool: string[], index: number): string {
   return pool[index % pool.length];
+}
+
+// Non-veneer category slugs that should use the panel/board image pool.
+const PANEL_IMAGE_CATEGORIES = new Set([
+  "fluted-panels", "acoustic-panels", "flush-doors", "designer-doors",
+  "commercial-plywood", "marine-plywood", "solid-laminates", "woodgrain-laminates",
+  "engineered-wood-flooring", "facade-cladding", "architectural-solutions"
+]);
+
+function usesPanelImages(categorySlug: string): boolean {
+  return PANEL_IMAGE_CATEGORIES.has(categorySlug);
 }
 
 function slugify(value: string): string {
@@ -105,14 +172,31 @@ async function seed() {
       transport: ws as unknown as WebSocketLikeConstructor
     }
   });
+  const catalogueMap: Record<string, string> = {};
+
+  console.log("Seeding product families (catalogues)...");
+  for (let index = 0; index < CATALOGUES_SEED.length; index += 1) {
+    const catalogue = CATALOGUES_SEED[index];
+    const { data, error } = await supabase
+      .from("catalogues")
+      .upsert({ ...catalogue, image_url: getImage(IMAGES.veneer, index), is_active: true }, { onConflict: "slug" })
+      .select("id, slug")
+      .single();
+    if (error) throw error;
+    catalogueMap[data.slug] = data.id;
+  }
+
   const categoryMap: Record<string, string> = {};
 
   console.log("Seeding categories...");
   for (let index = 0; index < CATEGORIES_SEED.length; index += 1) {
-    const category = CATEGORIES_SEED[index];
+    const { catalogue_slug, ...category } = CATEGORIES_SEED[index];
     const { data, error } = await supabase
       .from("categories")
-      .upsert({ ...category, image_url: getImage(IMAGES.veneer, index), is_active: true }, { onConflict: "slug" })
+      .upsert(
+        { ...category, catalogue_id: catalogueMap[catalogue_slug] ?? null, image_url: getImage(IMAGES.veneer, index), is_active: true },
+        { onConflict: "slug" }
+      )
       .select("id, slug")
       .single();
     if (error) throw error;
@@ -133,7 +217,7 @@ async function seed() {
         category_id: categoryId,
         tagline: collection.tagline,
         description: collection.description,
-        banner_url: getImage(collection.category_slug === "wall-panels" ? IMAGES.panels : IMAGES.veneer, index),
+        banner_url: getImage(usesPanelImages(collection.category_slug) ? IMAGES.panels : IMAGES.veneer, index),
         logo_url: null,
         brochure_url: null,
         is_featured: index < 4,
@@ -155,7 +239,7 @@ async function seed() {
     for (let index = 0; index < names.length; index += 1) {
       const name = names[index];
       const sku = generateSku(collectionSlug, index);
-      const productImage = getImage(collection.category_slug === "wall-panels" ? IMAGES.panels : IMAGES.veneer, index);
+      const productImage = getImage(usesPanelImages(collection.category_slug) ? IMAGES.panels : IMAGES.veneer, index);
       const { data: product, error } = await supabase
         .from("products")
         .upsert({

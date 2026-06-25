@@ -9,7 +9,7 @@ export function EnquiryCartFab() {
 
   return (
     <button
-      className="fixed bottom-24 right-5 z-50 inline-flex cursor-pointer items-center gap-2 rounded-full bg-text-primary px-5 py-3 text-sm font-semibold text-[rgb(var(--color-ivory-rgb))] shadow-premium transition hover:opacity-90"
+      className="fixed bottom-36 right-5 z-50 inline-flex cursor-pointer items-center gap-2 rounded-full bg-text-primary px-5 py-3 text-sm font-semibold text-[rgb(var(--color-ivory-rgb))] shadow-premium transition hover:opacity-90 sm:bottom-40"
       onClick={openDrawer}
       type="button"
     >
