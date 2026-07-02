@@ -10,8 +10,13 @@ gsap.registerPlugin(ScrollTrigger);
 interface Hotspot {
   id: string;
   label: string;
-  x: number; // percentage from left
+  x: number; // percentage from left (desktop 16/9 image space)
   y: number; // percentage from top
+  // Optional mobile overrides — the square crop hides the far left/right of
+  // the 16/9 image, so wide-spread features need repositioning into the
+  // visible center band. Falls back to x/y when omitted.
+  mx?: number;
+  my?: number;
   products: { name: string; type: string; finish: string }[];
 }
 
@@ -120,19 +125,19 @@ const APPLICATIONS: Application[] = [
     label: 'Feature Walls',
     image: '/images/sections/enquiry-texture.png',
     hotspots: [
-      { id: 'fluted', label: 'Fluted Section', x: 26, y: 30, products: [
+      { id: 'fluted', label: 'Fluted Section', x: 15, y: 42, mx: 34, my: 30, products: [
         { name: 'Smoked Oak Fluted Panel', type: 'Fluted Panel', finish: 'Matte' },
       ] },
-      { id: 'figured', label: 'Figured Veneer', x: 48, y: 40, products: [
+      { id: 'figured', label: 'Figured Veneer', x: 62, y: 40, mx: 55, my: 52, products: [
         { name: 'Ebony Grain Wall', type: 'Wall Veneer', finish: 'High-Gloss' },
         { name: 'Figured Maple Sheet', type: 'Decorative Veneer', finish: 'Satin' },
       ] },
-      { id: 'trim', label: 'Edge Trim', x: 70, y: 55, products: [
+      { id: 'trim', label: 'Edge Trim', x: 79, y: 30, mx: 70, my: 72, products: [
         { name: 'Colour-matched Edge-banding', type: 'Trim', finish: 'Matte' },
       ] },
-      { id: 'concealed-door', label: 'Concealed Door', x: 80, y: 70, products: [
-        { name: 'Concealed Veneer Door', type: 'Interior Door', finish: 'Matte' },
-      ] },
+      // { id: 'concealed-door', label: 'Concealed Door', x: 90, y: 62, products: [
+      //   { name: 'Concealed Veneer Door', type: 'Interior Door', finish: 'Matte' },
+      // ] },
     ],
   },
 ];
@@ -199,8 +204,10 @@ export function RoomDiscovery() {
     };
   }, []);
 
-  // Panel slide animation — slides in from the right on desktop, up from the
-  // bottom (as a sheet) on mobile so the details aren't clipped by the image.
+  // Panel slide animation — slides in from the right on desktop, up as a
+  // compact card anchored to the image's lower edge on mobile. On mobile it
+  // only covers the bottom of the image, so the zoomed material (panned into
+  // the upper part of the frame) stays visible.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
@@ -209,7 +216,7 @@ export function RoomDiscovery() {
       gsap.set(panel, { x: 0 });
       gsap.to(panel, activeHotspot
         ? { y: 0, duration: 0.45, ease: 'power3.out' }
-        : { y: '100%', duration: 0.35, ease: 'power3.in' });
+        : { y: '105%', duration: 0.35, ease: 'power3.in' });
     } else {
       gsap.set(panel, { y: 0 });
       gsap.to(panel, activeHotspot
@@ -225,15 +232,35 @@ export function RoomDiscovery() {
 
     const target = hotspots.find((h) => h.id === activeHotspot);
     if (target) {
+      // Use the same mobile-override coords the dot is rendered at, so the zoom
+      // focuses the tapped feature rather than its (cropped-off) desktop spot.
+      const tx = isMobile && target.mx != null ? target.mx : target.x;
+      const ty = isMobile && target.my != null ? target.my : target.y;
       // Pan via translation (not transform-origin) so switching dots while
       // zoomed eases smoothly from one focal point to the next instead of
       // jumping. Origin stays centered; we translate the focal point to center.
       const scale = 1.9;
-      // Clamp the focal point so edge dots don't pan past the image and expose gaps.
+      // Clamp the focal point so edge dots don't pan past the image and expose
+      // gaps. Computed against the active zoom scale (independent of the 1.1
+      // resting scale on the wrapper).
       const maxShift = (1 - 1 / scale) / 2; // furthest the center can move, as a fraction
-      const clamp = (v: number) => Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, v / 100));
-      const xPercent = -(clamp(target.x) - 0.5) * scale * 100;
-      const yPercent = -(clamp(target.y) - 0.5) * scale * 100;
+      const clampX = (v: number) => Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, v / 100));
+      const xPercent = -(clampX(tx) - 0.5) * scale * 100;
+
+      // On mobile the material card occupies the lower part of the image, so
+      // bias the focal point into the UPPER ~40% of the frame — that keeps the
+      // zoomed material fully visible above the card. On desktop, center it.
+      let yFocus: number;
+      if (isMobile) {
+        // Map the target toward 0.4 of the frame height, clamped so we don't
+        // pan past the top/bottom edges.
+        const targetFrac = ty / 100;
+        yFocus = Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, targetFrac * 0.6 + 0.1));
+      } else {
+        yFocus = Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, ty / 100));
+      }
+      const yPercent = -(yFocus - 0.5) * scale * 100;
+
       gsap.to(zoom, {
         scale,
         xPercent,
@@ -243,11 +270,36 @@ export function RoomDiscovery() {
         ease: 'power2.inOut',
       });
     } else {
-      gsap.to(zoom, { scale: 1, xPercent: 0, yPercent: 0, duration: 0.7, ease: 'power2.inOut' });
+      // Resting state is the 1.1 base zoom (not 1) so the image doesn't shrink
+      // when a hotspot is closed.
+      gsap.to(zoom, { scale: 1.1, xPercent: 0, yPercent: 0, duration: 0.7, ease: 'power2.inOut' });
     }
-  }, [activeHotspot, hotspots]);
+  }, [activeHotspot, hotspots, isMobile]);
 
   const activeData = hotspots.find((h) => h.id === activeHotspot);
+
+  // Dots are positioned by container %, but object-cover crops the image when
+  // the container aspect differs from the image's native 16/9. On mobile the
+  // box is 4/5 (taller/narrower) → the sides are center-cropped, so a raw
+  // `left: x%` drifts. Remap image-space coords into the visible window.
+  // (The shared 1.1 wrapper zoom scales dots + image together, so it needs no
+  // handling here.)
+  const IMAGE_RATIO = 16 / 9;
+  const containerRatio = isMobile ? 1 : 16 / 9; // square on mobile, 16/9 desktop
+  function mapHotspot(x: number, y: number) {
+    let visX = 1;
+    let visY = 1;
+    if (containerRatio < IMAGE_RATIO) {
+      visX = containerRatio / IMAGE_RATIO;        // sides cropped
+    } else if (containerRatio > IMAGE_RATIO) {
+      visY = IMAGE_RATIO / containerRatio;        // top/bottom cropped
+    }
+    const originX = (1 - visX) / 2;               // centered crop
+    const originY = (1 - visY) / 2;
+    const cx = (x / 100 - originX) / visX;
+    const cy = (y / 100 - originY) / visY;
+    return { left: `${cx * 100}%`, top: `${cy * 100}%` };
+  }
 
   return (
     <section
@@ -288,24 +340,43 @@ export function RoomDiscovery() {
       </div>
 
       <div className="relative" style={{ maxWidth: '1600px', margin: '2rem auto 0' }}>
-        {/* Room Image */}
-        <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
-          <div ref={zoomRef} className="absolute inset-0">
+        {/* Room Image — square on mobile so it's not tiny; 16/9 on desktop.
+            The taller mobile box center-crops the image sides via object-cover,
+            so the hotspot dots are remapped (mapHotspot) into the visible
+            window to stay pinned to their features. */}
+        <div
+          className="relative w-full overflow-hidden aspect-square sm:aspect-[16/9]"
+        >
+          {/* The base 1.1 zoom lives on this wrapper (via GSAP, see the zoom
+              effect) — not on the img — so the hotspot dots scale in lockstep
+              with the image; otherwise off-centre dots like the entry door
+              drift away from their target. */}
+          <div ref={zoomRef} className="absolute inset-0" style={{ transform: 'scale(1.1)' }}>
             <Image
               src={application.image}
               alt={`${application.label} interior showcasing CITIPLY surfaces and materials`}
               fill
-              className="object-cover scale-[1.1]"
+              className="object-cover"
               sizes="100vw"
             />
 
             {/* Hotspot Markers — inside the zoom wrapper so they pan with the image.
                 Shown on all screen sizes (callouts scale down via CSS media queries). */}
             {hotspots.map((hotspot) => {
+                // Use mobile overrides where provided so wide-spread features
+                // stay inside the square crop's visible band.
+                const hx = isMobile && hotspot.mx != null ? hotspot.mx : hotspot.x;
+                const hy = isMobile && hotspot.my != null ? hotspot.my : hotspot.y;
+                const pos = mapHotspot(hx, hy);
+                // Flip/drop are decided from the *mapped* on-screen position (a
+                // percentage of the visible box) — not the raw image-space x/y —
+                // so callouts stay on-screen after the crop remap too.
+                const mappedX = parseFloat(pos.left);
+                const mappedY = parseFloat(pos.top);
                 // Flip the callout to the left for dots on the right half so it stays on-screen.
-                const flip = hotspot.x > 55;
+                const flip = mappedX > 55;
                 // Drop the callout below the dot for dots near the top so the box isn't clipped.
-                const drop = hotspot.y < 15;
+                const drop = mappedY < 15;
                 const isActive = activeHotspot === hotspot.id;
                 // Hide the other dots while one is active.
                 const dimmed = activeHotspot !== null && !isActive;
@@ -313,7 +384,7 @@ export function RoomDiscovery() {
                   <button
                     key={hotspot.id}
                     className={`hotspot-marker${isActive ? ' is-active' : ''}${flip ? ' flip' : ''}${drop ? ' drop' : ''}${dimmed ? ' is-hidden' : ''}`}
-                    style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
+                    style={pos}
                     onClick={() => setActiveHotspot(isActive ? null : hotspot.id)}
                     aria-label={`Explore ${hotspot.label}`}
                   >
@@ -331,35 +402,52 @@ export function RoomDiscovery() {
               })}
           </div>
 
-          {/* Backdrop dim when panel open — covers the image on desktop, the
-              whole viewport on mobile (where the panel is a bottom sheet). */}
+          {/* Backdrop dim when panel open — a light scrim over the image so the
+              focused material still reads. On mobile it's confined to the image
+              (not fixed over the whole viewport) and tapping it closes. */}
           {activeHotspot && (
             <div
-              className={`${isMobile ? 'fixed z-40' : 'absolute z-10'} inset-0 bg-[rgb(var(--scrim)/0.3)] transition-opacity duration-500 cursor-pointer`}
+              className="absolute inset-0 z-10 bg-[rgb(var(--scrim)/0.25)] transition-opacity duration-500 cursor-pointer"
               onClick={() => setActiveHotspot(null)}
             />
           )}
         </div>
 
-        {/* Slide-in Panel — side panel on desktop, bottom sheet on mobile */}
+        {/* Details Panel —
+            Desktop: full-height side panel sliding in from the right.
+            Mobile: a compact card anchored to the image's lower edge. It only
+            covers the bottom of the image so the zoomed material (panned into
+            the upper part of the frame) stays visible above it. */}
         <div
           ref={panelRef}
           className={isMobile
-            ? "fixed bottom-0 left-0 right-0 z-50 overflow-y-auto rounded-t-2xl shadow-2xl"
+            ? "absolute bottom-0 left-0 right-0 z-30 overflow-y-auto rounded-t-2xl shadow-2xl"
             : "absolute top-0 right-0 h-full overflow-y-auto z-20"}
           style={{
             width: isMobile ? '100%' : '400px',
             maxWidth: '100%',
-            maxHeight: isMobile ? '75vh' : undefined,
-            background: 'var(--color-ivory)',
+            // Mobile: cap so the card never eats more than the lower ~44% of the
+            // image, keeping the focused material in view.
+            maxHeight: isMobile ? '44%' : undefined,
+            background: isMobile ? 'rgb(var(--color-ivory-rgb) / 0.97)' : 'var(--color-ivory)',
+            backdropFilter: isMobile ? 'blur(10px)' : undefined,
+            WebkitBackdropFilter: isMobile ? 'blur(10px)' : undefined,
             borderLeft: isMobile ? 'none' : '1px solid var(--color-beige)',
             borderTop: isMobile ? '1px solid var(--color-beige)' : 'none',
-            transform: isMobile ? 'translateY(100%)' : 'translateX(100%)',
+            transform: isMobile ? 'translateY(105%)' : 'translateX(100%)',
           }}
         >
           {activeData && (
-            <div className="p-6 sm:p-8">
-              <div className="flex items-center justify-between mb-8">
+            <div className="p-4 sm:p-8">
+              {/* Mobile grab-handle affordance */}
+              {isMobile && (
+                <div
+                  aria-hidden="true"
+                  className="mx-auto mb-3 h-1 w-10 rounded-full"
+                  style={{ background: 'var(--color-beige)' }}
+                />
+              )}
+              <div className="flex items-center justify-between mb-4 sm:mb-8">
                 <span className="text-eyebrow" style={{ color: 'var(--color-gold)' }}>
                   {activeData.label}
                 </span>
@@ -373,14 +461,14 @@ export function RoomDiscovery() {
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {activeData.products.map((product, i) => (
                   <div
                     key={i}
-                    className="pb-6"
+                    className="pb-4 sm:pb-6"
                     style={{ borderBottom: i < activeData.products.length - 1 ? '1px solid var(--color-beige)' : 'none' }}
                   >
-                    <h3 className="font-serif text-lg mb-1" style={{ color: 'var(--color-charcoal)' }}>
+                    <h3 className="font-serif text-base sm:text-lg mb-1" style={{ color: 'var(--color-charcoal)' }}>
                       {product.name}
                     </h3>
                     <p className="text-sm mb-1" style={{ color: 'var(--color-stone)' }}>
