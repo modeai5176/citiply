@@ -5,12 +5,12 @@ import gsap from 'gsap';
 import Image from 'next/image';
 
 export const VENEER_PANEL_IMAGES = [
-  '/loader/veneer-01-ash.png',
-  '/loader/veneer-02-honey-oak.png',
-  '/loader/veneer-03-taupe.png',
-  '/loader/veneer-04-walnut.png',
-  '/loader/veneer-05-cinnamon.png',
-  '/loader/veneer-06-espresso.png',
+  '/loader/veneer-01-ash.webp',
+  '/loader/veneer-02-honey-oak.webp',
+  '/loader/veneer-03-taupe.webp',
+  '/loader/veneer-04-walnut.webp',
+  '/loader/veneer-05-cinnamon.webp',
+  '/loader/veneer-06-espresso.webp',
 ];
 
 function compactElements<T extends Element>(elements: Array<T | null>) {
