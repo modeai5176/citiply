@@ -47,8 +47,11 @@ export function Header({ families }: { families: ProductFamily[] }) {
     setMobileSearchOpen(false);
   }
 
-  /* When over hero (not scrolled): transparent bg, ivory text, no borders, hide utility bar.
-     When scrolled: solid background, normal text, borders visible. */
+  /* When over hero (not scrolled): dark translucent bg, ivory text, subtle
+     borders, hide utility bar. When scrolled: solid ivory background, normal
+     text, borders visible.
+     `isTransparent` = the "over hero" state (kept as the prop name the child
+     components already understand: it drives light-on-dark styling). */
   const isTransparent = !isScrolled && !mobileNavOpen && !mobileSearchOpen;
 
   // Keep the header visible whenever a mobile panel is open, even mid-scroll.
@@ -58,9 +61,12 @@ export function Header({ families }: { families: ProductFamily[] }) {
     <header
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
       style={{
-        background: isTransparent ? 'transparent' : 'rgb(var(--color-ivory-rgb) / 0.97)',
-        backdropFilter: isTransparent ? 'none' : 'blur(12px)',
-        WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
+        // Over hero: dark translucent bar (light text). Scrolled: solid ivory.
+        background: isTransparent
+          ? 'rgb(var(--scrim) / 0.55)'
+          : 'rgb(var(--color-ivory-rgb) / 0.97)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
       }}
     >
@@ -78,7 +84,7 @@ export function Header({ families }: { families: ProductFamily[] }) {
       <div
         className="transition-colors duration-500"
         style={{
-          borderBottom: isTransparent ? '1px solid rgb(var(--on-image) / 0.12)' : '1px solid var(--color-beige)',
+          borderBottom: isTransparent ? '1px solid rgb(var(--on-image) / 0.18)' : '1px solid var(--color-beige)',
         }}
       >
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-3 sm:h-20 sm:px-4 lg:px-5">

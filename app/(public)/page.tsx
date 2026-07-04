@@ -4,6 +4,7 @@ import { VeneerArt } from "@/components/home/VeneerArt";
 import { DoorsFeature } from "@/components/home/DoorsFeature";
 import { PlywoodFeature } from "@/components/home/PlywoodFeature";
 import { RoomDiscovery } from "@/components/home/RoomDiscovery";
+import { InteractiveGallery } from "@/components/home/InteractiveGallery";
 import { ProjectsShowcase } from "@/components/home/ProjectsShowcase";
 import { MoodCollections } from "@/components/home/MoodCollections";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
@@ -25,6 +26,7 @@ export default async function HomePage() {
       <DoorsFeature />
       <PlywoodFeature />
       <RoomDiscovery />
+      <InteractiveGallery />
       <ProjectsShowcase projects={projects} />
       <ArchitectMode />
       <MoodCollections />
