@@ -121,7 +121,7 @@ export function GlobalSearch({ autoFocus = false, defaultQuery = "", isTranspare
       </div>
 
       {open && results ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-ivory shadow-2xl sm:max-h-[520px]">
+        <div data-lenis-prevent className="absolute left-0 right-0 top-full z-50 mt-2 max-h-[70vh] overflow-y-auto overscroll-contain rounded-xl border border-border bg-ivory shadow-2xl sm:max-h-[520px]">
           {loading ? (
             <div className="grid gap-3 p-4">
               {[1, 2, 3].map((item) => <div className="h-14 animate-pulse rounded-lg bg-surface" key={item} />)}

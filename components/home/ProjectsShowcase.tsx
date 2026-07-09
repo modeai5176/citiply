@@ -1,45 +1,58 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import DomeGallery from "@/components/home/DomeGallery";
 import type { Project } from "@/lib/projects-data";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function ProjectsShowcase({ projects }: { projects: Project[] }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const domeRef = useRef<HTMLDivElement>(null);
+
+  // Collect every project image (hero + gallery) into one de-duplicated pool
+  // for the dome tiles.
+  const images = useMemo(() => {
+    const pool: { src: string; alt: string }[] = [];
+    const seen = new Set<string>();
+    for (const project of projects) {
+      const all = [project.heroImage, ...(project.gallery ?? [])];
+      for (const src of all) {
+        if (src && !seen.has(src)) {
+          seen.add(src);
+          pool.push({ src, alt: project.name });
+        }
+      }
+    }
+    return pool;
+  }, [projects]);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const grid = gridRef.current;
-    if (!section || !grid) return;
+    const dome = domeRef.current;
+    if (!section || !dome) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const items = grid.querySelectorAll(".projects-tile");
 
-    gsap.fromTo(
-      items,
-      { opacity: 0, y: prefersReducedMotion ? 0 : 40, scale: prefersReducedMotion ? 1 : 0.97 },
+    const anim = gsap.fromTo(
+      dome,
+      { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
       {
         opacity: 1,
         y: 0,
-        scale: 1,
         duration: prefersReducedMotion ? 0.6 : 1.1,
         ease: prefersReducedMotion ? "none" : "power3.out",
-        stagger: 0.12,
-        scrollTrigger: { trigger: section, start: "top 75%" }
+        scrollTrigger: { trigger: section, start: "top 75%" },
       }
     );
 
     return () => {
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === section) st.kill();
-      });
+      anim.scrollTrigger?.kill();
+      anim.kill();
     };
   }, []);
 
@@ -56,7 +69,7 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
             </h2>
             <p className="mt-4 max-w-xl font-sans text-sm" style={{ color: "var(--color-stone)", lineHeight: 1.7 }}>
               See how CITIPLY surfaces solve actual design scenarios — from residences to retail, doors to
-              feature walls. Select a space to explore matched materials, tones and collections.
+              feature walls. Drag to spin the gallery and tap any image to explore it.
             </p>
           </div>
           <Link
@@ -70,12 +83,23 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
+      </div>
 
-        <div ref={gridRef} className="projects-grid grid gap-4 md:gap-5">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} className={`projects-tile projects-tile-${i}`} />
-          ))}
-        </div>
+      {/* Interactive dome gallery — draggable sphere of project imagery, in
+          original color. Sits full-bleed so the sphere has room to breathe. */}
+      <div
+        ref={domeRef}
+        className="relative mx-auto h-[70vh] min-h-[440px] w-full max-w-[1600px] overflow-hidden"
+        style={{ background: "rgb(var(--scrim))", borderRadius: "24px" }}
+      >
+        <DomeGallery
+          images={images}
+          grayscale={false}
+          overlayBlurColor="rgb(var(--scrim))"
+          imageBorderRadius="16px"
+          openedImageBorderRadius="16px"
+          fit={0.55}
+        />
       </div>
     </section>
   );

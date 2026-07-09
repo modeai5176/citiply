@@ -7,68 +7,11 @@
    ═══════════════════════════════════════════════ */
 
 :root,
-[data-theme="warm-oak"] {
-  color-scheme: light;
-
-  /* ── Color Tokens (Warm Oak — default) ──
-     Each color has a hex var AND an "-rgb" channel triplet so we can build
-     translucent variants with rgb(var(--x-rgb) / <alpha>) — fully theme-aware. */
-  --color-ivory: #F7F3EC;       --color-ivory-rgb: 247 243 236;
-  --color-beige: #EAE0D0;       --color-beige-rgb: 234 224 208;
-  --color-sand: #D9C7A8;        --color-sand-rgb: 217 199 168;
-  --color-stone: #BDB0A0;       --color-stone-rgb: 189 176 160;
-  --color-soft-grey: #C7C2B8;   --color-soft-grey-rgb: 199 194 184;
-  --color-charcoal: #1E1B18;    --color-charcoal-rgb: 30 27 24;
-  --color-espresso: #2A1B12;    --color-espresso-rgb: 42 27 18;
-  --color-deep-brown: #3B2A1E;  --color-deep-brown-rgb: 59 42 30;
-  --color-gold: #B8924C;        --color-gold-rgb: 184 146 76;
-
-  /* ── Semantic aliases (used by overlays / on-image text) ── */
-  --bg: var(--color-ivory);
-  --surface: #F5F3EF;
-  --border: var(--color-beige);
-  --text-primary: var(--color-charcoal);
-  --text-secondary: #555550;
-  --text-muted: var(--color-stone);
-  --accent: var(--color-gold);
-  --accent-hover: #C9A35B;
-  /* Text that sits on top of dark imagery (hero/loader) — light in every theme */
-  --on-image: 247 243 236;
-  /* Scrim gradient base for image overlays (dark in every theme) */
-  --scrim: 30 27 24;
-}
-
-[data-theme="slate-brass"] {
-  color-scheme: light;
-
-  /* ── Slate & Brass (cool light) ── */
-  --color-ivory: #F4F4F2;       --color-ivory-rgb: 244 244 242;
-  --color-beige: #DEDDD7;       --color-beige-rgb: 222 221 215;
-  --color-sand: #CFCDC4;        --color-sand-rgb: 207 205 196;
-  --color-stone: #9A9A93;       --color-stone-rgb: 154 154 147;
-  --color-soft-grey: #B6B5AE;   --color-soft-grey-rgb: 182 181 174;
-  --color-charcoal: #1C1D1F;    --color-charcoal-rgb: 28 29 31;
-  --color-espresso: #232427;    --color-espresso-rgb: 35 36 39;
-  --color-deep-brown: #33342F;  --color-deep-brown-rgb: 51 52 47;
-  --color-gold: #A8893F;        --color-gold-rgb: 168 137 63;
-
-  --bg: var(--color-ivory);
-  --surface: #ECECE8;
-  --border: var(--color-beige);
-  --text-primary: var(--color-charcoal);
-  --text-secondary: #565752;
-  --text-muted: var(--color-stone);
-  --accent: var(--color-gold);
-  --accent-hover: #BE9C4C;
-  --on-image: 244 244 242;
-  --scrim: 28 29 31;
-}
-
 [data-theme="noir-walnut"] {
   color-scheme: dark;
 
-  /* ── Noir Walnut (dark) ──
-     bg/surface are now dark and text is light; "ivory" stays the name of the
+  /* ── Noir Walnut (dark) — the sole theme ──
+     bg/surface are dark and text is light; "ivory" stays the name of the
      primary surface token so existing bg-ivory / text-charcoal usages invert
      correctly (charcoal = the light text on dark bg). */
   --color-ivory: #1A1715;       --color-ivory-rgb: 26 23 21;

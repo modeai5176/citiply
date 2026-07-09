@@ -9,7 +9,6 @@ import { UtilityBar } from "@/components/layout/UtilityBar";
 import { useQuoteModal } from "@/components/catalogue/QuoteModal";
 import type { ProductFamily } from "@/lib/types";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
-import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 
 export function Header({ families }: { families: ProductFamily[] }) {
   const { openQuote } = useQuoteModal();
@@ -61,12 +60,12 @@ export function Header({ families }: { families: ProductFamily[] }) {
     <header
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
       style={{
-        // Over hero: dark translucent bar (light text). Scrolled: solid ivory.
+        // Over hero: fully transparent (no bg/blur). Scrolled: solid ivory.
         background: isTransparent
-          ? 'rgb(var(--scrim) / 0.55)'
+          ? 'transparent'
           : 'rgb(var(--color-ivory-rgb) / 0.97)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: isTransparent ? 'none' : 'blur(12px)',
+        WebkitBackdropFilter: isTransparent ? 'none' : 'blur(12px)',
         transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
       }}
     >
@@ -84,7 +83,7 @@ export function Header({ families }: { families: ProductFamily[] }) {
       <div
         className="transition-colors duration-500"
         style={{
-          borderBottom: isTransparent ? '1px solid rgb(var(--on-image) / 0.18)' : '1px solid var(--color-beige)',
+          borderBottom: isTransparent ? '1px solid transparent' : '1px solid var(--color-beige)',
         }}
       >
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-3 sm:h-20 sm:px-4 lg:px-5">
@@ -92,7 +91,10 @@ export function Header({ families }: { families: ProductFamily[] }) {
           <Link
             href="/"
             className="shrink-0 text-xl font-semibold tracking-[0.14em] sm:text-2xl sm:tracking-[0.18em] transition-colors duration-500"
-            style={{ color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)' }}
+            style={{
+              color: isTransparent ? 'rgb(var(--on-image))' : 'var(--color-charcoal)',
+              textShadow: isTransparent ? '0 2px 12px rgb(var(--scrim) / 0.55)' : 'none',
+            }}
           >
             CITIPLY
           </Link>
@@ -130,14 +132,8 @@ export function Header({ families }: { families: ProductFamily[] }) {
             ))}
           </nav>
 
-          {/* Search (desktop) */}
-          <div className="hidden w-44 2xl:w-52 xl:block transition-all duration-500">
-            <GlobalSearch isTransparent={isTransparent} />
-          </div>
-
           {/* Actions */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <ThemeSwitcher isTransparent={isTransparent} />
             <Button
               className="hidden sm:inline-flex transition-all duration-500"
               style={isTransparent ? {
@@ -152,14 +148,14 @@ export function Header({ families }: { families: ProductFamily[] }) {
               Request Quote
             </Button>
             <button
-              className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
+              className="cursor-pointer rounded-full p-2 transition-all duration-300"
               style={{
                 border: `1px solid ${isTransparent ? 'rgb(var(--on-image) / 0.25)' : 'var(--color-beige)'}`,
-                color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
+                color: isTransparent ? 'rgb(var(--on-image))' : 'var(--color-charcoal)',
               }}
               aria-label={mobileSearchOpen ? "Close search" : "Open search"}
               aria-expanded={mobileSearchOpen}
-              aria-controls="mobile-header-search"
+              aria-controls="header-search"
               onClick={() => {
                 setMobileSearchOpen((open) => !open);
                 setMobileNavOpen(false);
@@ -186,8 +182,10 @@ export function Header({ families }: { families: ProductFamily[] }) {
           </div>
         </div>
         {mobileSearchOpen ? (
-          <div id="mobile-header-search" className="border-t border-border bg-background px-4 py-4 sm:px-6 lg:hidden">
-            <GlobalSearch autoFocus />
+          <div id="header-search" className="border-t border-border bg-background px-4 py-4 sm:px-6">
+            <div className="mx-auto max-w-[1400px]">
+              <GlobalSearch autoFocus />
+            </div>
           </div>
         ) : null}
         {mobileNavOpen ? (
