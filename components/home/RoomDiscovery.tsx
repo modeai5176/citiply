@@ -204,21 +204,23 @@ export function RoomDiscovery() {
     };
   }, []);
 
-  // Panel slide animation — slides in from the right on desktop, up as a
-  // compact card anchored to the image's lower edge on mobile. On mobile it
-  // only covers the bottom of the image, so the zoomed material (panned into
-  // the upper part of the frame) stays visible.
+  // Panel reveal animation — slides in from the right (overlaid) on desktop;
+  // on mobile it's an in-flow block below the image that expands/collapses its
+  // height so the detail opens BELOW the photo rather than over it.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
 
     if (isMobile) {
-      gsap.set(panel, { x: 0 });
-      gsap.to(panel, activeHotspot
-        ? { y: 0, duration: 0.45, ease: 'power3.out' }
-        : { y: '105%', duration: 0.35, ease: 'power3.in' });
+      // Reset any desktop transform, then animate height open/closed.
+      gsap.set(panel, { x: 0, y: 0 });
+      if (activeHotspot) {
+        gsap.to(panel, { height: 'auto', duration: 0.45, ease: 'power3.out' });
+      } else {
+        gsap.to(panel, { height: 0, duration: 0.35, ease: 'power3.in' });
+      }
     } else {
-      gsap.set(panel, { y: 0 });
+      gsap.set(panel, { y: 0, height: '100%', clearProps: 'height' });
       gsap.to(panel, activeHotspot
         ? { x: 0, duration: 0.5, ease: 'power3.out' }
         : { x: '100%', duration: 0.4, ease: 'power3.in' });
@@ -247,18 +249,9 @@ export function RoomDiscovery() {
       const clampX = (v: number) => Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, v / 100));
       const xPercent = -(clampX(tx) - 0.5) * scale * 100;
 
-      // On mobile the material card occupies the lower part of the image, so
-      // bias the focal point into the UPPER ~40% of the frame — that keeps the
-      // zoomed material fully visible above the card. On desktop, center it.
-      let yFocus: number;
-      if (isMobile) {
-        // Map the target toward 0.4 of the frame height, clamped so we don't
-        // pan past the top/bottom edges.
-        const targetFrac = ty / 100;
-        yFocus = Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, targetFrac * 0.6 + 0.1));
-      } else {
-        yFocus = Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, ty / 100));
-      }
+      // The detail now opens below the image (mobile) or beside it (desktop),
+      // so nothing covers the photo — center the focal point on both.
+      const yFocus = Math.max(0.5 - maxShift, Math.min(0.5 + maxShift, ty / 100));
       const yPercent = -(yFocus - 0.5) * scale * 100;
 
       gsap.to(zoom, {
@@ -414,27 +407,23 @@ export function RoomDiscovery() {
         </div>
 
         {/* Details Panel —
-            Desktop: full-height side panel sliding in from the right.
-            Mobile: a compact card anchored to the image's lower edge. It only
-            covers the bottom of the image so the zoomed material (panned into
-            the upper part of the frame) stays visible above it. */}
+            Desktop: full-height side panel sliding in from the right, overlaid
+            on the image.
+            Mobile: a normal in-flow block that reveals BELOW the image, so the
+            detail never covers the photo. */}
         <div
           ref={panelRef}
           className={isMobile
-            ? "absolute bottom-0 left-0 right-0 z-30 overflow-y-auto rounded-t-2xl shadow-2xl"
+            ? "overflow-hidden"
             : "absolute top-0 right-0 h-full overflow-y-auto z-20"}
           style={{
             width: isMobile ? '100%' : '400px',
             maxWidth: '100%',
-            // Mobile: cap so the card never eats more than the lower ~44% of the
-            // image, keeping the focused material in view.
-            maxHeight: isMobile ? '44%' : undefined,
-            background: isMobile ? 'rgb(var(--color-ivory-rgb) / 0.97)' : 'var(--color-ivory)',
-            backdropFilter: isMobile ? 'blur(10px)' : undefined,
-            WebkitBackdropFilter: isMobile ? 'blur(10px)' : undefined,
+            background: 'var(--color-ivory)',
             borderLeft: isMobile ? 'none' : '1px solid var(--color-beige)',
             borderTop: isMobile ? '1px solid var(--color-beige)' : 'none',
-            transform: isMobile ? 'translateY(105%)' : 'translateX(100%)',
+            transform: isMobile ? 'none' : 'translateX(100%)',
+            height: isMobile ? 0 : undefined,
           }}
         >
           {activeData && (

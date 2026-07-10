@@ -5,31 +5,53 @@ import { Sparkles, X } from "lucide-react";
 import { ProjectBriefModal } from "@/components/lead/ProjectBriefModal";
 
 export function ProjectBriefStrip() {
-  const [visible, setVisible] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Reveal after mount (so SSR/markup is stable). Dismissal is in-memory only,
-  // so the strip returns on every reload.
+  // Reveal only once the user has scrolled past the hero section (or, on pages
+  // without a hero, past one viewport). Dismissal is in-memory only, so the
+  // strip returns on every reload.
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const delay = prefersReducedMotion ? 0 : 600;
-    const timer = window.setTimeout(() => setVisible(true), delay);
-    return () => window.clearTimeout(timer);
+    function threshold() {
+      const hero = document.getElementById("hero-section");
+      if (hero) {
+        // Reveal a bit before the hero fully leaves the viewport.
+        return hero.getBoundingClientRect().bottom + window.scrollY - window.innerHeight * 0.4;
+      }
+      return window.innerHeight * 0.6;
+    }
+    function onScroll() {
+      setRevealed(window.scrollY > threshold());
+    }
+    onScroll(); // check initial position
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
+  const visible = revealed && !dismissed;
+
   function dismiss() {
-    setVisible(false);
+    setDismissed(true);
   }
 
   return (
     <>
-      {visible ? (
-        <div
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-[rgb(var(--color-gold-rgb)/0.35)] shadow-premium transition-transform duration-500"
-          style={{ background: "rgb(var(--color-charcoal-rgb))" }}
-          role="region"
-          aria-label="Project brief"
-        >
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[rgb(var(--color-gold-rgb)/0.35)] shadow-premium transition-transform duration-500 ease-out"
+        style={{
+          background: "rgb(var(--color-charcoal-rgb))",
+          transform: visible ? "translateY(0)" : "translateY(100%)",
+          pointerEvents: visible ? "auto" : "none",
+        }}
+        aria-hidden={!visible}
+        role="region"
+        aria-label="Project brief"
+      >
           <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-3 sm:px-6">
             <Sparkles className="hidden h-5 w-5 shrink-0 text-[rgb(var(--color-gold-rgb))] sm:block" />
             <div className="min-w-0 flex-1">
@@ -56,8 +78,7 @@ export function ProjectBriefStrip() {
               <X className="h-4 w-4" />
             </button>
           </div>
-        </div>
-      ) : null}
+      </div>
 
       <ProjectBriefModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
