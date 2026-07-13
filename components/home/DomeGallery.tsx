@@ -23,6 +23,10 @@ type DomeGalleryProps = {
   imageBorderRadius?: string;
   openedImageBorderRadius?: string;
   grayscale?: boolean;
+  /** Continuously rotate the sphere like a spinning globe when idle. */
+  autoSpin?: boolean;
+  /** Degrees per second for the idle auto-spin. */
+  autoSpinSpeed?: number;
 };
 
 type ItemDef = {
@@ -122,6 +126,8 @@ export default function DomeGallery({
   imageBorderRadius = "30px",
   openedImageBorderRadius = "30px",
   grayscale = false,
+  autoSpin = false,
+  autoSpinSpeed = 6,
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -149,6 +155,12 @@ export default function DomeGallery({
   const openingRef = useRef(false);
   const openStartedAtRef = useRef(0);
   const lastDragEndAt = useRef(0);
+
+  // Idle auto-spin ("globe") state. Paused while hovering, grabbing/dragging,
+  // running inertia, or when an image is opened.
+  const hoveringRef = useRef(false);
+  const autoSpinRAF = useRef<number | null>(null);
+  const autoSpinLastTs = useRef<number | null>(null);
 
   const scrollLockedRef = useRef(false);
   const lockScroll = useCallback(() => {
@@ -302,6 +314,44 @@ export default function DomeGallery({
     [dragDampening, maxVerticalRotationDeg, stopInertia]
   );
 
+  // Idle auto-spin loop. Spins the sphere along Y like a globe whenever nothing
+  // is actively interacting with it (no hover, no drag, no inertia, no open item).
+  useEffect(() => {
+    if (!autoSpin) return;
+    const prefersReducedMotion =
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const tick = (ts: number) => {
+      const last = autoSpinLastTs.current;
+      autoSpinLastTs.current = ts;
+      const dt = last == null ? 0 : (ts - last) / 1000;
+
+      const idle =
+        !hoveringRef.current &&
+        !draggingRef.current &&
+        inertiaRAF.current == null &&
+        !focusedElRef.current &&
+        !openingRef.current;
+
+      if (idle && dt > 0) {
+        const nextY = wrapAngleSigned(rotationRef.current.y + autoSpinSpeed * dt);
+        rotationRef.current = { x: rotationRef.current.x, y: nextY };
+        applyTransform(rotationRef.current.x, nextY);
+      }
+
+      autoSpinRAF.current = requestAnimationFrame(tick);
+    };
+
+    autoSpinLastTs.current = null;
+    autoSpinRAF.current = requestAnimationFrame(tick);
+    return () => {
+      if (autoSpinRAF.current) cancelAnimationFrame(autoSpinRAF.current);
+      autoSpinRAF.current = null;
+      autoSpinLastTs.current = null;
+    };
+  }, [autoSpin, autoSpinSpeed]);
+
   const openItemFromElement = useCallback(
     (el: HTMLElement) => {
       if (openingRef.current) return;
@@ -428,6 +478,8 @@ export default function DomeGallery({
       onDragStart: ({ event }) => {
         if (focusedElRef.current) return;
         stopInertia();
+        // Drop the stale auto-spin timestamp so resume after the drag doesn't jump.
+        autoSpinLastTs.current = null;
 
         const evt = event as PointerEvent;
         pointerTypeRef.current = (evt.pointerType as any) || "mouse";
@@ -768,6 +820,15 @@ export default function DomeGallery({
           style={{
             touchAction: "none",
             WebkitUserSelect: "none",
+          }}
+          onPointerEnter={() => {
+            hoveringRef.current = true;
+          }}
+          onPointerLeave={() => {
+            hoveringRef.current = false;
+            // Reset the timestamp so the resumed spin starts from "now" instead
+            // of jumping by the whole paused interval.
+            autoSpinLastTs.current = null;
           }}
         >
           <div className="stage">

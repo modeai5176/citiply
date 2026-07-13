@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "dotenv -e .env -- npx tsx scripts/check-catalogue-migration.ts",
+    "seed:veneers": "dotenv -e .env -- npx tsx scripts/seed-veneers.ts",
     "migration": "dotenv -e .env -- npx tsx scripts/run-catalogue-migration.ts"
   },
   "dependencies": {
