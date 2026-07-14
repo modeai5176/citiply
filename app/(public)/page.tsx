@@ -1,12 +1,11 @@
 import { HeroSection } from "@/components/home/HeroSection";
 import { BrandPhilosophy } from "@/components/home/BrandPhilosophy";
-import { VeneerArt } from "@/components/home/VeneerArt";
+// import { VeneerArt } from "@/components/home/VeneerArt";
 import { DoorsFeature } from "@/components/home/DoorsFeature";
 import { PlywoodFeature } from "@/components/home/PlywoodFeature";
 import { RoomDiscovery } from "@/components/home/RoomDiscovery";
 import { InteractiveGallery } from "@/components/home/InteractiveGallery";
 import { ProjectsShowcase } from "@/components/home/ProjectsShowcase";
-import { MoodCollections } from "@/components/home/MoodCollections";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
 import { CatalogueLookbook } from "@/components/home/CatalogueLookbook";
 import { WarmEnquiry } from "@/components/home/WarmEnquiry";
@@ -20,16 +19,16 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroSection />
+      <HeroSection projects={projects} />
       <BrandPhilosophy />
-      <VeneerArt />
+      {/* Veneer as Art — horizontal scroll section (commented out) */}
+      {/* <VeneerArt /> */}
       <DoorsFeature />
       <PlywoodFeature />
       <RoomDiscovery />
       <InteractiveGallery />
       <ProjectsShowcase projects={projects} />
       <ArchitectMode />
-      <MoodCollections />
       <CatalogueLookbook catalogues={catalogues} />
       <WarmEnquiry />
     </>
