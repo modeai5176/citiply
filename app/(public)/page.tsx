@@ -5,7 +5,6 @@ import { DoorsFeature } from "@/components/home/DoorsFeature";
 import { PlywoodFeature } from "@/components/home/PlywoodFeature";
 import { RoomDiscovery } from "@/components/home/RoomDiscovery";
 import { InteractiveGallery } from "@/components/home/InteractiveGallery";
-import { ProjectsShowcase } from "@/components/home/ProjectsShowcase";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
 import { CatalogueLookbook } from "@/components/home/CatalogueLookbook";
 import { WarmEnquiry } from "@/components/home/WarmEnquiry";
@@ -27,7 +26,6 @@ export default async function HomePage() {
       <PlywoodFeature />
       <RoomDiscovery />
       <InteractiveGallery />
-      <ProjectsShowcase projects={projects} />
       <ArchitectMode />
       <CatalogueLookbook catalogues={catalogues} />
       <WarmEnquiry />
