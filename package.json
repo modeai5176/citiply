@@ -9,10 +9,12 @@
     "lint": "next lint",
     "seed": "dotenv -e .env -- npx tsx scripts/check-catalogue-migration.ts",
     "seed:veneers": "dotenv -e .env -- npx tsx scripts/seed-veneers.ts",
+    "seed:laminates": "dotenv -e .env -- npx tsx scripts/seed-laminates.ts",
     "seed:doors": "dotenv -e .env -- npx tsx scripts/seed-doors.ts",
     "upload:door-images": "dotenv -e .env -- npx tsx scripts/upload-door-images.ts",
     "covers:doors": "dotenv -e .env -- npx tsx scripts/set-door-covers.ts",
     "upload:veneer-images": "dotenv -e .env -- npx tsx scripts/upload-veneer-images.ts",
+    "upload:laminate-images": "dotenv -e .env -- npx tsx scripts/upload-laminate-images.ts",
     "migration": "dotenv -e .env -- npx tsx scripts/run-catalogue-migration.ts"
   },
   "dependencies": {
