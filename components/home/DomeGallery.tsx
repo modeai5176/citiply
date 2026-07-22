@@ -27,6 +27,8 @@ type DomeGalleryProps = {
   autoSpin?: boolean;
   /** Degrees per second for the idle auto-spin. */
   autoSpinSpeed?: number;
+  /** Pause auto-spin on hover. Defaults to false. */
+  pauseOnHover?: boolean;
 };
 
 type ItemDef = {
@@ -128,6 +130,7 @@ export default function DomeGallery({
   grayscale = false,
   autoSpin = false,
   autoSpinSpeed = 6,
+  pauseOnHover = false,
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -328,7 +331,7 @@ export default function DomeGallery({
       const dt = last == null ? 0 : (ts - last) / 1000;
 
       const idle =
-        !hoveringRef.current &&
+        (!pauseOnHover || !hoveringRef.current) &&
         !draggingRef.current &&
         inertiaRAF.current == null &&
         !focusedElRef.current &&
@@ -350,7 +353,7 @@ export default function DomeGallery({
       autoSpinRAF.current = null;
       autoSpinLastTs.current = null;
     };
-  }, [autoSpin, autoSpinSpeed]);
+  }, [autoSpin, autoSpinSpeed, pauseOnHover]);
 
   const openItemFromElement = useCallback(
     (el: HTMLElement) => {

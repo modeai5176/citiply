@@ -191,7 +191,7 @@ export function HeroSection({ projects = [] }: { projects?: Project[] }) {
               willChange: 'transform, filter',
             }}
           >
-            Surfaces that shape the mood of a space.
+            One World, Every Material.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">

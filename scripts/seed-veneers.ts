@@ -38,13 +38,13 @@ function slugify(value: string): string {
 // ---- Category definitions (upserted under the `veneers` catalogue) ----------
 // Slugs that already exist in scripts/seed.ts are reused (upsert = no dupes).
 const CATEGORIES = [
-  { name: "Fluted", slug: "fluted-veneers", description: "Veneer-based fluted and grooved panels.", sort_order: 10 },
-  { name: "Textured", slug: "textured-veneers", description: "Rough cut, torched, weathered and 3D textured surfaces.", sort_order: 4 },
-  { name: "Dyed / Coloured", slug: "coloured-veneers", description: "Pre-finished coloured and dyed veneers.", sort_order: 3 },
-  { name: "Natural", slug: "natural-veneers", description: "Premium natural wood veneers from around the world.", sort_order: 1 },
-  { name: "Exotic", slug: "exotic-veneers", description: "Rare and specialty exotic wood veneers.", sort_order: 2 },
-  { name: "Smoked / Fumed / Specialty", slug: "specialty-series", description: "Smoked, fumed, metallic and specialty surface treatments.", sort_order: 5 },
-  { name: "Premium / Limited Collections", slug: "premium-collections", description: "Premium fan decks, bespoke marquetry and limited artisanal surfaces.", sort_order: 6 }
+  { name: "Natural", slug: "natural-veneers", description: "Premium natural wood veneers from around the world.", sort_order: 1, image_url: "/images/categories/natural-veneers.png" },
+  { name: "Exotic", slug: "exotic-veneers", description: "Rare and specialty exotic wood veneers.", sort_order: 2, image_url: "/images/categories/exotic-veneers.png" },
+  { name: "Dyed / Coloured", slug: "coloured-veneers", description: "Pre-finished coloured and dyed veneers.", sort_order: 3, image_url: "/images/categories/coloured-veneers.png" },
+  { name: "Textured", slug: "textured-veneers", description: "Rough cut, torched, weathered and 3D textured surfaces.", sort_order: 4, image_url: "/images/categories/textured-veneers.png" },
+  { name: "Smoked / Fumed / Specialty", slug: "specialty-series", description: "Smoked, fumed, metallic and specialty surface treatments.", sort_order: 5, image_url: "/images/categories/specialty-series.png" },
+  { name: "Premium / Limited Collections", slug: "premium-collections", description: "Premium fan decks, bespoke marquetry and limited artisanal surfaces.", sort_order: 6, image_url: "/images/categories/premium-collections.png" },
+  { name: "Fluted", slug: "fluted-veneers", description: "Veneer-based fluted and grooved panels.", sort_order: 7, image_url: "/images/categories/fluted-veneers.png" }
 ];
 
 // ---- Spec builder from each brochure's common_technical_details --------------
