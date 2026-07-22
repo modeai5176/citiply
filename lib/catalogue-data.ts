@@ -28,6 +28,16 @@ function mapCatalogue(row: CatalogueRow): Catalogue {
   };
 }
 
+const DEFAULT_CATEGORY_IMAGES: Record<string, string> = {
+  "natural-veneers": "/images/categories/natural-veneers.png",
+  "exotic-veneers": "/images/categories/exotic-veneers.png",
+  "coloured-veneers": "/images/categories/coloured-veneers.png",
+  "textured-veneers": "/images/categories/textured-veneers.png",
+  "specialty-series": "/images/categories/specialty-series.png",
+  "premium-collections": "/images/categories/premium-collections.png",
+  "fluted-veneers": "/images/categories/fluted-veneers.png",
+};
+
 function mapCategory(row: CategoryWithCatalogue): Category {
   return {
     id: row.id,
@@ -37,7 +47,7 @@ function mapCategory(row: CategoryWithCatalogue): Category {
     name: row.name,
     slug: row.slug,
     description: row.description ?? "",
-    imageUrl: row.image_url || fallbackImage,
+    imageUrl: row.image_url || DEFAULT_CATEGORY_IMAGES[row.slug] || fallbackImage,
     sortOrder: row.sort_order ?? 0,
     isActive: row.is_active
   };
@@ -250,7 +260,8 @@ export async function getProductBySku(sku: string) {
   return data ? mapProduct(data as ProductWithRelations) : null;
 }
 
-export async function getProductStaticParams(limit = 200) {
+export async function getProductStaticParams(limit = 10) {
+  if (limit <= 0) return [];
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("products")

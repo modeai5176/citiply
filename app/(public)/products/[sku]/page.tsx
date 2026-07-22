@@ -12,9 +12,10 @@ import { getCategories, getCollections, getProductBySku, getProducts, getProduct
 import { ProductQuoteButton } from "./product-quote-button";
 
 export const revalidate = 3600;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  return getProductStaticParams();
+  return getProductStaticParams(10);
 }
 
 export default async function ProductDetailPage({ params }: { params: { sku: string } }) {
