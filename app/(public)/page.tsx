@@ -4,6 +4,7 @@ import { BrandPhilosophy } from "@/components/home/BrandPhilosophy";
 import { DoorsFeature } from "@/components/home/DoorsFeature";
 import { PlywoodFeature } from "@/components/home/PlywoodFeature";
 import { RoomDiscovery } from "@/components/home/RoomDiscovery";
+import { VeneerFeature } from "@/components/home/VeneerFeature";
 import { InteractiveGallery } from "@/components/home/InteractiveGallery";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
 import { CatalogueLookbook } from "@/components/home/CatalogueLookbook";
@@ -25,6 +26,7 @@ export default async function HomePage() {
       <DoorsFeature />
       <PlywoodFeature />
       <RoomDiscovery />
+      <VeneerFeature />
       <InteractiveGallery />
       <ArchitectMode />
       <CatalogueLookbook catalogues={catalogues} />
