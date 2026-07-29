@@ -217,3 +217,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   }
   return STATIC_PROJECTS.find((p) => p.slug === slug) ?? null;
 }
+
+// deriveFamiliesUsed() lives in lib/project-families.ts, not here — that file
+// needs to be importable from client components, and this module pulls in
+// lib/supabase/admin.ts ("server-only"), which a client component cannot import.

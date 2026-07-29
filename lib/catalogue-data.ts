@@ -294,3 +294,25 @@ export async function getNavigationData() {
 
   return { catalogues, categories, collections, families };
 }
+
+// Full product-family list with an accurate "N collections" count per family —
+// used by the homepage "Complete Citiply Universe" grid, which needs every
+// family (not just featured ones) plus a real collection tally rather than a
+// hardcoded number.
+export type ProductFamilyWithCount = ProductFamily & { collectionCount: number };
+
+export async function getProductFamilies(): Promise<ProductFamilyWithCount[]> {
+  const [catalogues, categories, collections] = await Promise.all([
+    getCatalogues(),
+    getCategories(),
+    getCollections()
+  ]);
+
+  const families = groupFamilies(catalogues, categories);
+
+  return families.map((family) => {
+    const categoryIds = new Set(family.categories.map((category) => category.id));
+    const collectionCount = collections.filter((collection) => categoryIds.has(collection.categoryId)).length;
+    return { ...family, collectionCount };
+  });
+}

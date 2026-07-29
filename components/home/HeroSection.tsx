@@ -9,6 +9,25 @@ import type { Project } from '@/lib/projects-data';
 const INSTAGRAM_HANDLE = 'cit.ply';
 const INSTAGRAM_URL = 'https://instagram.com/cit.ply';
 
+// Mood-collection art (public/images/collections) and the 8 family cover
+// shots (public/images/catalogue) always ship with the repo, so they seed the
+// dome alongside whatever real project photography exists — the gallery
+// never looks sparse on a fresh install with few/no projects.
+const COLLECTION_IMAGES: { src: string; alt: string }[] = [
+  { src: '/images/collections/warm-naturals.png', alt: 'Warm Naturals collection' },
+  { src: '/images/collections/dark-elegance.png', alt: 'Dark Elegance collection' },
+  { src: '/images/collections/modern-neutrals.png', alt: 'Modern Neutrals collection' },
+  { src: '/images/collections/statement-grains.png', alt: 'Statement Grains collection' },
+  { src: '/images/catalogue/veneer.png', alt: 'Veneers' },
+  { src: '/images/catalogue/panel.png', alt: 'Panels' },
+  { src: '/images/catalogue/door.png', alt: 'Doors' },
+  { src: '/images/catalogue/plywood.png', alt: 'Plywood' },
+  { src: '/images/catalogue/laminates.png', alt: 'Laminates' },
+  { src: '/images/catalogue/flooring.png', alt: 'Flooring' },
+  { src: '/images/catalogue/exterior.png', alt: 'Exterior' },
+  { src: '/images/catalogue/millwork.png', alt: 'Millwork' },
+];
+
 export function HeroSection({ projects = [] }: { projects?: Project[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const lockupRef = useRef<HTMLDivElement>(null);
@@ -21,10 +40,17 @@ export function HeroSection({ projects = [] }: { projects?: Project[] }) {
   const domeRef = useRef<HTMLDivElement>(null);
   const isPageLoaded = usePageLoaded();
 
-  // Pool every project image (hero + gallery), de-duplicated, for the dome tiles.
+  // Pool every project image (hero + gallery) plus the mood-collection art,
+  // de-duplicated, for the dome tiles.
   const images = useMemo(() => {
     const pool: { src: string; alt: string }[] = [];
     const seen = new Set<string>();
+    for (const image of COLLECTION_IMAGES) {
+      if (!seen.has(image.src)) {
+        seen.add(image.src);
+        pool.push(image);
+      }
+    }
     for (const project of projects) {
       const all = [project.heroImage, ...(project.gallery ?? [])];
       for (const src of all) {

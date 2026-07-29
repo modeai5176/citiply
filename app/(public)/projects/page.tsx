@@ -1,6 +1,7 @@
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { getProjects } from "@/lib/projects-data";
+import { deriveFamiliesUsed } from "@/lib/project-families";
 
 export const metadata = {
   title: "Projects & Applications — Citiply",
@@ -11,6 +12,7 @@ export const revalidate = 300;
 
 export default async function ProjectsPage() {
   const projects = await getProjects();
+  const [lead, ...rest] = projects;
 
   return (
     <>
@@ -24,11 +26,21 @@ export default async function ProjectsPage() {
         </h1>
         <p className="mt-4 max-w-2xl text-text-secondary">
           CITIPLY is a design solutions brand, not just a stock catalogue. Choose a space or element to see
-          recommended materials, suitable veneer tones, fluted panels, doors and matching laminates.
+          recommended materials, suitable veneer tones, fluted panels, doors and matching laminates — and
+          which product families come together in each one.
         </p>
+
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} project={project} className="rounded-xl" />
+          {lead ? (
+            <ProjectCard
+              project={lead}
+              families={deriveFamiliesUsed(lead)}
+              className="rounded-xl sm:col-span-2 lg:col-span-2"
+              minHeight="360px"
+            />
+          ) : null}
+          {rest.map((project) => (
+            <ProjectCard key={project.slug} project={project} families={deriveFamiliesUsed(project)} className="rounded-xl" />
           ))}
         </div>
       </section>

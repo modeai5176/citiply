@@ -462,6 +462,19 @@ a {
   .hotspot-marker.is-active .hotspot-callout-product { display: block; font-size: 9px; }
 }
 
+/* ── Ecosystem-in-One-Space (homepage EcosystemSpace component) ──
+   Reuses the .hotspot-marker family above, but the image here is never
+   zoomed, so it must NOT use .is-active (that rule assumes a 1.9x zoomed
+   parent and hard-codes a 0.526 counter-scale — applying it here would make
+   the selected marker visibly shrink). This modifier gives the same "this
+   one is selected" read without any scale change. */
+.hotspot-marker.ecosystem-marker-selected .ring {
+  border-color: var(--color-charcoal);
+}
+.hotspot-marker.ecosystem-marker-selected .dot {
+  background: var(--color-charcoal);
+}
+
 /* ── Prefers Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue,

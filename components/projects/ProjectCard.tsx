@@ -5,14 +5,24 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/lib/projects-data";
 
-export function ProjectCard({ project, className }: { project: Project; className?: string }) {
+export function ProjectCard({
+  project,
+  className,
+  families,
+  minHeight = "240px"
+}: {
+  project: Project;
+  className?: string;
+  families?: string[];
+  minHeight?: string;
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Link
       href={`/projects/${project.slug}`}
       className={`group relative block overflow-hidden ${className ?? ""}`}
-      style={{ minHeight: "240px" }}
+      style={{ minHeight }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -61,6 +71,19 @@ export function ProjectCard({ project, className }: { project: Project; classNam
         >
           {project.concept}
         </p>
+        {families?.length ? (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {families.map((family) => (
+              <span
+                key={family}
+                className="rounded-full px-2.5 py-1 text-[11px] font-sans"
+                style={{ background: "rgb(var(--on-image) / 0.14)", color: "rgb(var(--on-image) / 0.9)" }}
+              >
+                {family}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
     </Link>
   );
