@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" data-theme="warm-oak">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-white/10 bg-dark text-white lg:block">
         <div className="flex h-full flex-col p-5">
           <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4">

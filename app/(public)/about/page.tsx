@@ -4,6 +4,9 @@ import { MessageCircle, ArrowRight } from "lucide-react";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { Button } from "@/components/ui/Button";
 import { getCatalogues } from "@/lib/catalogue-data";
+import { BrandPhilosophy } from "@/components/home/BrandPhilosophy";
+import { DoorsFeature } from "@/components/home/DoorsFeature";
+import { PlywoodFeature } from "@/components/home/PlywoodFeature";
 
 export const revalidate = 300;
 
@@ -107,6 +110,8 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      <BrandPhilosophy />
+
       {/* How the business evolved — timeline on beige band */}
       <section className="section-padding" style={{ background: "var(--color-beige)" }}>
         <div className="content-container">
@@ -123,6 +128,9 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      <DoorsFeature />
+      <PlywoodFeature />
 
       {/* What makes our curation different — charcoal band, text + image */}
       <section className="section-padding" style={{ background: "var(--color-charcoal)" }}>

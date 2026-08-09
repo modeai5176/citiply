@@ -22,18 +22,14 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection projects={projects} />
-      <BrandPhilosophy />
       {/* Veneer as Art — horizontal scroll section (commented out) */}
       {/* <VeneerArt /> */}
-      <DoorsFeature />
-      <PlywoodFeature />
       <FullRangeGrid families={families} />
       <HeritageStrip />
       <RoomDiscovery />
       {/* <EcosystemSpace /> */}
-      <RealProjects projects={projects} />
-      <BuildPalette />
-      <ArchitectMode />
+      {/* <RealProjects projects={projects} /> */}
+      {/* <ArchitectMode /> */}
       <WarmEnquiry />
     </>
   );

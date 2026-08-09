@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <section className="grid min-h-screen place-items-center bg-background px-4">
+    <section className="grid min-h-screen place-items-center bg-background px-4" data-theme="warm-oak">
       <div className="w-full max-w-md rounded-xl border border-border bg-white p-6 shadow-soft">
         <h1 className="text-3xl font-semibold">Admin Login</h1>
         <p className="mt-2 text-sm text-text-secondary">Use Supabase email and password authentication.</p>

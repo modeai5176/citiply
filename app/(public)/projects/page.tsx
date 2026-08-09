@@ -2,6 +2,7 @@ import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { getProjects } from "@/lib/projects-data";
 import { deriveFamiliesUsed } from "@/lib/project-families";
+import { BuildPalette } from "@/components/home/BuildPalette";
 
 export const metadata = {
   title: "Projects & Applications — Citiply",
@@ -44,6 +45,8 @@ export default async function ProjectsPage() {
           ))}
         </div>
       </section>
+      <BuildPalette />
+
     </>
   );
 }

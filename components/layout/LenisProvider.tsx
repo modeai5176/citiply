@@ -7,8 +7,15 @@ import Lenis from 'lenis';
 export function LenisProvider({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
   const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
+    // Admin is a functional dashboard, not the marketing scroll experience —
+    // Lenis intercepts wheel/touch events on the whole document, which fights
+    // with modal/table internal scrolling (scrolling a form inside a modal
+    // would scroll the page behind it instead). Skip it there entirely.
+    if (isAdmin) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -27,7 +34,7 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [isAdmin]);
 
   // Next.js resets `window.scrollTo(0, 0)` on route change, but Lenis keeps
   // animating toward its own internally tracked target scroll position from
