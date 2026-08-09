@@ -69,7 +69,7 @@ async function main() {
   const extras = (prods ?? []).filter((p) => !pdfKeys.has(norm(p.name)));
 
   // --- 3. duplicates ---
-  const dupes = [...dbByKey.entries()].filter(([, v]) => v.length > 1);
+  const dupes = Array.from(dbByKey.entries()).filter(([, v]) => v.length > 1);
 
   console.log("=== 1. coverage: PDF -> DB ===");
   console.log(`  PDF Evergreen species : ${PDF_EVERGREEN.length}`);
