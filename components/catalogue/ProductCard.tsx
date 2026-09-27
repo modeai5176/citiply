@@ -15,8 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
     openQuote({
       sku: product.sku,
       name: product.name,
-      finish: product.finish,
-      colorTone: product.colorTone,
+      colorTone: product.colorTone === "Not specified" ? undefined : product.colorTone,
       imageUrl: main.thumbnailUrl
     });
   };
@@ -32,7 +31,7 @@ export function ProductCard({ product }: { product: Product }) {
         <Link href={`/products/${product.sku}`} className="block">
           <ProductCodeBadge code={product.sku} />
           <h3 className="mt-3 font-medium">{product.name}</h3>
-          <p className="mt-1 text-sm text-text-muted">{product.finish} / {product.colorTone}</p>
+          {product.colorTone && product.colorTone !== "Not specified" ? <p className="mt-1 text-sm text-text-muted">{product.colorTone}</p> : null}
         </Link>
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
           <button

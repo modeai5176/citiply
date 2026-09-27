@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useGesture } from "@use-gesture/react";
 
-type ImageItem = string | { src: string; alt?: string };
+/** `position` is a CSS object-position for the tile crop (e.g. "bottom"). */
+type ImageItem = string | { src: string; alt?: string; position?: string };
 
 type DomeGalleryProps = {
   images?: ImageItem[];
@@ -34,6 +35,7 @@ type DomeGalleryProps = {
 type ItemDef = {
   src: string;
   alt: string;
+  position?: string;
   x: number;
   y: number;
   sizeX: number;
@@ -76,9 +78,9 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
 
   const normalizedImages = pool.map((image) => {
     if (typeof image === "string") {
-      return { src: image, alt: "" };
+      return { src: image, alt: "", position: undefined as string | undefined };
     }
-    return { src: image.src || "", alt: image.alt || "" };
+    return { src: image.src || "", alt: image.alt || "", position: image.position };
   });
 
   const usedImages = Array.from({ length: totalSlots }, (_, i) => normalizedImages[i % normalizedImages.length]);
@@ -100,6 +102,7 @@ function buildItems(pool: ImageItem[], seg: number): ItemDef[] {
     ...c,
     src: usedImages[i].src,
     alt: usedImages[i].alt,
+    position: usedImages[i].position,
   }));
 }
 
@@ -891,8 +894,10 @@ export default function DomeGallery({
                       src={it.src}
                       draggable={false}
                       alt={it.alt}
+                      decoding="async"
                       className="w-full h-full object-cover pointer-events-none"
                       style={{
+                        objectPosition: it.position,
                         backfaceVisibility: "hidden",
                         filter: `var(--image-filter, ${grayscale ? "grayscale(1)" : "none"})`,
                       }}

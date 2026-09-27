@@ -1,0 +1,1042 @@
+{
+ "chroma-bunito": [
+  {
+   "sku": "BUNITO-ARC",
+   "name": "Chroma Bunito Arc"
+  },
+  {
+   "sku": "BUNITO-ARRAY",
+   "name": "Chroma Bunito Array"
+  },
+  {
+   "sku": "BUNITO-CRESCENT",
+   "name": "Chroma Bunito Crescent"
+  },
+  {
+   "sku": "BUNITO-CRUDE",
+   "name": "Chroma Bunito Crude"
+  },
+  {
+   "sku": "BUNITO-DIAMOND",
+   "name": "Chroma Bunito Diamond"
+  },
+  {
+   "sku": "BUNITO-FISSURE",
+   "name": "Chroma Bunito Fissure"
+  },
+  {
+   "sku": "BUNITO-FRIZZ",
+   "name": "Chroma Bunito Frizz"
+  },
+  {
+   "sku": "BUNITO-GRID",
+   "name": "Chroma Bunito Grid"
+  },
+  {
+   "sku": "BUNITO-JUTE",
+   "name": "Chroma Bunito Jute"
+  },
+  {
+   "sku": "BUNITO-MESH",
+   "name": "Chroma Bunito Mesh"
+  },
+  {
+   "sku": "BUNITO-MOTIF",
+   "name": "Chroma Bunito Motif"
+  },
+  {
+   "sku": "BUNITO-PEBBLE",
+   "name": "Chroma Bunito Pebble"
+  },
+  {
+   "sku": "BUNITO-QR-CODE",
+   "name": "Chroma Bunito QR Code"
+  },
+  {
+   "sku": "BUNITO-RUNNEL",
+   "name": "Chroma Bunito Runnel"
+  },
+  {
+   "sku": "BUNITO-STEM",
+   "name": "Chroma Bunito Stem"
+  },
+  {
+   "sku": "BUNITO-STRAW",
+   "name": "Chroma Bunito Straw"
+  },
+  {
+   "sku": "BUNITO-TRELLIS",
+   "name": "Chroma Bunito Trellis"
+  }
+ ],
+ "karnav-designer-panels": [
+  {
+   "sku": "KARNAV-ANTIQUE",
+   "name": "Karnav Antique"
+  },
+  {
+   "sku": "KARNAV-ARTISAN",
+   "name": "Karnav Artisan"
+  },
+  {
+   "sku": "KARNAV-BARK",
+   "name": "Karnav Bark"
+  },
+  {
+   "sku": "KARNAV-BURBERRY",
+   "name": "Karnav Burberry"
+  },
+  {
+   "sku": "KARNAV-CAD",
+   "name": "Karnav CAD"
+  },
+  {
+   "sku": "KARNAV-CATHEDRAL",
+   "name": "Karnav Cathedral"
+  },
+  {
+   "sku": "KARNAV-CHAIN",
+   "name": "Karnav Chain"
+  },
+  {
+   "sku": "KARNAV-CHANNEL",
+   "name": "Karnav Channel"
+  },
+  {
+   "sku": "KARNAV-CHARCOAL",
+   "name": "Karnav Charcoal"
+  },
+  {
+   "sku": "KARNAV-CHESSBOARD",
+   "name": "Karnav Chessboard"
+  },
+  {
+   "sku": "KARNAV-CHEVRON",
+   "name": "Karnav Chevron"
+  },
+  {
+   "sku": "KARNAV-CONNECT",
+   "name": "Karnav Connect"
+  },
+  {
+   "sku": "KARNAV-CROSS-STITCH",
+   "name": "Karnav Cross Stitch"
+  },
+  {
+   "sku": "KARNAV-DIAMOND",
+   "name": "Karnav Diamond"
+  },
+  {
+   "sku": "KARNAV-FABRIC",
+   "name": "Karnav Fabric"
+  },
+  {
+   "sku": "KARNAV-FLUTE",
+   "name": "Karnav Flute"
+  },
+  {
+   "sku": "KARNAV-FLUTE-XL",
+   "name": "Karnav Flute XL"
+  },
+  {
+   "sku": "KARNAV-JAGUARD",
+   "name": "Karnav Jaguard"
+  },
+  {
+   "sku": "KARNAV-JUTE",
+   "name": "Karnav Jute"
+  },
+  {
+   "sku": "KARNAV-LEATHER",
+   "name": "Karnav Leather"
+  },
+  {
+   "sku": "KARNAV-LINEN",
+   "name": "Karnav Linen"
+  },
+  {
+   "sku": "KARNAV-PIXEL",
+   "name": "Karnav Pixel"
+  },
+  {
+   "sku": "KARNAV-RANDOM",
+   "name": "Karnav Random"
+  },
+  {
+   "sku": "KARNAV-RIPPED",
+   "name": "Karnav Ripped"
+  },
+  {
+   "sku": "KARNAV-ROMA",
+   "name": "Karnav Roma"
+  },
+  {
+   "sku": "KARNAV-TIDE",
+   "name": "Karnav Tide"
+  },
+  {
+   "sku": "KARNAV-TUBE",
+   "name": "Karnav Tube"
+  },
+  {
+   "sku": "KARNAV-V-FLUTE",
+   "name": "Karnav V Flute"
+  },
+  {
+   "sku": "KARNAV-VENEZIA",
+   "name": "Karnav Venezia"
+  },
+  {
+   "sku": "KARNAV-WAVE",
+   "name": "Karnav Wave"
+  }
+ ],
+ "legnoluxe": [
+  {
+   "sku": "LEGNO-BENZ",
+   "name": "LegnöLuxé Benz"
+  },
+  {
+   "sku": "LEGNO-CAPRI",
+   "name": "LegnöLuxé Capri"
+  },
+  {
+   "sku": "LEGNO-CASK",
+   "name": "LegnöLuxé Cask"
+  },
+  {
+   "sku": "LEGNO-DIAMOND",
+   "name": "LegnöLuxé Diamond"
+  },
+  {
+   "sku": "LEGNO-KNIT",
+   "name": "LegnöLuxé Knit"
+  },
+  {
+   "sku": "LEGNO-MILANO",
+   "name": "LegnöLuxé Milano"
+  },
+  {
+   "sku": "LEGNO-RHOMBUS",
+   "name": "LegnöLuxé Rhombus"
+  },
+  {
+   "sku": "LEGNO-ROMA",
+   "name": "LegnöLuxé Roma"
+  },
+  {
+   "sku": "LEGNO-VENEZIA",
+   "name": "LegnöLuxé Venezia"
+  },
+  {
+   "sku": "LEGNO-VINTAGE",
+   "name": "LegnöLuxé Vintage"
+  }
+ ],
+ "dyed-veneers-turakhia": [
+  {
+   "sku": "DYED-DYED-AMERICAN-ASH",
+   "name": "Dyed American Ash"
+  },
+  {
+   "sku": "DYED-DYED-AMERICAN-ASH-1619",
+   "name": "Dyed American Ash 1619"
+  },
+  {
+   "sku": "DYED-DYED-ARMANI",
+   "name": "Dyed Armani"
+  },
+  {
+   "sku": "DYED-DYED-ARMANI-1616",
+   "name": "Dyed Armani 1616"
+  },
+  {
+   "sku": "DYED-DYED-ARMANI-2102",
+   "name": "Dyed Armani 2102"
+  },
+  {
+   "sku": "DYED-DYED-ARMANI-DSCU",
+   "name": "Dyed Armani DSCU"
+  },
+  {
+   "sku": "DYED-DYED-ASH",
+   "name": "Dyed Ash"
+  },
+  {
+   "sku": "DYED-DYED-ASH-FIGURED",
+   "name": "Dyed Ash Figured"
+  },
+  {
+   "sku": "DYED-DYED-EUCALYPTUS-FIGURED-1613",
+   "name": "Dyed Eucalyptus Figured 1613"
+  },
+  {
+   "sku": "DYED-DYED-EUCALYPTUS-FIGURED-2124",
+   "name": "Dyed Eucalyptus Figured 2124"
+  },
+  {
+   "sku": "DYED-DYED-EUCALYPTUS-FIGURED-2126",
+   "name": "Dyed Eucalyptus Figured 2126"
+  },
+  {
+   "sku": "DYED-DYED-EUCALYPTUS-FIGURED-2129",
+   "name": "Dyed Eucalyptus Figured 2129"
+  },
+  {
+   "sku": "DYED-DYED-KOTO-2105",
+   "name": "Dyed Koto 2105"
+  },
+  {
+   "sku": "DYED-DYED-KOTO-2108",
+   "name": "Dyed Koto 2108"
+  },
+  {
+   "sku": "DYED-DYED-KOTO-2109",
+   "name": "Dyed Koto 2109"
+  },
+  {
+   "sku": "DYED-DYED-MAPLE",
+   "name": "Dyed Maple"
+  },
+  {
+   "sku": "DYED-DYED-MAPLE-1605",
+   "name": "Dyed Maple 1605"
+  },
+  {
+   "sku": "DYED-DYED-MAPLE-FIGURED",
+   "name": "Dyed Maple Figured"
+  },
+  {
+   "sku": "DYED-DYED-OAK-2132",
+   "name": "Dyed Oak 2132"
+  },
+  {
+   "sku": "DYED-DYED-SYCAMORE",
+   "name": "Dyed Sycamore"
+  },
+  {
+   "sku": "DYED-DYED-TULIP",
+   "name": "Dyed Tulip"
+  },
+  {
+   "sku": "DYED-DYED-TULIP-533",
+   "name": "Dyed Tulip 533"
+  },
+  {
+   "sku": "DYED-DYED-WHITE-OAK",
+   "name": "Dyed White Oak"
+  }
+ ],
+ "furrow-finest-hybrid-flutes": [
+  {
+   "sku": "FURROW-C10",
+   "name": "Furrow C10"
+  },
+  {
+   "sku": "FURROW-C100",
+   "name": "Furrow C100"
+  },
+  {
+   "sku": "FURROW-C111",
+   "name": "Furrow C111"
+  },
+  {
+   "sku": "FURROW-C112",
+   "name": "Furrow C112"
+  },
+  {
+   "sku": "FURROW-C113",
+   "name": "Furrow C113"
+  },
+  {
+   "sku": "FURROW-C114",
+   "name": "Furrow C114"
+  },
+  {
+   "sku": "FURROW-C115",
+   "name": "Furrow C115"
+  },
+  {
+   "sku": "FURROW-C116",
+   "name": "Furrow C116"
+  },
+  {
+   "sku": "FURROW-C117",
+   "name": "Furrow C117"
+  },
+  {
+   "sku": "FURROW-C121",
+   "name": "Furrow C121"
+  },
+  {
+   "sku": "FURROW-C126",
+   "name": "Furrow C126"
+  },
+  {
+   "sku": "FURROW-C127",
+   "name": "Furrow C127"
+  },
+  {
+   "sku": "FURROW-C129",
+   "name": "Furrow C129"
+  },
+  {
+   "sku": "FURROW-C135",
+   "name": "Furrow C135"
+  },
+  {
+   "sku": "FURROW-C136",
+   "name": "Furrow C136"
+  },
+  {
+   "sku": "FURROW-C137",
+   "name": "Furrow C137"
+  },
+  {
+   "sku": "FURROW-C138",
+   "name": "Furrow C138"
+  },
+  {
+   "sku": "FURROW-C153",
+   "name": "Furrow C153"
+  },
+  {
+   "sku": "FURROW-C169",
+   "name": "Furrow C169"
+  },
+  {
+   "sku": "FURROW-C58",
+   "name": "Furrow C58"
+  },
+  {
+   "sku": "FURROW-C71",
+   "name": "Furrow C71"
+  },
+  {
+   "sku": "FURROW-C75",
+   "name": "Furrow C75"
+  },
+  {
+   "sku": "FURROW-C76",
+   "name": "Furrow C76"
+  },
+  {
+   "sku": "FURROW-C77",
+   "name": "Furrow C77"
+  }
+ ],
+ "splendor-shadow-ombre": [
+  {
+   "sku": "SPLENDOR-SL10",
+   "name": "Splendor SL10"
+  },
+  {
+   "sku": "SPLENDOR-SL28",
+   "name": "Splendor SL28"
+  },
+  {
+   "sku": "SPLENDOR-SL29",
+   "name": "Splendor SL29"
+  },
+  {
+   "sku": "SPLENDOR-SL35",
+   "name": "Splendor SL35"
+  },
+  {
+   "sku": "SPLENDOR-SL47",
+   "name": "Splendor SL47"
+  },
+  {
+   "sku": "SPLENDOR-SL54",
+   "name": "Splendor SL54"
+  },
+  {
+   "sku": "SPLENDOR-SL65",
+   "name": "Splendor SL65"
+  },
+  {
+   "sku": "SPLENDOR-SL75",
+   "name": "Splendor SL75"
+  },
+  {
+   "sku": "SPLENDOR-SL86",
+   "name": "Splendor SL86"
+  },
+  {
+   "sku": "SPLENDOR-SL94",
+   "name": "Splendor SL94"
+  }
+ ],
+ "citiply-open-grain": [
+  {
+   "sku": "CITIPLY-OPEN-G-TEAK-CROWN-0-5MM-OPEN-GRAINS-PANELLO",
+   "name": "Teak Crown 0.5mm Open Grains Panello"
+  },
+  {
+   "sku": "CITIPLY-OPEN-G-WHITE-OAK-CROWN-OPEN-GRAINS",
+   "name": "White Oak Crown Open Grains"
+  }
+ ],
+ "chroma-composite": [
+  {
+   "sku": "CHROMACOMP-CC2-2901",
+   "name": "Chroma Composite CC2-2901"
+  },
+  {
+   "sku": "CHROMACOMP-CC59-3401",
+   "name": "Chroma Composite CC59-3401"
+  },
+  {
+   "sku": "CHROMACOMP-CC64-901",
+   "name": "Chroma Composite CC64-901"
+  }
+ ],
+ "citiply-metallico": [
+  {
+   "sku": "CITIPLY-METALL-GOLD-PIN-OAK-WILD-OPEN-GRAIN",
+   "name": "Gold Pin Oak Wild Open Grain"
+  },
+  {
+   "sku": "CITIPLY-METALL-TORCHED-AMERICAN-CHERRY-PANELLO",
+   "name": "Torched American Cherry Panello"
+  },
+  {
+   "sku": "CITIPLY-METALL-TORCHED-EUCALYPTUS-FIGURED-PANELLO",
+   "name": "Torched Eucalyptus Figured Panello"
+  }
+ ],
+ "citiply-weathered": [
+  {
+   "sku": "CITIPLY-WEATHE-CANARYWOOD-PANELLO",
+   "name": "Canarywood Panello"
+  },
+  {
+   "sku": "CITIPLY-WEATHE-ICACO-PANELLO",
+   "name": "Icaco Panello"
+  },
+  {
+   "sku": "CITIPLY-WEATHE-MONTANA-PANELLO",
+   "name": "Montana Panello"
+  },
+  {
+   "sku": "CITIPLY-WEATHE-SORBUSTREE-PANELLO",
+   "name": "Sorbustree Panello"
+  },
+  {
+   "sku": "CITIPLY-WEATHE-SPALTED-JAPONICA-PANELLO",
+   "name": "Spalted Japonica Panello"
+  }
+ ],
+ "prism-dyed-veneer-palette": [
+  {
+   "sku": "PRISM-ARMANI-2101",
+   "name": "Prism Armani-2101"
+  },
+  {
+   "sku": "PRISM-ARMANI-2103",
+   "name": "Prism Armani-2103"
+  },
+  {
+   "sku": "PRISM-ARMANI-7003",
+   "name": "Prism Armani-7003"
+  },
+  {
+   "sku": "PRISM-ARMANI-7054",
+   "name": "Prism Armani-7054"
+  },
+  {
+   "sku": "PRISM-ARMANI-7055",
+   "name": "Prism Armani-7055"
+  },
+  {
+   "sku": "PRISM-ARMANI-7056",
+   "name": "Prism Armani-7056"
+  },
+  {
+   "sku": "PRISM-ARMANI-7067",
+   "name": "Prism Armani-7067"
+  },
+  {
+   "sku": "PRISM-ARMANI-7077",
+   "name": "Prism Armani-7077"
+  },
+  {
+   "sku": "PRISM-ASH-1619",
+   "name": "Prism Ash-1619"
+  },
+  {
+   "sku": "PRISM-ASH-7029",
+   "name": "Prism Ash-7029"
+  },
+  {
+   "sku": "PRISM-ASH-7030",
+   "name": "Prism Ash-7030"
+  },
+  {
+   "sku": "PRISM-ASH-7031",
+   "name": "Prism Ash-7031"
+  },
+  {
+   "sku": "PRISM-ASH-7032",
+   "name": "Prism Ash-7032"
+  },
+  {
+   "sku": "PRISM-ASH-7050",
+   "name": "Prism Ash-7050"
+  },
+  {
+   "sku": "PRISM-ASH-7057",
+   "name": "Prism Ash-7057"
+  },
+  {
+   "sku": "PRISM-ASH-7061",
+   "name": "Prism Ash-7061"
+  },
+  {
+   "sku": "PRISM-ASH-7062",
+   "name": "Prism Ash-7062"
+  },
+  {
+   "sku": "PRISM-ASH-7073",
+   "name": "Prism Ash-7073"
+  },
+  {
+   "sku": "PRISM-ASH-7082",
+   "name": "Prism Ash-7082"
+  },
+  {
+   "sku": "PRISM-ASH-7084",
+   "name": "Prism Ash-7084"
+  },
+  {
+   "sku": "PRISM-CHENCHEN-7021",
+   "name": "Prism Chenchen-7021"
+  },
+  {
+   "sku": "PRISM-CHENCHEN-7022",
+   "name": "Prism Chenchen-7022"
+  },
+  {
+   "sku": "PRISM-CHENCHEN-7023",
+   "name": "Prism Chenchen-7023"
+  },
+  {
+   "sku": "PRISM-EUCALYPTUS-FIGURED-7079",
+   "name": "Prism Eucalyptus-Figured-7079"
+  },
+  {
+   "sku": "PRISM-EUCALYPTUS-FIGURED-7080",
+   "name": "Prism Eucalyptus-Figured-7080"
+  },
+  {
+   "sku": "PRISM-EUCALYPTUS-FIGURED-7081",
+   "name": "Prism Eucalyptus-Figured-7081"
+  },
+  {
+   "sku": "PRISM-EUCALYPTUS-FIGURED-7083",
+   "name": "Prism Eucalyptus-Figured-7083"
+  },
+  {
+   "sku": "PRISM-KOTO-7024",
+   "name": "Prism Koto-7024"
+  },
+  {
+   "sku": "PRISM-KOTO-7025",
+   "name": "Prism Koto-7025"
+  },
+  {
+   "sku": "PRISM-KOTO-7026",
+   "name": "Prism Koto-7026"
+  },
+  {
+   "sku": "PRISM-KOTO-7027",
+   "name": "Prism Koto-7027"
+  },
+  {
+   "sku": "PRISM-KOTO-7028",
+   "name": "Prism Koto-7028"
+  },
+  {
+   "sku": "PRISM-KOTO-7059",
+   "name": "Prism Koto-7059"
+  },
+  {
+   "sku": "PRISM-KOTO-7064",
+   "name": "Prism Koto-7064"
+  },
+  {
+   "sku": "PRISM-KOTO-7065",
+   "name": "Prism Koto-7065"
+  },
+  {
+   "sku": "PRISM-KOTO-7066",
+   "name": "Prism Koto-7066"
+  },
+  {
+   "sku": "PRISM-LACEWOOD-7058",
+   "name": "Prism Lacewood-7058"
+  },
+  {
+   "sku": "PRISM-MACORE-FIGURED-7086",
+   "name": "Prism Macore-Figured-7086"
+  },
+  {
+   "sku": "PRISM-MACORE-FIGURED-7086B",
+   "name": "Prism Macore-Figured-7086b"
+  },
+  {
+   "sku": "PRISM-MOVIGINI-FIGURED-7088",
+   "name": "Prism Movigini-Figured-7088"
+  },
+  {
+   "sku": "PRISM-OAK-7011",
+   "name": "Prism Oak-7011"
+  },
+  {
+   "sku": "PRISM-OAK-7034",
+   "name": "Prism Oak-7034"
+  },
+  {
+   "sku": "PRISM-OAK-7039",
+   "name": "Prism Oak-7039"
+  },
+  {
+   "sku": "PRISM-OAK-7044",
+   "name": "Prism Oak-7044"
+  },
+  {
+   "sku": "PRISM-OAK-7045",
+   "name": "Prism Oak-7045"
+  },
+  {
+   "sku": "PRISM-OAK-7046",
+   "name": "Prism Oak-7046"
+  },
+  {
+   "sku": "PRISM-OAK-7049",
+   "name": "Prism Oak-7049"
+  },
+  {
+   "sku": "PRISM-OAK-7063",
+   "name": "Prism Oak-7063"
+  },
+  {
+   "sku": "PRISM-POPLAR-BURL-7048",
+   "name": "Prism Poplar-Burl-7048"
+  },
+  {
+   "sku": "PRISM-POPLAR-BURL-7052",
+   "name": "Prism Poplar-Burl-7052"
+  },
+  {
+   "sku": "PRISM-SYCAMORE-FIGURED-7042",
+   "name": "Prism Sycamore-Figured-7042"
+  },
+  {
+   "sku": "PRISM-SYCAMORE-FIGURED-7043",
+   "name": "Prism Sycamore-Figured-7043"
+  },
+  {
+   "sku": "PRISM-SYCAMORE-FIGURED-7051",
+   "name": "Prism Sycamore-Figured-7051"
+  },
+  {
+   "sku": "PRISM-SYCAMORE-FIGURED-7078",
+   "name": "Prism Sycamore-Figured-7078"
+  },
+  {
+   "sku": "PRISM-TULIP-7068",
+   "name": "Prism Tulip-7068"
+  },
+  {
+   "sku": "PRISM-TULIP-7070",
+   "name": "Prism Tulip-7070"
+  },
+  {
+   "sku": "PRISM-TULIP-7071",
+   "name": "Prism Tulip-7071"
+  },
+  {
+   "sku": "PRISM-TULIP-7072",
+   "name": "Prism Tulip-7072"
+  },
+  {
+   "sku": "PRISM-TULIP-7074",
+   "name": "Prism Tulip-7074"
+  },
+  {
+   "sku": "PRISM-TULIP-7076",
+   "name": "Prism Tulip-7076"
+  }
+ ],
+ "reganto-deziner-collection": [
+  {
+   "sku": "REGANTO-R-2017L",
+   "name": "Reganto R-2017L"
+  },
+  {
+   "sku": "REGANTO-R-2018L",
+   "name": "Reganto R-2018L"
+  },
+  {
+   "sku": "REGANTO-R-2023L",
+   "name": "Reganto R-2023L"
+  },
+  {
+   "sku": "REGANTO-R-3011L",
+   "name": "Reganto R-3011L"
+  },
+  {
+   "sku": "REGANTO-R-6003L",
+   "name": "Reganto R-6003L"
+  },
+  {
+   "sku": "REGANTO-R-6004L",
+   "name": "Reganto R-6004L"
+  },
+  {
+   "sku": "REGANTO-R-6006L",
+   "name": "Reganto R-6006L"
+  }
+ ],
+ "barcode": [
+  {
+   "sku": "BARCODE-B16",
+   "name": "Barcode B16"
+  },
+  {
+   "sku": "BARCODE-B17",
+   "name": "Barcode B17"
+  },
+  {
+   "sku": "BARCODE-B9",
+   "name": "Barcode B9"
+  },
+  {
+   "sku": "BARCODE-BD1",
+   "name": "Barcode BD1"
+  },
+  {
+   "sku": "BARCODE-BD10",
+   "name": "Barcode BD10"
+  },
+  {
+   "sku": "BARCODE-BD11",
+   "name": "Barcode BD11"
+  },
+  {
+   "sku": "BARCODE-BD12",
+   "name": "Barcode BD12"
+  },
+  {
+   "sku": "BARCODE-BD13",
+   "name": "Barcode BD13"
+  },
+  {
+   "sku": "BARCODE-BD14",
+   "name": "Barcode BD14"
+  },
+  {
+   "sku": "BARCODE-BD15",
+   "name": "Barcode BD15"
+  },
+  {
+   "sku": "BARCODE-BD16",
+   "name": "Barcode BD16"
+  },
+  {
+   "sku": "BARCODE-BD17",
+   "name": "Barcode BD17"
+  },
+  {
+   "sku": "BARCODE-BD18",
+   "name": "Barcode BD18"
+  },
+  {
+   "sku": "BARCODE-BD2",
+   "name": "Barcode BD2"
+  },
+  {
+   "sku": "BARCODE-BD3",
+   "name": "Barcode BD3"
+  },
+  {
+   "sku": "BARCODE-BD4",
+   "name": "Barcode BD4"
+  },
+  {
+   "sku": "BARCODE-BD5",
+   "name": "Barcode BD5"
+  },
+  {
+   "sku": "BARCODE-BD6",
+   "name": "Barcode BD6"
+  },
+  {
+   "sku": "BARCODE-BD7",
+   "name": "Barcode BD7"
+  },
+  {
+   "sku": "BARCODE-BD8",
+   "name": "Barcode BD8"
+  },
+  {
+   "sku": "BARCODE-BD9A",
+   "name": "Barcode BD9A"
+  },
+  {
+   "sku": "BARCODE-BD9B",
+   "name": "Barcode BD9B"
+  }
+ ],
+ "citiply-exotic-highlights": [
+  {
+   "sku": "CITIPLY-EXOTIC-EXOTIC-RIVERWOOD",
+   "name": "Exotic Riverwood"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-RIVERWOOD",
+   "name": "Riverwood"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-ROUGH-WALNUT",
+   "name": "Rough Walnut"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-SPALTED-WEATHERED-JAPONICA",
+   "name": "Spalted Weathered Japonica"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-VINTAGE-PADOUK",
+   "name": "Vintage Padouk"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-WALNUT-CROTCH",
+   "name": "Walnut Crotch"
+  },
+  {
+   "sku": "CITIPLY-EXOTIC-YEWTREE",
+   "name": "Yewtree"
+  }
+ ],
+ "furrow-vivid-dyed-flutes": [
+  {
+   "sku": "FURROWVIVID-C10-7098",
+   "name": "Furrow Vivid C10 — Dyed Koto 7098"
+  },
+  {
+   "sku": "FURROWVIVID-C121-7101",
+   "name": "Furrow Vivid C121 — Dyed Koto 7101"
+  },
+  {
+   "sku": "FURROWVIVID-C126-7100",
+   "name": "Furrow Vivid C126 — 7100"
+  },
+  {
+   "sku": "FURROWVIVID-C17-R-TULIP",
+   "name": "Furrow Vivid C17 — Dyed Red Tulip"
+  },
+  {
+   "sku": "FURROWVIVID-C180-R2025",
+   "name": "Furrow Vivid C180 — R2025"
+  },
+  {
+   "sku": "FURROWVIVID-C37-7102",
+   "name": "Furrow Vivid C37 — Dyed Koto 7102"
+  },
+  {
+   "sku": "FURROWVIVID-C37-R2023",
+   "name": "Furrow Vivid C37 — R2023"
+  },
+  {
+   "sku": "FURROWVIVID-C71-7105",
+   "name": "Furrow Vivid C71 — 7105"
+  },
+  {
+   "sku": "FURROWVIVID-C78-G-TULIP",
+   "name": "Furrow Vivid C78 — Dyed Green Tulip"
+  }
+ ],
+ "reganto-premier-collection": [
+  {
+   "sku": "REGANTOPREM-305",
+   "name": "Reganto Gris Chene 305"
+  },
+  {
+   "sku": "REGANTOPREM-306L",
+   "name": "Reganto Noir Fume 306L"
+  },
+  {
+   "sku": "REGANTOPREM-312",
+   "name": "Reganto Noce 312"
+  },
+  {
+   "sku": "REGANTOPREM-316",
+   "name": "Reganto Chiaro Noce 316"
+  },
+  {
+   "sku": "REGANTOPREM-322",
+   "name": "Reganto Laurier 322"
+  },
+  {
+   "sku": "REGANTOPREM-322CL",
+   "name": "Reganto Laurier 322CL"
+  },
+  {
+   "sku": "REGANTOPREM-323",
+   "name": "Reganto Dalbergia 323"
+  },
+  {
+   "sku": "REGANTOPREM-327",
+   "name": "Reganto Epicea 327"
+  },
+  {
+   "sku": "REGANTOPREM-343",
+   "name": "Reganto Scuro Ebony 343"
+  },
+  {
+   "sku": "REGANTOPREM-344",
+   "name": "Reganto Ciocco Lato Ebno 344"
+  },
+  {
+   "sku": "REGANTOPREM-365",
+   "name": "Reganto Gris Rovere 365"
+  },
+  {
+   "sku": "REGANTOPREM-369",
+   "name": "Reganto Chiaro Rovere 369"
+  },
+  {
+   "sku": "REGANTOPREM-369CL",
+   "name": "Reganto Sequoia 369CL"
+  },
+  {
+   "sku": "REGANTOPREM-374",
+   "name": "Reganto Tactona 374"
+  },
+  {
+   "sku": "REGANTOPREM-383",
+   "name": "Reganto Sand Rovere 383"
+  },
+  {
+   "sku": "REGANTOPREM-383CL",
+   "name": "Reganto Sand Rovere 383CL"
+  },
+  {
+   "sku": "REGANTOPREM-385",
+   "name": "Reganto Ciocco Lato Noce 385"
+  },
+  {
+   "sku": "REGANTOPREM-385CL",
+   "name": "Reganto Ciocco Lato Noce 385CL"
+  },
+  {
+   "sku": "REGANTOPREM-387",
+   "name": "Reganto Cortado 387"
+  },
+  {
+   "sku": "REGANTOPREM-503",
+   "name": "Reganto Vareno 503"
+  }
+ ]
+}

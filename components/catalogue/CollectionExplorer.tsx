@@ -10,12 +10,34 @@ function uniqueSorted(values: string[]) {
   return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
 }
 
-export function CollectionExplorer({ products }: { products: Product[] }) {
+export function CollectionExplorer({
+  products,
+  speciesById
+}: {
+  products: Product[];
+  /**
+   * Real species label per product id. getVeneerFacets() only derives a
+   * synthetic species from the SKU hash, so pass this wherever the true
+   * species is known (e.g. the family collection a product sits in) and the
+   * Species filter becomes accurate instead of decorative.
+   */
+  speciesById?: Record<string, string>;
+}) {
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
 
   // Compute facets once per product, then reuse for both the option lists and
   // the active filtering below.
-  const facetMap = useMemo(() => new Map(products.map((product) => [product.id, getVeneerFacets(product)])), [products]);
+  const facetMap = useMemo(
+    () =>
+      new Map(
+        products.map((product) => {
+          const facets = getVeneerFacets(product);
+          const species = speciesById?.[product.id];
+          return [product.id, species ? { ...facets, species } : facets] as const;
+        })
+      ),
+    [products, speciesById]
+  );
 
   const groups = useMemo<FilterGroup[]>(() => {
     const all = products.map((product) => facetMap.get(product.id)!);

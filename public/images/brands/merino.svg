@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0%" stop-color="#2B241E"/>
+      <stop offset="100%" stop-color="#141110"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <rect x="36" y="36" width="528" height="528" fill="none" stroke="#C9A75C" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="50%" y="316.56" text-anchor="middle" fill="#C9A75C"
+    font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="400"
+    letter-spacing="1">Merino</text>
+  <line x1="260" x2="340" y1="350.6" y2="350.6" stroke="#C9A75C" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="50%" y="396.6" text-anchor="middle" fill="#F2EDE4" fill-opacity="0.6"
+    font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="20" letter-spacing="5">LAMINATES</text>
+</svg>

@@ -11,6 +11,7 @@ import { BuildPalette } from "@/components/home/BuildPalette";
 import { ArchitectMode } from "@/components/home/ArchitectMode";
 import { RealProjects } from "@/components/home/RealProjects";
 import { WarmEnquiry } from "@/components/home/WarmEnquiry";
+import { StudioSection } from "@/components/home/StudioSection";
 import { getProductFamilies } from "@/lib/catalogue-data";
 import { getProjects } from "@/lib/projects-data";
 
@@ -31,6 +32,7 @@ export default async function HomePage() {
       {/* <RealProjects projects={projects} /> */}
       {/* <ArchitectMode /> */}
       <WarmEnquiry />
+      <StudioSection />
     </>
   );
 }

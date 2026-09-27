@@ -1,0 +1,534 @@
+{
+ "source": "Fandeck Naturals Turakhia FC4 (1).pdf",
+ "series": {
+  "Evergreen": {
+   "category": "evergreen",
+   "page_range": [
+    22,
+    73
+   ],
+   "count": 52,
+   "pages": {
+    "Black Gum": 22,
+    "Indian Rosewood": 23,
+    "Macassar Ebony": 24,
+    "Wenge": 25,
+    "Barbasco": 26,
+    "Yewtree": 27,
+    "Santos Rosewood": 28,
+    "Rosso": 29,
+    "Ontano Rosso": 30,
+    "Stonewood": 31,
+    "Zericoated": 32,
+    "Sucupira": 33,
+    "Ipe": 34,
+    "Spilted": 35,
+    "American Walnut": 36,
+    "Indian Walnut": 37,
+    "European Walnut": 38,
+    "Lacewood": 39,
+    "Zebrano": 40,
+    "Bocote": 41,
+    "Sassnero": 42,
+    "Riverwood": 43,
+    "Spalted Teak": 44,
+    "Burmese Teak": 45,
+    "Golden Wenge": 46,
+    "Anigre Figured": 47,
+    "Eucalyptus Figured": 48,
+    "Anigre": 49,
+    "White Oak": 50,
+    "American Maple": 51,
+    "Chestnut": 52,
+    "Sycamore": 53,
+    "Ash": 54,
+    "Hackberry": 55,
+    "Poplar": 56,
+    "Birds Eye Maple": 57,
+    "Larch": 58,
+    "Rivertree": 59,
+    "Beech": 60,
+    "Lebanese Cedar": 61,
+    "Plaintree": 62,
+    "Red Oak": 63,
+    "Roseheart": 64,
+    "Kevasingo": 65,
+    "Sapeli": 66,
+    "European Cherry": 67,
+    "African Mahogany": 68,
+    "African Cherry": 69,
+    "Red Cedar": 70,
+    "Padauk": 71,
+    "Sapeli Pomele": 72,
+    "Eucalyptus Pommele": 73
+   },
+   "families": null
+  },
+  "Fiero": {
+   "category": "specialty-series",
+   "page_range": [
+    76,
+    115
+   ],
+   "count": 40,
+   "pages": {
+    "Exotic Ebony Oak": 76,
+    "Patternwood Figured": 77,
+    "Sassafras": 78,
+    "Thinwin": 79,
+    "Patternwood Pommele": 80,
+    "Koa": 81,
+    "Teatree": 82,
+    "Saddle Tree": 83,
+    "Raintree": 84,
+    "Rainwood": 85,
+    "Yewwood": 86,
+    "Black Alder": 87,
+    "Jamire": 88,
+    "Cocobolo": 89,
+    "Kossipo": 90,
+    "Kossipo Pomele": 91,
+    "Arc": 92,
+    "Sasswood": 93,
+    "Pearwood": 94,
+    "Barwood": 95,
+    "Sapgum": 96,
+    "Coffeebin": 97,
+    "Zitrone": 98,
+    "Thermo Robusta": 99,
+    "Bolivian": 100,
+    "Laura Petro": 101,
+    "Exotic Bugged Oak": 102,
+    "Bugged Oak": 103,
+    "Mexican Laurel": 104,
+    "Ironwood": 105,
+    "Robusta": 106,
+    "Blackwood": 107,
+    "Brown Laurel": 108,
+    "Izombe": 109,
+    "Golden Patternwood": 110,
+    "Bog Elm": 111,
+    "Bog Ash": 112,
+    "Tan Oak": 113,
+    "Winewood": 114,
+    "Cottonwood": 115
+   },
+   "families": null
+  },
+  "Weathered": {
+   "category": "textured-veneers",
+   "page_range": [
+    118,
+    138
+   ],
+   "count": 21,
+   "pages": {
+    "Crispa": 118,
+    "Nyssa": 119,
+    "Kelloggi": 120,
+    "Bur Oak": 121,
+    "Coralbean": 122,
+    "Cordia Burl": 123,
+    "Cocoplum": 124,
+    "Black Locust": 125,
+    "Ironbark": 126,
+    "Tomentosa": 127,
+    "Pin Oak": 128,
+    "Voilet Armani": 129,
+    "Calabash Burl": 130,
+    "Coccinea": 131,
+    "Cowania": 132,
+    "Plicata": 133,
+    "Ginko": 134,
+    "Japonica": 135,
+    "Bolivier": 136,
+    "Grey Armani": 137,
+    "Sand Bolivier": 138
+   },
+   "families": [
+    {
+     "name": "Oak",
+     "slug": "weathered-oak",
+     "tagline": "Aged bur and pin oak.",
+     "species": [
+      "Bur Oak",
+      "Pin Oak"
+     ]
+    },
+    {
+     "name": "Burl",
+     "slug": "weathered-burl",
+     "tagline": "Cordia and calabash burl, weathered.",
+     "species": [
+      "Cordia Burl",
+      "Calabash Burl"
+     ]
+    },
+    {
+     "name": "Armani",
+     "slug": "weathered-armani",
+     "tagline": "The Armani greys.",
+     "species": [
+      "Voilet Armani",
+      "Grey Armani"
+     ]
+    },
+    {
+     "name": "Bolivier",
+     "slug": "weathered-bolivier",
+     "tagline": "Plain and sand.",
+     "species": [
+      "Bolivier",
+      "Sand Bolivier"
+     ]
+    },
+    {
+     "name": "Deep Weathered",
+     "slug": "weathered-deep",
+     "tagline": "Darker aged tones. Measured swatch luminance below 100.",
+     "species": [
+      "Crispa",
+      "Coralbean",
+      "Kelloggi",
+      "Ginko",
+      "Coccinea"
+     ]
+    },
+    {
+     "name": "Light Weathered",
+     "slug": "weathered-light",
+     "tagline": "Pale driftwood greys. Measured swatch luminance 100 and above.",
+     "species": [
+      "Ironbark",
+      "Tomentosa",
+      "Black Locust",
+      "Nyssa",
+      "Japonica",
+      "Plicata",
+      "Cowania",
+      "Cocoplum"
+     ]
+    }
+   ]
+  },
+  "Roughcut": {
+   "category": "textured-veneers",
+   "page_range": [
+    141,
+    155
+   ],
+   "count": 15,
+   "pages": {
+    "Rough Ebony Oak": 141,
+    "Rough Teatree": 142,
+    "Rough Bur Oak": 143,
+    "Rough Cocoplum": 144,
+    "Rough Yewwood": 145,
+    "Rough Coreal": 146,
+    "Exotic Rough Bugged Oak": 147,
+    "Rough American Walnut": 148,
+    "Rough Bugged Oak": 149,
+    "Rough Burmese Teak": 150,
+    "Rough Kossipo": 151,
+    "Rough Sapeli": 152,
+    "Rough White Oak": 153,
+    "Rough Ash": 154,
+    "Rough Olive Beech": 155
+   },
+   "families": [
+    {
+     "name": "Oak",
+     "slug": "roughcut-oak",
+     "tagline": "Sawn-texture oak, ebony through white.",
+     "species": [
+      "Rough Ebony Oak",
+      "Rough Bur Oak",
+      "Exotic Rough Bugged Oak",
+      "Rough Bugged Oak",
+      "Rough White Oak"
+     ]
+    },
+    {
+     "name": "Deep Roughcut",
+     "slug": "roughcut-deep",
+     "tagline": "Darker sawn textures. Measured swatch luminance below 100.",
+     "species": [
+      "Rough Teatree",
+      "Rough Cocoplum",
+      "Rough Yewwood",
+      "Rough Coreal",
+      "Rough American Walnut",
+      "Rough Burmese Teak",
+      "Rough Kossipo",
+      "Rough Sapeli"
+     ]
+    },
+    {
+     "name": "Light Roughcut",
+     "slug": "roughcut-light",
+     "tagline": "Pale sawn textures. Measured swatch luminance 100 and above.",
+     "species": [
+      "Rough Ash",
+      "Rough Olive Beech"
+     ]
+    }
+   ]
+  },
+  "Volcano": {
+   "category": "textured-veneers",
+   "page_range": [
+    158,
+    160
+   ],
+   "count": 3,
+   "pages": {
+    "Volcano Yewwood": 158,
+    "Volcano Bugged Oak": 159,
+    "Volcano Kossipo": 160
+   },
+   "families": [
+    {
+     "name": "Volcano",
+     "slug": "volcano-diagonal",
+     "tagline": "Diagonal grain undulations. 3D solid-wood illusion.",
+     "species": [
+      "Volcano Yewwood",
+      "Volcano Bugged Oak",
+      "Volcano Kossipo"
+     ]
+    }
+   ]
+  },
+  "Metallico": {
+   "category": "specialty-series",
+   "page_range": [
+    163,
+    197
+   ],
+   "count": 35,
+   "pages": {
+    "Black Oak": 163,
+    "Blackstone": 164,
+    "Blacknut": 165,
+    "Blacktree": 166,
+    "Flame Koa": 167,
+    "Cocotree": 168,
+    "Choconut": 169,
+    "Flame Larch": 170,
+    "Limed Oak": 171,
+    "Choco Eucalyptus Figured": 172,
+    "Choco Birds Eye Maple": 173,
+    "Choco Ash Burl": 174,
+    "Choco Poplar Burl": 175,
+    "Torched Charcoal Oak": 176,
+    "Torched Hagburry": 177,
+    "Torched Eucalyptus Figured": 178,
+    "Torched Ironwood": 179,
+    "Torched Tanned Oak": 180,
+    "Torched Yewtree": 181,
+    "Torched Flame Larch": 182,
+    "Torched Flamed Oak": 183,
+    "Torched Tamo Ash": 184,
+    "Torched Poplar Burl": 185,
+    "Torched Flamed Oak Burl": 186,
+    "Torched Exotic Rough White Oak": 187,
+    "Torched Elm": 188,
+    "Torched Maple": 189,
+    "Torched Sycamore": 190,
+    "Torched Ash": 191,
+    "Torched Birch": 192,
+    "Torched Beech": 193,
+    "Torched Red Oak": 194,
+    "Torched Sapeli": 195,
+    "Firoze Oak": 196,
+    "Firoze Mappa Burl": 197
+   },
+   "families": [
+    {
+     "name": "Black & Charcoal",
+     "slug": "metallico-black",
+     "tagline": "Black metallic filled into open grain.",
+     "species": [
+      "Black Oak",
+      "Blackstone",
+      "Blacknut",
+      "Blacktree"
+     ]
+    },
+    {
+     "name": "Flame",
+     "slug": "metallico-flame",
+     "tagline": "Flame figure with metallic fill.",
+     "species": [
+      "Flame Koa",
+      "Flame Larch"
+     ]
+    },
+    {
+     "name": "Choco",
+     "slug": "metallico-choco",
+     "tagline": "Chocolate metallic fill.",
+     "species": [
+      "Cocotree",
+      "Choconut",
+      "Choco Eucalyptus Figured",
+      "Choco Birds Eye Maple",
+      "Choco Ash Burl",
+      "Choco Poplar Burl"
+     ]
+    },
+    {
+     "name": "Torched",
+     "slug": "metallico-torched",
+     "tagline": "The largest Metallico family - torched bronze over open grain.",
+     "species": [
+      "Torched Charcoal Oak",
+      "Torched Hagburry",
+      "Torched Eucalyptus Figured",
+      "Torched Ironwood",
+      "Torched Tanned Oak",
+      "Torched Yewtree",
+      "Torched Flame Larch",
+      "Torched Flamed Oak",
+      "Torched Tamo Ash",
+      "Torched Poplar Burl",
+      "Torched Flamed Oak Burl",
+      "Torched Exotic Rough White Oak",
+      "Torched Elm",
+      "Torched Maple",
+      "Torched Sycamore",
+      "Torched Ash",
+      "Torched Birch",
+      "Torched Beech",
+      "Torched Red Oak",
+      "Torched Sapeli"
+     ]
+    },
+    {
+     "name": "Limed & Firoze",
+     "slug": "metallico-limed-firoze",
+     "tagline": "White limed and turquoise Firoze accents.",
+     "species": [
+      "Limed Oak",
+      "Firoze Oak",
+      "Firoze Mappa Burl"
+     ]
+    }
+   ]
+  },
+  "Burl": {
+   "category": "specialty-series",
+   "page_range": [
+    200,
+    206
+   ],
+   "count": 7,
+   "pages": {
+    "Vavona Burl": 200,
+    "Walnut Burl": 201,
+    "Elm Burl": 202,
+    "Maple Burl": 203,
+    "Olive Ash Burl": 204,
+    "White Oak Burl": 205,
+    "Poplar Burl": 206
+   },
+   "families": [
+    {
+     "name": "Dark Burl",
+     "slug": "burl-dark",
+     "tagline": "Deep burl figure. Measured swatch luminance below 120.",
+     "species": [
+      "Walnut Burl",
+      "Elm Burl",
+      "Vavona Burl"
+     ]
+    },
+    {
+     "name": "Light Burl",
+     "slug": "burl-light",
+     "tagline": "Pale burl figure. Measured swatch luminance 120 and above.",
+     "species": [
+      "White Oak Burl",
+      "Olive Ash Burl",
+      "Poplar Burl",
+      "Maple Burl"
+     ]
+    }
+   ]
+  },
+  "Faded": {
+   "category": "coloured-veneers",
+   "page_range": [
+    209,
+    214
+   ],
+   "count": 6,
+   "pages": {
+    "Faded Antic Oak": 209,
+    "Faded Blue Moon": 210,
+    "Faded Dyed Sycamore": 211,
+    "Faded Dyed Ash": 212,
+    "Faded Dyed Beech": 213,
+    "Faded Dyed Mahogany": 214
+   },
+   "families": [
+    {
+     "name": "Faded",
+     "slug": "faded-natural",
+     "tagline": "Faded over natural species.",
+     "species": [
+      "Faded Antic Oak",
+      "Faded Blue Moon"
+     ]
+    },
+    {
+     "name": "Faded Dyed",
+     "slug": "faded-dyed",
+     "tagline": "Faded over dyed grounds.",
+     "species": [
+      "Faded Dyed Sycamore",
+      "Faded Dyed Ash",
+      "Faded Dyed Beech",
+      "Faded Dyed Mahogany"
+     ]
+    }
+   ]
+  },
+  "Thunder": {
+   "category": "coloured-veneers",
+   "page_range": [
+    217,
+    221
+   ],
+   "count": 5,
+   "pages": {
+    "Gold Inlay Coffeetree": 217,
+    "Gold Inlay Coffeebin": 218,
+    "Gold Inlay Sassafras": 219,
+    "Acrylico Blackstone": 220,
+    "Acrylico Sassafras": 221
+   },
+   "families": [
+    {
+     "name": "Gold Inlay",
+     "slug": "thunder-gold-inlay",
+     "tagline": "Natural cracks filled with gold acrylic.",
+     "species": [
+      "Gold Inlay Coffeetree",
+      "Gold Inlay Coffeebin",
+      "Gold Inlay Sassafras"
+     ]
+    },
+    {
+     "name": "Acrylico",
+     "slug": "thunder-acrylico",
+     "tagline": "Natural cracks filled with coloured acrylic.",
+     "species": [
+      "Acrylico Blackstone",
+      "Acrylico Sassafras"
+     ]
+    }
+   ]
+  }
+ }
+}

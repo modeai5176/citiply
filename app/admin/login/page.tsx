@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
@@ -10,6 +11,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,13 +37,24 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <section className="grid min-h-screen place-items-center bg-background px-4" data-theme="warm-oak">
+    <section className="grid min-h-screen place-items-center bg-background px-4 text-text-primary" data-theme="warm-oak">
       <div className="w-full max-w-md rounded-xl border border-border bg-white p-6 shadow-soft">
-        <h1 className="text-3xl font-semibold">Admin Login</h1>
+        <h1 className="text-3xl font-semibold text-text-primary">Admin Login</h1>
         <p className="mt-2 text-sm text-text-secondary">Use Supabase email and password authentication.</p>
         <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
           <Input label="Email" name="email" type="email" autoComplete="email" required />
-          <Input label="Password" name="password" type="password" autoComplete="current-password" required />
+          <div className="relative">
+            <Input label="Password" name="password" type={showPassword ? "text" : "password"} autoComplete="current-password" className="w-full pr-11" required />
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="absolute bottom-0 right-0 grid h-11 w-11 cursor-pointer place-items-center text-text-muted hover:text-text-primary"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
           {error ? <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
           <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Signing in..." : "Sign In"}</Button>
         </form>

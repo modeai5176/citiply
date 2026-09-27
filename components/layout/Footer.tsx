@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
+import { SOCIAL_CHANNELS } from "@/lib/studio-content";
 import type { Catalogue, Category, Collection } from "@/lib/types";
 
 export function Footer({ catalogues, categories, collections }: { catalogues: Catalogue[]; categories: Category[]; collections: Collection[] }) {
@@ -44,7 +45,14 @@ export function Footer({ catalogues, categories, collections }: { catalogues: Ca
         <div className="mt-12 flex flex-col gap-4 border-t border-[rgb(var(--color-ivory-rgb)/0.1)] pt-6 text-sm text-[rgb(var(--color-ivory-rgb)/0.55)] sm:flex-row sm:items-center sm:justify-between">
           <p>Copyright © 2026 Citiply. All rights reserved.</p>
           <div className="flex gap-3">
-            {[Facebook, Instagram, Linkedin, Youtube].map((Icon, index) => <Icon className="h-5 w-5 text-[rgb(var(--color-ivory-rgb)/0.65)]" key={index} />)}
+            {SOCIAL_CHANNELS.map((channel) => {
+              const Icon = { instagram: Instagram, youtube: Youtube, facebook: Facebook }[channel.platform];
+              return (
+                <a href={channel.url} target="_blank" rel="noopener noreferrer" aria-label={channel.label} key={channel.platform} className="text-[rgb(var(--color-ivory-rgb)/0.65)] transition-colors hover:text-[rgb(var(--color-ivory-rgb))]">
+                  <Icon className="h-5 w-5" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

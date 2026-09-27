@@ -109,7 +109,7 @@ export default function AdminProductsPage() {
             <AdminTableRow key={product.id}>
               <AdminTableCell><input type="checkbox" checked={selected.includes(product.id)} onChange={(event) => setSelected(event.target.checked ? [...selected, product.id] : selected.filter((id) => id !== product.id))} aria-label={`Select ${product.sku}`} /></AdminTableCell>
               <AdminTableCell className="font-mono text-xs tracking-widest text-text-primary">{product.sku}</AdminTableCell>
-              <AdminTableCell className="font-medium text-text-primary">{product.name}<p className="mt-1 text-xs text-text-muted">{product.finish ?? "No finish"} / {product.color_tone ?? "No tone"}</p></AdminTableCell>
+              <AdminTableCell className="font-medium text-text-primary">{product.name}{product.color_tone ? <p className="mt-1 text-xs text-text-muted">{product.color_tone}</p> : null}</AdminTableCell>
               <AdminTableCell>{collection?.name ?? "-"}</AdminTableCell>
               <AdminTableCell><AdminStatusBadge status={product.is_active ? "active" : "hidden"} /></AdminTableCell>
               <AdminTableCell className="text-right">

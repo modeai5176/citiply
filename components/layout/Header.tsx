@@ -167,7 +167,7 @@ export function Header({ families }: { families: ProductFamily[] }) {
               className="cursor-pointer rounded-full p-2 transition-all duration-300 lg:hidden"
               style={{
                 border: `1px solid ${isTransparent ? 'rgb(var(--on-image) / 0.25)' : 'var(--color-beige)'}`,
-                color: isTransparent ? 'var(--color-ivory)' : 'var(--color-charcoal)',
+                color: isTransparent ? 'rgb(var(--on-image))' : 'var(--color-charcoal)',
               }}
               aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={mobileNavOpen}

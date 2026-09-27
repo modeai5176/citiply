@@ -9,24 +9,17 @@ import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { slugify } from "@/lib/admin/slug";
+import { cn } from "@/lib/utils";
 import type { CategoryRow, CollectionRow, ProductImageRow, ProductRow, ProductSpecRow } from "@/lib/supabase/types";
 
 const productSchema = z.object({
   sku: z.string().min(1, "SKU is required"),
   name: z.string().min(1, "Name is required"),
-  slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Lowercase, numbers and hyphens only"),
   category_id: z.string().min(1, "Category is required"),
   collection_id: z.string().min(1, "Collection is required"),
-  finish: z.string().optional(),
-  base_material: z.string().optional(),
   size: z.string().optional(),
-  thickness: z.string().optional(),
   color_tone: z.string().optional(),
-  applications: z.string().optional(),
   short_description: z.string().optional(),
-  brochure_url: z.string().optional(),
-  seo_title: z.string().optional(),
-  seo_description: z.string().optional(),
   is_active: z.boolean().default(true)
 });
 
@@ -34,23 +27,19 @@ type ProductFormValues = z.infer<typeof productSchema>;
 type SpecDraft = Pick<ProductSpecRow, "spec_name" | "spec_value">;
 type ImageDraft = Pick<ProductImageRow, "image_url" | "thumbnail_url" | "blur_data_url" | "kind">;
 
+const IMAGE_KINDS = ["main", "closeup", "application", "texture"] as const;
+const selectClass = "h-11 rounded-lg border border-border bg-ivory px-3 text-text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-60";
+const rowInputClass = "h-10 rounded-lg border border-border bg-ivory px-3 text-sm text-text-primary outline-none focus:border-accent";
+
 function getProductFormDefaults(initial?: ProductRow | null): ProductFormValues {
   return {
     sku: initial?.sku ?? "",
     name: initial?.name ?? "",
-    slug: initial?.slug ?? "",
     category_id: initial?.category_id ?? "",
     collection_id: initial?.collection_id ?? "",
-    finish: initial?.finish ?? "",
-    base_material: initial?.base_material ?? "",
     size: initial?.size ?? "",
-    thickness: initial?.thickness ?? "",
     color_tone: initial?.color_tone ?? "",
-    applications: initial?.applications?.join(", ") ?? "",
     short_description: initial?.short_description ?? "",
-    brochure_url: initial?.brochure_url ?? "",
-    seo_title: initial?.seo_title ?? "",
-    seo_description: initial?.seo_description ?? "",
     is_active: initial?.is_active ?? true
   };
 }
@@ -70,7 +59,8 @@ export function ProductForm({
 }) {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [collections, setCollections] = useState<CollectionRow[]>([]);
-  const [specs, setSpecs] = useState<SpecDraft[]>(initialSpecs.length ? initialSpecs : [{ spec_name: "", spec_value: "" }]);
+  const [specs, setSpecs] = useState<SpecDraft[]>(initialSpecs);
+  const [applications, setApplications] = useState<string[]>(initial?.applications ?? []);
   const [images, setImages] = useState<ImageDraft[]>(initialImages.map((image) => ({ image_url: image.image_url, thumbnail_url: image.thumbnail_url, blur_data_url: image.blur_data_url, kind: image.kind })));
   const [brochureUrl, setBrochureUrl] = useState(initial?.brochure_url ?? "");
   const [saving, setSaving] = useState(false);
@@ -92,7 +82,8 @@ export function ProductForm({
 
   useEffect(() => {
     form.reset(getProductFormDefaults(initial));
-    setSpecs(initialSpecs.length ? initialSpecs : [{ spec_name: "", spec_value: "" }]);
+    setSpecs(initialSpecs);
+    setApplications(initial?.applications ?? []);
     setImages(initialImages.map((image) => ({ image_url: image.image_url, thumbnail_url: image.thumbnail_url, blur_data_url: image.blur_data_url, kind: image.kind })));
     setBrochureUrl(initial?.brochure_url ?? "");
     setError("");
@@ -100,44 +91,35 @@ export function ProductForm({
 
   const selectedCategory = form.watch("category_id");
   const selectedCollection = form.watch("collection_id");
+  const isActive = form.watch("is_active");
+  const name = form.watch("name");
+  const slug = initial?.slug || slugify(name ?? "");
   const filteredCollections = useMemo(
-    () => collections.filter((collection) => !selectedCategory || collection.category_id === selectedCategory || collection.id === selectedCollection),
-    [collections, selectedCategory, selectedCollection]
+    () => (selectedCategory ? collections.filter((collection) => collection.category_id === selectedCategory) : []),
+    [collections, selectedCategory]
   );
 
+  // Legacy rows can carry a category that doesn't match their collection — trust the collection.
   useEffect(() => {
-    if (!collections.length || !categories.length) return;
-
-    const currentCollectionId = form.getValues("collection_id") || initial?.collection_id || "";
-    const currentCategoryId = form.getValues("category_id") || initial?.category_id || "";
-    const currentCollection = collections.find((collection) => collection.id === currentCollectionId);
-    const categoryExists = categories.some((category) => category.id === currentCategoryId);
-
-    if (currentCollection && (!currentCategoryId || !categoryExists || currentCollection.category_id !== currentCategoryId)) {
+    if (!collections.length) return;
+    const currentCollection = collections.find((collection) => collection.id === form.getValues("collection_id"));
+    if (currentCollection && currentCollection.category_id !== form.getValues("category_id")) {
       form.setValue("category_id", currentCollection.category_id, { shouldDirty: false });
-      form.setValue("collection_id", currentCollection.id, { shouldDirty: false });
     }
-  }, [categories, collections, form, initial?.category_id, initial?.collection_id]);
+  }, [collections, form]);
 
   function handleCategoryChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const nextCategoryId = event.target.value;
-    const currentCollectionId = form.getValues("collection_id");
-    const currentCollection = collections.find((collection) => collection.id === currentCollectionId);
+    const currentCollection = collections.find((collection) => collection.id === form.getValues("collection_id"));
 
     form.setValue("category_id", nextCategoryId, { shouldDirty: true, shouldValidate: true });
-    if (currentCollection && currentCollection.category_id !== nextCategoryId) {
-      form.setValue("collection_id", "", { shouldDirty: true, shouldValidate: true });
+    if (!currentCollection || currentCollection.category_id !== nextCategoryId) {
+      form.setValue("collection_id", "", { shouldDirty: true });
     }
   }
 
-  function handleCollectionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const nextCollectionId = event.target.value;
-    const nextCollection = collections.find((collection) => collection.id === nextCollectionId);
-
-    form.setValue("collection_id", nextCollectionId, { shouldDirty: true, shouldValidate: true });
-    if (nextCollection) {
-      form.setValue("category_id", nextCollection.category_id, { shouldDirty: true, shouldValidate: true });
-    }
+  function setImage(kind: ImageDraft["kind"], image: ImageDraft | null) {
+    setImages((current) => [...current.filter((item) => item.kind !== kind), ...(image?.image_url ? [image] : [])]);
   }
 
   async function checkSku() {
@@ -148,38 +130,49 @@ export function ProductForm({
     if (json.data) form.setError("sku", { message: "SKU already exists" });
   }
 
-  async function onSubmit(values: ProductFormValues) {
-    setSaving(true);
-    setError("");
-    const payload = {
-      sku: values.sku,
-      name: values.name,
-      slug: values.slug,
-      category_id: values.category_id,
-      collection_id: values.collection_id,
-      finish: values.finish || null,
-      base_material: values.base_material || null,
-      size: values.size || null,
-      thickness: values.thickness || null,
-      color_tone: values.color_tone || null,
-      applications: values.applications?.split(",").map((item) => item.trim()).filter(Boolean) ?? [],
-      short_description: values.short_description || null,
-      brochure_url: brochureUrl || null,
-      seo_title: values.seo_title || null,
-      seo_description: values.seo_description || null,
-      is_active: values.is_active
-    };
-
+  async function save(product: Record<string, unknown>) {
     const cleanSpecs = specs.filter((spec) => spec.spec_name.trim() && spec.spec_value.trim());
-    const response = await fetch(initial ? `/api/admin/products/${initial.id}` : "/api/admin/products", {
+    const orderedImages = [...images].sort((a, b) => IMAGE_KINDS.indexOf(a.kind as (typeof IMAGE_KINDS)[number]) - IMAGE_KINDS.indexOf(b.kind as (typeof IMAGE_KINDS)[number]));
+    return fetch(initial ? `/api/admin/products/${initial.id}` : "/api/admin/products", {
       method: initial ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        product: payload,
+        product,
         specs: cleanSpecs.map((spec, index) => ({ ...spec, sort_order: index })),
-        images: images.map((image, index) => ({ ...image, sort_order: index }))
+        images: orderedImages.map((image, index) => ({ ...image, sort_order: index }))
       })
     });
+  }
+
+  async function onSubmit(values: ProductFormValues) {
+    setSaving(true);
+    setError("");
+    const shortDescription = values.short_description?.trim() || null;
+    // finish / base_material / thickness are no longer edited here; omitting them keeps existing values on update.
+    const payload = {
+      sku: values.sku.trim(),
+      name: values.name.trim(),
+      slug: initial?.slug || slugify(values.name),
+      category_id: values.category_id,
+      collection_id: values.collection_id,
+      size: values.size?.trim() || null,
+      color_tone: values.color_tone?.trim() || null,
+      applications: applications.map((item) => item.trim()).filter(Boolean),
+      short_description: shortDescription,
+      brochure_url: brochureUrl || null,
+      seo_title: values.name.trim(),
+      seo_description: shortDescription,
+      is_active: values.is_active
+    };
+
+    let response = await save(payload);
+    // Two products can share a name — fall back to a SKU-suffixed slug on a unique-key clash.
+    if (!response.ok && !initial) {
+      const json = (await response.clone().json()) as { error?: string };
+      if (json.error?.includes("slug")) {
+        response = await save({ ...payload, slug: `${payload.slug}-${slugify(values.sku)}` });
+      }
+    }
 
     if (!response.ok) {
       const json = (await response.json()) as { error?: string };
@@ -195,74 +188,29 @@ export function ProductForm({
   const folder = `products/${form.watch("sku") || "product"}`;
 
   return (
-    <form className="grid gap-5" onSubmit={form.handleSubmit(onSubmit)}>
-      <h2 className="pr-10 text-2xl font-semibold">{initial ? "Edit" : "Add"} Product</h2>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Input label="SKU *" className="font-mono text-sm" {...form.register("sku")} onBlur={checkSku} error={form.formState.errors.sku?.message} />
-        <Input label="Name *" {...form.register("name")} error={form.formState.errors.name?.message} onBlur={() => !initial && !form.getValues("slug") && form.setValue("slug", slugify(form.getValues("name")))} />
-        <Input label="Slug *" className="font-mono text-sm" {...form.register("slug")} error={form.formState.errors.slug?.message} />
-        <label className="grid gap-2 text-sm text-text-secondary">
-          Category *
-          <select className="h-11 rounded-lg border border-border bg-white px-3 text-text-primary" value={selectedCategory} onChange={handleCategoryChange}>
-            <option value="">Select category</option>
-            {categories.map((category) => <option value={category.id} key={category.id}>{category.name}</option>)}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm text-text-secondary">
-          Collection *
-          <select className="h-11 rounded-lg border border-border bg-white px-3 text-text-primary" value={selectedCollection} onChange={handleCollectionChange}>
-            <option value="">Select collection</option>
-            {filteredCollections.map((collection) => <option value={collection.id} key={collection.id}>{collection.name}</option>)}
-          </select>
-        </label>
-        {["finish", "base_material", "size", "thickness", "color_tone", "seo_title"].map((field) => (
-          <Input label={field.replace(/_/g, " ")} key={field} {...form.register(field as keyof ProductFormValues)} />
-        ))}
-      </div>
-      <Input label="Applications (comma-separated)" {...form.register("applications")} />
-      <Textarea label="Short Description" {...form.register("short_description")} />
-      <Textarea label="SEO Description" {...form.register("seo_description")} />
-      <label className="flex items-center gap-2 text-sm text-text-secondary"><input type="checkbox" {...form.register("is_active")} /> Active</label>
+    <form className="grid gap-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <h2 className="pr-10 text-2xl font-semibold text-text-primary">{initial ? "Edit" : "Add"} Product</h2>
 
       <section className="rounded-xl border border-border bg-surface p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="font-semibold">Technical Specs</h3>
-          <Button type="button" variant="ghost" className="px-3 py-2" onClick={() => setSpecs([...specs, { spec_name: "", spec_value: "" }])}><Plus className="h-4 w-4" /> Add</Button>
-        </div>
-        <div className="grid gap-2">
-          {specs.map((spec, index) => (
-            <div className="grid gap-2 md:grid-cols-[1fr_1fr_auto]" key={index}>
-              <input className="h-10 rounded-lg border border-border px-3" placeholder="Spec name" value={spec.spec_name} onChange={(event) => setSpecs(specs.map((item, itemIndex) => itemIndex === index ? { ...item, spec_name: event.target.value } : item))} />
-              <input className="h-10 rounded-lg border border-border px-3" placeholder="Spec value" value={spec.spec_value} onChange={(event) => setSpecs(specs.map((item, itemIndex) => itemIndex === index ? { ...item, spec_value: event.target.value } : item))} />
-              <button type="button" className="cursor-pointer rounded-lg border border-border px-3 text-red-600" onClick={() => setSpecs(specs.filter((_, itemIndex) => itemIndex !== index))}><Trash2 className="h-4 w-4" /></button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="rounded-xl border border-border bg-surface p-4">
-        <h3 className="mb-3 font-semibold">Images</h3>
-        <div className="grid gap-4 md:grid-cols-2">
-          {(["main", "closeup", "application", "texture"] as const).map((kind) => {
+        <h3 className="font-semibold text-text-primary">Product Images</h3>
+        <p className="mb-4 mt-1 text-sm text-text-secondary">The main image is used on cards and listings.</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {IMAGE_KINDS.map((kind) => {
             const image = images.find((item) => item.kind === kind);
             return (
               <div key={kind}>
-                <p className="mb-2 text-sm capitalize text-text-secondary">{kind}</p>
+                <p className="mb-2 text-sm font-medium capitalize text-text-primary">{kind}</p>
                 <ImageUploadField
                   value={image?.image_url ?? ""}
-                  onChange={(url) => {
-                    const nextImage: ImageDraft = { image_url: url, thumbnail_url: url, blur_data_url: null, kind };
-                    setImages([...images.filter((item) => item.kind !== kind), nextImage].filter((item) => item.image_url));
-                  }}
+                  onChange={(url) => setImage(kind, url ? { image_url: url, thumbnail_url: url, blur_data_url: null, kind } : null)}
                   onUploaded={(payload) => {
                     if (!payload.imageUrl) return;
-                    const nextImage: ImageDraft = {
+                    setImage(kind, {
                       image_url: payload.imageUrl,
                       thumbnail_url: payload.thumbnailUrl ?? payload.imageUrl,
                       blur_data_url: payload.blurDataUrl ?? null,
                       kind
-                    };
-                    setImages([...images.filter((item) => item.kind !== kind), nextImage]);
+                    });
                   }}
                   folder={folder}
                   filename={kind}
@@ -273,14 +221,103 @@ export function ProductForm({
         </div>
       </section>
 
+      <div className="grid gap-4 md:grid-cols-2">
+        <Input label="Name *" {...form.register("name")} error={form.formState.errors.name?.message} />
+        <Input label="SKU *" className="font-mono text-sm" {...form.register("sku")} onBlur={checkSku} error={form.formState.errors.sku?.message} />
+        <p className="-mt-2 text-xs text-text-muted md:col-span-2">
+          Slug: <span className="font-mono">{slug || "…"}</span>{initial ? " (kept stable for existing products)" : " (generated from name)"}
+        </p>
+        <label className="grid gap-2 text-sm text-text-secondary">
+          <span>Category *</span>
+          <select className={selectClass} value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="">Select category</option>
+            {categories.map((category) => <option value={category.id} key={category.id}>{category.name}</option>)}
+          </select>
+          {form.formState.errors.category_id ? <span className="text-xs text-red-600">{form.formState.errors.category_id.message}</span> : null}
+        </label>
+        <label className="grid gap-2 text-sm text-text-secondary">
+          <span>Collection *</span>
+          <select
+            className={selectClass}
+            value={selectedCollection}
+            disabled={!selectedCategory}
+            onChange={(event) => form.setValue("collection_id", event.target.value, { shouldDirty: true, shouldValidate: true })}
+          >
+            <option value="">{selectedCategory ? (filteredCollections.length ? "Select collection" : "No collections in this category") : "Select category first"}</option>
+            {filteredCollections.map((collection) => <option value={collection.id} key={collection.id}>{collection.name}</option>)}
+          </select>
+          {!selectedCategory ? (
+            <span className="text-xs text-amber-700">Select a category first to see its collections.</span>
+          ) : form.formState.errors.collection_id ? (
+            <span className="text-xs text-red-600">{form.formState.errors.collection_id.message}</span>
+          ) : null}
+        </label>
+        <Input label="Size" {...form.register("size")} />
+        <Input label="Color tone" {...form.register("color_tone")} />
+      </div>
+
+      <Textarea label="Short Description (also used as SEO description)" {...form.register("short_description")} />
+
+      <div className="flex items-center justify-between rounded-xl border border-border bg-surface p-4">
+        <div>
+          <p className="font-medium text-text-primary">{isActive ? "Active" : "Inactive"}</p>
+          <p className="text-sm text-text-secondary">{isActive ? "Visible on the public site." : "Hidden from the public site."}</p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={isActive}
+          aria-label="Toggle product active"
+          onClick={() => form.setValue("is_active", !isActive, { shouldDirty: true })}
+          className={cn("relative h-7 w-12 shrink-0 cursor-pointer rounded-full transition-colors", isActive ? "bg-emerald-600" : "bg-stone")}
+        >
+          <span className={cn("absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform", isActive && "translate-x-5")} />
+        </button>
+      </div>
+
+      <section className="rounded-xl border border-border bg-surface p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-semibold text-text-primary">Applications <span className="text-sm font-normal text-text-muted">(optional)</span></h3>
+          <Button type="button" variant="ghost" className="px-3 py-2 text-text-primary" onClick={() => setApplications([...applications, ""])}><Plus className="h-4 w-4" /> Add application</Button>
+        </div>
+        {applications.length ? (
+          <div className="mt-3 grid gap-2">
+            {applications.map((application, index) => (
+              <div className="grid grid-cols-[1fr_auto] gap-2" key={index}>
+                <input className={rowInputClass} placeholder="e.g. Wall panelling" autoFocus={!application} value={application} onChange={(event) => setApplications(applications.map((item, itemIndex) => itemIndex === index ? event.target.value : item))} />
+                <button type="button" aria-label="Remove application" className="cursor-pointer rounded-lg border border-border px-3 text-red-600" onClick={() => setApplications(applications.filter((_, itemIndex) => itemIndex !== index))}><Trash2 className="h-4 w-4" /></button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <section className="rounded-xl border border-border bg-surface p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-semibold text-text-primary">Technical Specs <span className="text-sm font-normal text-text-muted">(optional)</span></h3>
+          <Button type="button" variant="ghost" className="px-3 py-2 text-text-primary" onClick={() => setSpecs([...specs, { spec_name: "", spec_value: "" }])}><Plus className="h-4 w-4" /> Add spec</Button>
+        </div>
+        {specs.length ? (
+          <div className="mt-3 grid gap-2">
+            {specs.map((spec, index) => (
+              <div className="grid gap-2 md:grid-cols-[1fr_1fr_auto]" key={index}>
+                <input className={rowInputClass} placeholder="Spec name" autoFocus={!spec.spec_name && !spec.spec_value} value={spec.spec_name} onChange={(event) => setSpecs(specs.map((item, itemIndex) => itemIndex === index ? { ...item, spec_name: event.target.value } : item))} />
+                <input className={rowInputClass} placeholder="Spec value" value={spec.spec_value} onChange={(event) => setSpecs(specs.map((item, itemIndex) => itemIndex === index ? { ...item, spec_value: event.target.value } : item))} />
+                <button type="button" aria-label="Remove spec" className="cursor-pointer rounded-lg border border-border px-3 text-red-600" onClick={() => setSpecs(specs.filter((_, itemIndex) => itemIndex !== index))}><Trash2 className="h-4 w-4" /></button>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
       <div>
-        <p className="mb-2 text-sm text-text-secondary">Brochure PDF</p>
+        <p className="mb-2 text-sm font-medium text-text-primary">Brochure PDF <span className="font-normal text-text-muted">(optional)</span></p>
         <ImageUploadField value={brochureUrl} onChange={setBrochureUrl} folder={folder} filename="brochure" type="pdf" />
       </div>
       {error ? <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
       <div className="flex gap-3">
         <Button type="submit" disabled={saving}>{saving ? "Saving..." : "Save Product"}</Button>
-        <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+        <Button type="button" variant="ghost" className="text-text-primary" onClick={onCancel}>Cancel</Button>
       </div>
     </form>
   );

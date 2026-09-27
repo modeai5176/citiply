@@ -28,6 +28,10 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
   ]);
   const collection = collections.find((item) => item.id === product.collectionId);
   const category = categories.find((item) => item.id === product.categoryId);
+  const details = [
+    ["Size", product.size],
+    ["Color Tone", product.colorTone]
+  ].filter(([, value]) => value && value !== "Not specified");
 
   return (
     <>
@@ -46,48 +50,53 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
             <ProductCodeBadge code={product.sku} className="text-sm" />
             <h1 className="mt-5 text-5xl font-semibold">{product.name}</h1>
             {collection ? <Link className="mt-4 inline-flex text-accent" href={`/collections/${collection.slug}`}>{collection.name}</Link> : null}
-            <p className="mt-5 text-text-secondary">{product.shortDescription}</p>
-            <div className="mt-8 grid grid-cols-2 gap-3">
-              {[
-                ["Finish", product.finish],
-                ["Base Material", product.baseMaterial],
-                ["Size", product.size],
-                ["Thickness", product.thickness],
-                ["Color Tone", product.colorTone]
-              ].map(([name, value]) => (
-                <div className="rounded-lg border border-border bg-ivory p-4" key={name}>
-                  <p className="text-xs uppercase tracking-[0.2em] text-text-muted">{name}</p>
-                  <p className="mt-2 font-medium">{value}</p>
+            {product.shortDescription ? <p className="mt-5 text-text-secondary">{product.shortDescription}</p> : null}
+            {details.length ? (
+              <dl className="mt-8 divide-y divide-border border-y border-border">
+                {details.map(([name, value]) => (
+                  <div className="flex items-baseline justify-between gap-6 py-3" key={name}>
+                    <dt className="text-xs uppercase tracking-[0.2em] text-text-muted">{name}</dt>
+                    <dd className="text-right font-medium">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+            {product.applications.length ? (
+              <div className="mt-6">
+                <p className="text-xs uppercase tracking-[0.2em] text-text-muted">Applications</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {product.applications.map((item) => <Badge key={item}>{item}</Badge>)}
                 </div>
-              ))}
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {product.applications.map((item) => <Badge key={item}>{item}</Badge>)}
-            </div>
+              </div>
+            ) : null}
             <div className="mt-8 flex flex-wrap gap-3">
               {product.brochureUrl !== "#" ? <Button href={product.brochureUrl} target="_blank"><Download className="h-4 w-4" /> Download Brochure</Button> : null}
-              <ProductQuoteButton product={{ sku: product.sku, name: product.name, finish: product.finish, colorTone: product.colorTone, imageUrl: product.images[0]?.thumbnailUrl }} />
+              <ProductQuoteButton product={{ sku: product.sku, name: product.name, colorTone: product.colorTone === "Not specified" ? undefined : product.colorTone, imageUrl: product.images[0]?.thumbnailUrl }} />
             </div>
             <div className="mt-3 max-w-xs">
               <AddToEnquiryButton product={product} variant="detail" />
             </div>
           </div>
         </div>
-        <div className="mt-16">
-          <h2 className="text-3xl font-semibold">Technical Specs</h2>
-          <div className="mt-5 overflow-hidden rounded-xl border border-border bg-ivory">
-            {product.specs.map((spec) => (
-              <div className="grid grid-cols-2 border-b border-border last:border-0" key={spec.name}>
-                <div className="bg-surface p-4 text-sm font-medium">{spec.name}</div>
-                <div className="p-4 text-sm text-text-secondary">{spec.value}</div>
-              </div>
-            ))}
+        {product.specs.length ? (
+          <div className="mt-16">
+            <h2 className="text-3xl font-semibold">Technical Specs</h2>
+            <dl className="mt-5 max-w-3xl divide-y divide-border border-y border-border">
+              {product.specs.map((spec) => (
+                <div className="grid grid-cols-2 gap-6 py-3 text-sm" key={spec.name}>
+                  <dt className="font-medium">{spec.name}</dt>
+                  <dd className="text-text-secondary">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-        </div>
-        <div className="mt-16">
-          <h2 className="mb-6 text-3xl font-semibold">Related Products</h2>
-          <ProductGrid products={related} />
-        </div>
+        ) : null}
+        {related.length ? (
+          <div className="mt-16">
+            <h2 className="mb-6 text-3xl font-semibold">Related Products</h2>
+            <ProductGrid products={related} />
+          </div>
+        ) : null}
       </section>
     </>
   );

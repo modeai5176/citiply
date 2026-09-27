@@ -8,7 +8,7 @@ import { RequestSampleButton } from "@/components/catalogue/RequestSampleButton"
 import { Button } from "@/components/ui/Button";
 import { getCategories, getCollectionBySlug, getCollections, getProducts } from "@/lib/catalogue-data";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 const WHATSAPP_NUMBER = "919136460666";
 

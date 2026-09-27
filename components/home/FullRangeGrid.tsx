@@ -64,6 +64,7 @@ export function FullRangeGrid({ families }: { families: ProductFamilyWithCount[]
   return (
     <section
       ref={sectionRef}
+      id="full-range"
       className="section-padding"
       style={{ background: 'var(--color-ivory)' }}
     >

@@ -316,3 +316,4 @@ export async function getProductFamilies(): Promise<ProductFamilyWithCount[]> {
     return { ...family, collectionCount };
   });
 }
+

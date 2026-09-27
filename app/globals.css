@@ -294,6 +294,45 @@ a {
   transform-origin: left center;
 }
 
+/* Hero CTA: underline link on desktop, full gold button on mobile/tablet where
+   the globe is hidden and this is the main conversion path. */
+@media (max-width: 1023px) {
+  .hero-cta.cta-underline {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 1.75rem;
+    border-radius: 9999px;
+    background: var(--color-gold);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  .hero-cta.cta-underline:hover { background: var(--accent-hover); }
+  .hero-cta.cta-underline::after { display: none; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-cta.cta-underline { display: inline-flex; width: auto; }
+}
+
+/* Brand marquee — duplicated track slides by exactly half its width for a seamless loop. */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee-x 32s linear infinite; }
+
+/* Slow ken-burns drift on the mobile hero texture, echoing the enquiry section. */
+@keyframes hero-texture-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.hero-texture { animation: hero-texture-drift 18s ease-in-out infinite alternate; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .hero-texture { animation: none; }
+}
+
 /* ── Scroll Cue (pulsing vertical line) ── */
 .scroll-cue {
   width: 1px;

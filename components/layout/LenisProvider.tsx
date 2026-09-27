@@ -20,6 +20,8 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       touchMultiplier: 1.5,
+      // Smooth-scroll in-page #anchor links, landing below the fixed header (HeaderSpacer height).
+      anchors: { offset: -116 },
     });
 
     lenisRef.current = lenis;
