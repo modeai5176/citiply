@@ -30,7 +30,8 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
   const category = categories.find((item) => item.id === product.categoryId);
   const details = [
     ["Size", product.size],
-    ["Color Tone", product.colorTone]
+    ["Color Tone", product.colorTone],
+    ["Available Quantity", product.quantity]
   ].filter(([, value]) => value && value !== "Not specified");
 
   return (
@@ -47,7 +48,15 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
         <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(360px,2fr)]">
           <ImageGallery images={product.images} />
           <div>
-            <ProductCodeBadge code={product.sku} className="text-sm" />
+            <div className="flex flex-wrap items-center gap-3">
+              <ProductCodeBadge code={product.sku} className="text-sm" />
+              {product.quantity ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/20 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  Qty: {product.quantity}
+                </span>
+              ) : null}
+            </div>
             <h1 className="mt-5 text-5xl font-semibold">{product.name}</h1>
             {collection ? <Link className="mt-4 inline-flex text-accent" href={`/collections/${collection.slug}`}>{collection.name}</Link> : null}
             {product.shortDescription ? <p className="mt-5 text-text-secondary">{product.shortDescription}</p> : null}
@@ -71,7 +80,7 @@ export default async function ProductDetailPage({ params }: { params: { sku: str
             ) : null}
             <div className="mt-8 flex flex-wrap gap-3">
               {product.brochureUrl !== "#" ? <Button href={product.brochureUrl} target="_blank"><Download className="h-4 w-4" /> Download Brochure</Button> : null}
-              <ProductQuoteButton product={{ sku: product.sku, name: product.name, colorTone: product.colorTone === "Not specified" ? undefined : product.colorTone, imageUrl: product.images[0]?.thumbnailUrl }} />
+              <ProductQuoteButton product={{ sku: product.sku, name: product.name, colorTone: product.colorTone === "Not specified" ? undefined : product.colorTone, imageUrl: product.images[0]?.thumbnailUrl, quantity: product.quantity ?? undefined }} />
             </div>
             <div className="mt-3 max-w-xs">
               <AddToEnquiryButton product={product} variant="detail" />

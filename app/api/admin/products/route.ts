@@ -21,12 +21,29 @@ export async function GET() {
 export async function POST(request: Request) {
   const payload = (await request.json()) as ProductPayload;
   const supabase = createAdminClient();
-  const { data: product, error } = await supabase.from("products").insert(payload.product).select("id").single();
+
+  let productInsert = { ...payload.product };
+  let pendingSpecs = [...(payload.specs ?? [])];
+
+  let { data: product, error } = await supabase.from("products").insert(productInsert).select("id").single();
+
+  // Graceful fallback if quantity column is not present in live Supabase table
+  if (error && error.message?.includes("quantity") && "quantity" in productInsert) {
+    const qtyValue = String(productInsert.quantity ?? "");
+    delete productInsert.quantity;
+    if (qtyValue) {
+      pendingSpecs.push({ spec_name: "Quantity", spec_value: qtyValue });
+    }
+    const retry = await supabase.from("products").insert(productInsert).select("id").single();
+    product = retry.data;
+    error = retry.error;
+  }
+
   if (error || !product) return NextResponse.json({ error: error?.message ?? "Could not create product" }, { status: 500 });
 
   const productId = product.id as string;
-  if (payload.specs?.length) {
-    const { error: specError } = await supabase.from("product_specs").insert(payload.specs.map((spec, index) => ({ ...spec, product_id: productId, sort_order: spec.sort_order ?? index })));
+  if (pendingSpecs.length) {
+    const { error: specError } = await supabase.from("product_specs").insert(pendingSpecs.map((spec, index) => ({ ...spec, product_id: productId, sort_order: spec.sort_order ?? index })));
     if (specError) return NextResponse.json({ error: specError.message }, { status: 500 });
   }
   if (payload.images?.length) {

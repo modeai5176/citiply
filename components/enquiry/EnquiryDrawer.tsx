@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 
 const formSchema = z.object({
   full_name: z.string().min(2, "Full name is required"),
+  email: z.string().email("Enter a valid email address").min(5, "Email is required"),
   phone: z.string().min(7, "Phone is required"),
   whatsapp: z.string().optional(),
   firm: z.string().optional(),
@@ -26,7 +27,7 @@ export function EnquiryDrawer() {
   const [error, setError] = useState("");
   const form = useForm<EnquiryFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { full_name: "", phone: "", whatsapp: "", firm: "", city: "", message: "" }
+    defaultValues: { full_name: "", email: "", phone: "", whatsapp: "", firm: "", city: "", message: "" }
   });
 
   if (!drawerOpen) return null;
@@ -119,10 +120,11 @@ export function EnquiryDrawer() {
             <div className="grid flex-1 gap-4 overflow-y-auto p-5 sm:grid-cols-2">
               {error ? <div className="sm:col-span-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div> : null}
               <Input label="Full Name*" {...form.register("full_name")} error={form.formState.errors.full_name?.message} />
+              <Input label="Email*" type="email" placeholder="you@company.com" {...form.register("email")} error={form.formState.errors.email?.message} />
               <Input label="Phone*" {...form.register("phone")} error={form.formState.errors.phone?.message} />
               <Input label="WhatsApp" {...form.register("whatsapp")} />
-              <Input label="Firm / Company" {...form.register("firm")} />
               <Input label="City*" {...form.register("city")} error={form.formState.errors.city?.message} />
+              <Input label="Firm / Company" {...form.register("firm")} />
               <Textarea className="sm:col-span-2" label="Project / Message" {...form.register("message")} />
             </div>
             <div className="border-t border-border p-4">

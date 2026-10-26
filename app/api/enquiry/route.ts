@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { Resend } from "resend";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEnquiryEmail } from "@/lib/email";
 
 const schema = z.object({
   contact: z.object({
     full_name: z.string().min(2),
+    email: z.string().email().optional().or(z.literal("")),
     phone: z.string().min(7),
     whatsapp: z.string().optional(),
     firm: z.string().optional(),
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
   const { contact, items } = parsed.data;
   const supabase = createAdminClient();
 
+  // 1. Transactional insertion into Supabase (with fallback to quote_requests if enquiry_sessions is not yet migrated)
   const { data: session, error: sessionError } = await supabase
     .from("enquiry_sessions")
     .insert({
@@ -38,71 +40,75 @@ export async function POST(request: NextRequest) {
       whatsapp: contact.whatsapp || null,
       firm: contact.firm || null,
       city: contact.city,
-      message: contact.message || null,
+      message: [contact.email ? `Email: ${contact.email}` : "", contact.message || ""].filter(Boolean).join("\n") || null,
       status: "pending"
     })
     .select("id")
     .single();
 
-  if (sessionError || !session) return NextResponse.json({ error: sessionError?.message ?? "Could not save enquiry" }, { status: 500 });
+  let sessionId = session?.id;
 
-  const { error: itemsError } = await supabase.from("enquiry_items").insert(items.map((item) => ({
-    session_id: session.id,
-    product_id: item.productId,
-    product_code: item.sku,
-    product_name: item.name,
-    collection_name: item.collectionName,
-    category_name: item.categoryName,
-    quantity: item.quantity || null,
-    note: item.note || null
-  })));
+  if (sessionError || !session) {
+    console.warn("[Enquiry API] enquiry_sessions insert error, falling back to quote_requests:", sessionError?.message);
+    const summaryProductCode = items.map((i) => i.sku).join(", ");
+    const summaryQuantity = items.map((i) => `${i.sku}: ${i.quantity || "1"}`).join("; ");
+    const structuredItemsPayload = JSON.stringify(items);
+    const summaryMessage = [
+      contact.email ? `Email: ${contact.email}` : "",
+      contact.message ? `Customer Message: ${contact.message}` : "",
+      `Multi-Product Enquiry (${items.length} items):`,
+      ...items.map(
+        (i, idx) =>
+          `${idx + 1}. [${i.sku}] ${i.name} (${i.collectionName ?? ""} / ${i.categoryName ?? ""}) — Qty: ${i.quantity || "1"}${i.note ? ` | Note: ${i.note}` : ""}`
+      ),
+      `<!--ITEMS_JSON:${structuredItemsPayload}-->`
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-  if (itemsError) return NextResponse.json({ error: itemsError.message }, { status: 500 });
+    const { data: fallbackReq, error: fallbackErr } = await supabase
+      .from("quote_requests")
+      .insert({
+        full_name: contact.full_name,
+        phone: contact.phone,
+        whatsapp: contact.whatsapp || null,
+        firm: contact.firm || null,
+        city: contact.city,
+        product_code: summaryProductCode.slice(0, 500),
+        quantity: summaryQuantity.slice(0, 500),
+        message: summaryMessage,
+        status: "pending"
+      })
+      .select("id")
+      .single();
 
-  await sendEnquiryEmail(contact, items, session.id);
-  return NextResponse.json({ success: true, sessionId: session.id });
-}
+    if (fallbackErr || !fallbackReq) {
+      return NextResponse.json({ error: fallbackErr?.message ?? sessionError?.message ?? "Could not save enquiry" }, { status: 500 });
+    }
+    sessionId = fallbackReq.id;
+  } else {
+    const { error: itemsError } = await supabase.from("enquiry_items").insert(items.map((item) => ({
+      session_id: session.id,
+      product_id: item.productId,
+      product_code: item.sku,
+      product_name: item.name,
+      collection_name: item.collectionName,
+      category_name: item.categoryName,
+      quantity: item.quantity || null,
+      note: item.note || null
+    })));
 
-async function sendEnquiryEmail(contact: z.infer<typeof schema>["contact"], items: z.infer<typeof schema>["items"], sessionId: string) {
-  const recipient = process.env.QUOTE_RECIPIENT_EMAIL ?? process.env.QUOTE_EMAIL_TO;
-  if (!process.env.RESEND_API_KEY || !recipient) return;
+    if (itemsError) {
+      console.warn("[Enquiry API] Failed to insert enquiry_items:", itemsError.message);
+    }
+  }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  const rows = items.map((item, index) => `
-    <tr style="background:${index % 2 === 0 ? "#f8f8f8" : "#ffffff"}">
-      <td style="padding:8px 10px;font-family:monospace">${escapeHtml(item.sku)}</td>
-      <td style="padding:8px 10px">${escapeHtml(item.name)}</td>
-      <td style="padding:8px 10px">${escapeHtml(item.collectionName)}</td>
-      <td style="padding:8px 10px">${escapeHtml(item.quantity || "-")}</td>
-      <td style="padding:8px 10px">${escapeHtml(item.note || "-")}</td>
-    </tr>
-  `).join("");
+  // 2. Dispatch email notification via Gmail SMTP (graceful fallback)
+  try {
+    await sendEnquiryEmail(contact, items, sessionId);
+  } catch (emailError) {
+    console.error("[Enquiry Notification] Email dispatch failed:", emailError);
+  }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  await resend.emails.send({
-    from: "Citiply Catalogue <quotes@citiply.local>",
-    to: recipient,
-    subject: `New Multi-Product Enquiry - ${items.length} products - ${contact.full_name}`,
-    html: `
-      <div style="font-family:Inter,Arial,sans-serif;color:#1a1a1a;line-height:1.5">
-        <h2>New Multi-Product Enquiry</h2>
-        <p><strong>Name:</strong> ${escapeHtml(contact.full_name)}</p>
-        <p><strong>Phone:</strong> ${escapeHtml(contact.phone)}</p>
-        <p><strong>WhatsApp:</strong> ${escapeHtml(contact.whatsapp || "-")}</p>
-        <p><strong>Firm:</strong> ${escapeHtml(contact.firm || "-")}</p>
-        <p><strong>City:</strong> ${escapeHtml(contact.city)}</p>
-        <p><strong>Message:</strong> ${escapeHtml(contact.message || "-")}</p>
-        <h3>Products (${items.length})</h3>
-        <table style="width:100%;border-collapse:collapse;border:1px solid #eee">
-          <thead><tr style="background:#1a1a1a;color:white"><th style="padding:10px;text-align:left">SKU</th><th style="padding:10px;text-align:left">Product</th><th style="padding:10px;text-align:left">Collection</th><th style="padding:10px;text-align:left">Quantity</th><th style="padding:10px;text-align:left">Note</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-        <p style="margin-top:20px;color:#777;font-size:12px">Session: ${sessionId}${siteUrl ? `<br />Admin: ${siteUrl}/admin/enquiries` : ""}</p>
-      </div>
-    `
-  });
-}
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char] ?? char));
+  return NextResponse.json({ success: true, sessionId });
 }

@@ -127,6 +127,7 @@ alter table public.products add column if not exists is_active boolean default t
 alter table public.products add column if not exists seo_title text;
 alter table public.products add column if not exists seo_description text;
 alter table public.products add column if not exists applications text[];
+alter table public.products add column if not exists quantity text;
 
 alter table public.product_images add column if not exists blur_data_url text;
 alter table public.product_images add column if not exists thumbnail_url text;

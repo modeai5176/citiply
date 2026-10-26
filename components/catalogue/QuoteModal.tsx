@@ -20,6 +20,7 @@ type QuoteProductSummary = {
   finish?: string;
   colorTone?: string;
   imageUrl?: string;
+  quantity?: string;
 };
 
 const QuoteContext = createContext<QuoteContextValue | null>(null);
@@ -89,13 +90,19 @@ export function QuoteModalProvider({ children }: { children: React.ReactNode }) 
                     <p className="font-semibold text-text-primary">{selectedProduct.name}</p>
                     <p className="text-sm text-text-secondary">{selectedProduct.sku}</p>
                   </div>
-                  {(selectedProduct.finish || selectedProduct.colorTone) ? (
-                    <p className="text-sm text-text-muted">{[selectedProduct.finish, selectedProduct.colorTone].filter(Boolean).join(" / ")}</p>
-                  ) : null}
+                  <div className="text-left sm:text-right">
+                    {(selectedProduct.finish || selectedProduct.colorTone) ? (
+                      <p className="text-sm text-text-muted">{[selectedProduct.finish, selectedProduct.colorTone].filter(Boolean).join(" / ")}</p>
+                    ) : null}
+                    {selectedProduct.quantity ? (
+                      <p className="text-xs font-medium text-emerald-800">In Stock: {selectedProduct.quantity}</p>
+                    ) : null}
+                  </div>
                 </div>
               </div>
             ) : null}
             <Input label="Full Name*" {...form.register("fullName")} error={form.formState.errors.fullName?.message} />
+            <Input label="Email" type="email" placeholder="you@company.com" {...form.register("email")} error={form.formState.errors.email?.message} />
             <Input label="Phone*" {...form.register("phone")} error={form.formState.errors.phone?.message} />
             <Input label="WhatsApp" {...form.register("whatsapp")} error={form.formState.errors.whatsapp?.message} />
             <Input label="Firm / Company" {...form.register("firm")} />

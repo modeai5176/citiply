@@ -4,6 +4,7 @@ const phonePattern = /^\+?[0-9\s()-]{8,20}$/;
 
 export const quoteSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
+  email: z.string().email("Enter a valid email address").optional().or(z.literal("")),
   phone: z.string().regex(phonePattern, "Enter a valid phone number"),
   whatsapp: z.string().regex(phonePattern, "Enter a valid WhatsApp number").optional().or(z.literal("")),
   firm: z.string().optional(),

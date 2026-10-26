@@ -113,6 +113,11 @@ function mapProduct(row: ProductWithRelations): Product {
     colorTone: row.color_tone ?? "Not specified",
     applications: row.applications ?? [],
     shortDescription: row.short_description ?? "",
+    quantity:
+      row.quantity ??
+      (row.product_specs ?? []).find((s) => s.spec_name.toLowerCase() === "quantity")?.spec_value ??
+      row.short_description?.match(/Qty:\s*([^)]+)/i)?.[1]?.trim() ??
+      null,
     specs: (row.product_specs ?? [])
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order)

@@ -66,6 +66,7 @@ export type Product = {
   colorTone: string;
   applications: string[];
   shortDescription: string;
+  quantity?: string | null;
   specs: Array<{ name: string; value: string }>;
   images: ProductImage[];
   brochureUrl: string;

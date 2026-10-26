@@ -21,6 +21,7 @@ type EnquirySession = {
   id: string;
   created_at: string;
   full_name: string;
+  email?: string | null;
   phone: string;
   whatsapp: string | null;
   firm: string | null;
@@ -65,7 +66,7 @@ export default function AdminEnquiriesPage() {
   }
 
   const filtered = useMemo(() => sessions.filter((session) => {
-    const haystack = `${session.full_name} ${session.phone} ${session.city} ${session.firm ?? ""} ${session.enquiry_items.map((item) => `${item.product_code} ${item.product_name}`).join(" ")}`.toLowerCase();
+    const haystack = `${session.full_name} ${session.email ?? ""} ${session.phone} ${session.city} ${session.firm ?? ""} ${session.enquiry_items.map((item) => `${item.product_code} ${item.product_name}`).join(" ")}`.toLowerCase();
     return haystack.includes(search.toLowerCase()) && (!statusFilter || session.status === statusFilter);
   }), [sessions, search, statusFilter]);
 
@@ -114,8 +115,10 @@ export default function AdminEnquiriesPage() {
                 <tr className="border-t border-border bg-surface/60">
                   <td className="px-4 py-5" colSpan={7}>
                     <div className="grid gap-3 text-sm md:grid-cols-3">
+                      <p><span className="text-text-muted">Email:</span> {session.email ? <a className="text-accent" href={`mailto:${session.email}`}>{session.email}</a> : <span className="text-text-muted">Not provided</span>}</p>
                       <p><span className="text-text-muted">Phone:</span> <a className="text-accent" href={`tel:${session.phone}`}>{session.phone}</a></p>
                       <p><span className="text-text-muted">WhatsApp:</span> <a className="text-accent" href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`} target="_blank" rel="noreferrer">{session.whatsapp ?? session.phone}</a></p>
+                      <p><span className="text-text-muted">City:</span> {session.city}</p>
                       <p><span className="text-text-muted">Firm:</span> {session.firm ?? "-"}</p>
                       <p className="md:col-span-3"><span className="text-text-muted">Message:</span> {session.message ?? "-"}</p>
                     </div>

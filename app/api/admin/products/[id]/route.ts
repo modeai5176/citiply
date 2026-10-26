@@ -17,18 +17,43 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   if (product.error) return NextResponse.json({ error: product.error.message }, { status: 500 });
   if (specs.error) return NextResponse.json({ error: specs.error.message }, { status: 500 });
   if (images.error) return NextResponse.json({ error: images.error.message }, { status: 500 });
-  return NextResponse.json({ data: product.data, specs: specs.data, images: images.data });
+
+  const productData = product.data;
+  if (!productData.quantity) {
+    const specQty = specs.data?.find((s) => s.spec_name.toLowerCase() === "quantity")?.spec_value;
+    const descQty = productData.short_description?.match(/Qty:\s*([^)]+)/i)?.[1]?.trim();
+    productData.quantity = specQty ?? descQty ?? null;
+  }
+
+  return NextResponse.json({ data: productData, specs: specs.data, images: images.data });
 }
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   const payload = (await request.json()) as ProductPayload;
   const supabase = createAdminClient();
-  const { error } = await supabase.from("products").update(payload.product).eq("id", params.id);
+
+  let productUpdate = { ...payload.product };
+  let pendingSpecs = [...(payload.specs ?? [])];
+
+  let { error } = await supabase.from("products").update(productUpdate).eq("id", params.id);
+
+  // Graceful fallback if quantity column is not present in live Supabase table
+  if (error && error.message?.includes("quantity") && "quantity" in productUpdate) {
+    const qtyValue = String(productUpdate.quantity ?? "");
+    delete productUpdate.quantity;
+    if (qtyValue) {
+      pendingSpecs = pendingSpecs.filter((s) => s.spec_name.toLowerCase() !== "quantity");
+      pendingSpecs.push({ spec_name: "Quantity", spec_value: qtyValue });
+    }
+    const retry = await supabase.from("products").update(productUpdate).eq("id", params.id);
+    error = retry.error;
+  }
+
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   await supabase.from("product_specs").delete().eq("product_id", params.id);
-  if (payload.specs?.length) {
-    const { error: specError } = await supabase.from("product_specs").insert(payload.specs.map((spec, index) => ({ ...spec, product_id: params.id, sort_order: spec.sort_order ?? index })));
+  if (pendingSpecs.length) {
+    const { error: specError } = await supabase.from("product_specs").insert(pendingSpecs.map((spec, index) => ({ ...spec, product_id: params.id, sort_order: spec.sort_order ?? index })));
     if (specError) return NextResponse.json({ error: specError.message }, { status: 500 });
   }
 

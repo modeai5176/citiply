@@ -16,6 +16,13 @@ export async function POST(request: Request) {
       : { data: null };
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
 
+    const fullMessage = [
+      parsed.data.email ? `Email: ${parsed.data.email}` : "",
+      parsed.data.message || ""
+    ]
+      .filter(Boolean)
+      .join("\n") || null;
+
     await saveQuoteRequest({
       full_name: parsed.data.fullName,
       phone: parsed.data.phone,
@@ -24,17 +31,22 @@ export async function POST(request: Request) {
       city: parsed.data.city,
       product_code: parsed.data.productCode || null,
       quantity: parsed.data.quantity || null,
-      message: parsed.data.message || null,
+      message: fullMessage,
       status: "pending"
     });
 
-    await sendQuoteEmail(parsed.data, {
-      code: product?.sku ?? parsed.data.productCode,
-      name: product?.name,
-      collection: product && "collections" in product ? (product.collections as { name?: string } | null)?.name : undefined,
-      category: product && "categories" in product ? (product.categories as { name?: string } | null)?.name : undefined,
-      url: product ? `${siteUrl}/products/${product.sku}` : undefined
-    });
+    try {
+      await sendQuoteEmail(parsed.data, {
+        code: product?.sku ?? parsed.data.productCode,
+        name: product?.name,
+        collection: product && "collections" in product ? (product.collections as { name?: string } | null)?.name : undefined,
+        category: product && "categories" in product ? (product.categories as { name?: string } | null)?.name : undefined,
+        url: product ? `${siteUrl}/products/${product.sku}` : undefined,
+        quantity: parsed.data.quantity
+      });
+    } catch (emailError) {
+      console.error("[Quote Notification] Email dispatch failed:", emailError);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {

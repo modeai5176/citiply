@@ -64,6 +64,7 @@ export type ProductRow = {
   brochure_url: string | null;
   seo_title: string | null;
   seo_description: string | null;
+  quantity: string | null;
   is_active: boolean;
   created_at: string;
 } & DbRecord;
