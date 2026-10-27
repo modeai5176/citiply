@@ -10,39 +10,34 @@ import { CollectionForm } from "@/components/admin/CollectionForm";
 import { Button } from "@/components/ui/Button";
 import type { CategoryRow, CollectionRow } from "@/lib/supabase/types";
 
+import { useCollectionsStore } from "@/lib/stores/collections-store";
+
 export default function AdminCollectionsPage() {
-  const [items, setItems] = useState<CollectionRow[]>([]);
-  const [categories, setCategories] = useState<CategoryRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const {
+    collections: items,
+    categories,
+    loading,
+    error,
+    categoryFilter,
+    setCategoryFilter,
+    fetchCollections,
+    deleteCollection
+  } = useCollectionsStore();
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState<CollectionRow | null>(null);
 
-  async function fetchItems() {
-    setLoading(true);
-    setError("");
-    const response = await fetch("/api/admin/collections", { cache: "no-store" });
-    const json = (await response.json()) as { data?: CollectionRow[]; categories?: CategoryRow[]; error?: string };
-    if (!response.ok) setError(json.error ?? "Could not load collections");
-    setItems(json.data ?? []);
-    setCategories(json.categories ?? []);
-    setLoading(false);
-  }
+  useEffect(() => {
+    void fetchCollections();
+  }, [fetchCollections]);
 
-  useEffect(() => { void fetchItems(); }, []);
+  const filtered = useMemo(
+    () => items.filter((item) => !categoryFilter || item.category_id === categoryFilter),
+    [items, categoryFilter]
+  );
 
-  const filtered = useMemo(() => items.filter((item) => !categoryFilter || item.category_id === categoryFilter), [items, categoryFilter]);
-
-  async function deleteItem(id: string) {
+  async function handleDelete(id: string) {
     if (!window.confirm("Delete this collection?")) return;
-    const response = await fetch(`/api/admin/collections/${id}`, { method: "DELETE" });
-    if (!response.ok) {
-      const json = (await response.json()) as { error?: string };
-      setError(json.error ?? "Could not delete collection");
-      return;
-    }
-    await fetchItems();
+    await deleteCollection(id);
   }
 
   return (
@@ -72,13 +67,13 @@ export default function AdminCollectionsPage() {
               <AdminTableCell><AdminStatusBadge status={collection.is_active ? "active" : "hidden"} /></AdminTableCell>
               <AdminTableCell className="text-right">
                 <button className="mr-2 cursor-pointer rounded-full p-2 hover:bg-surface" onClick={() => { setEditItem(collection); setOpen(true); }} aria-label={`Edit ${collection.name}`}><Edit className="h-4 w-4" /></button>
-                <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void deleteItem(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" /></button>
+                <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void handleDelete(collection.id)} aria-label={`Delete ${collection.name}`}><Trash2 className="h-4 w-4" /></button>
               </AdminTableCell>
             </AdminTableRow>
           );
         })}
       </AdminTable>
-      {open ? <AdminModal onClose={() => setOpen(false)}><CollectionForm initial={editItem} onSaved={() => { setOpen(false); void fetchItems(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
+      {open ? <AdminModal onClose={() => setOpen(false)}><CollectionForm initial={editItem} onSaved={() => { setOpen(false); void fetchCollections(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
     </>
   );
 }

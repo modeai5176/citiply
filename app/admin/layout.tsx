@@ -62,9 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             })}
           </nav>
           <div className="mt-auto rounded-xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-white/35">Workspace</p>
-            <p className="mt-2 text-sm text-white/72">Supabase connected dashboard for catalogue operations.</p>
-            <button className="mt-4 inline-flex cursor-pointer items-center gap-2 text-sm text-white/70 hover:text-white" onClick={() => void signOut()}>
+            <button className="inline-flex cursor-pointer items-center gap-2 text-sm text-white/70 transition hover:text-white" onClick={() => void signOut()}>
               <LogOut className="h-4 w-4" />
               Sign out
             </button>

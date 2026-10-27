@@ -10,34 +10,20 @@ import { CatalogueForm } from "@/components/admin/CatalogueForm";
 import { Button } from "@/components/ui/Button";
 import type { CatalogueRow } from "@/lib/supabase/types";
 
+import { useCataloguesStore } from "@/lib/stores/catalogues-store";
+
 export default function AdminCataloguesPage() {
-  const [items, setItems] = useState<CatalogueRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { catalogues: items, loading, error, fetchCatalogues, deleteCatalogue } = useCataloguesStore();
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState<CatalogueRow | null>(null);
 
-  async function fetchItems() {
-    setLoading(true);
-    setError("");
-    const response = await fetch("/api/admin/catalogues", { cache: "no-store" });
-    const json = (await response.json()) as { data?: CatalogueRow[]; error?: string };
-    if (!response.ok) setError(json.error ?? "Could not load catalogues");
-    setItems(json.data ?? []);
-    setLoading(false);
-  }
+  useEffect(() => {
+    void fetchCatalogues();
+  }, [fetchCatalogues]);
 
-  useEffect(() => { void fetchItems(); }, []);
-
-  async function deleteItem(id: string) {
+  async function handleDelete(id: string) {
     if (!window.confirm("Delete this catalogue? All associated categories will lose their catalogue assignment.")) return;
-    const response = await fetch(`/api/admin/catalogues/${id}`, { method: "DELETE" });
-    if (!response.ok) {
-      const json = (await response.json()) as { error?: string };
-      setError(json.error ?? "Could not delete catalogue");
-      return;
-    }
-    await fetchItems();
+    await deleteCatalogue(id);
   }
 
   return (
@@ -58,12 +44,12 @@ export default function AdminCataloguesPage() {
             <AdminTableCell><AdminStatusBadge status={catalogue.is_active ? "active" : "hidden"} /></AdminTableCell>
             <AdminTableCell className="text-right">
               <button className="mr-2 cursor-pointer rounded-full p-2 hover:bg-surface" onClick={() => { setEditItem(catalogue); setOpen(true); }} aria-label={`Edit ${catalogue.name}`}><Edit className="h-4 w-4" /></button>
-              <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void deleteItem(catalogue.id)} aria-label={`Delete ${catalogue.name}`}><Trash2 className="h-4 w-4" /></button>
+              <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void handleDelete(catalogue.id)} aria-label={`Delete ${catalogue.name}`}><Trash2 className="h-4 w-4" /></button>
             </AdminTableCell>
           </AdminTableRow>
         ))}
       </AdminTable>
-      {open ? <AdminModal onClose={() => setOpen(false)}><CatalogueForm initial={editItem} onSaved={() => { setOpen(false); void fetchItems(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
+      {open ? <AdminModal onClose={() => setOpen(false)}><CatalogueForm initial={editItem} onSaved={() => { setOpen(false); void fetchCatalogues(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
     </>
   );
 }

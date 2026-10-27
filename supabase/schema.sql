@@ -56,7 +56,8 @@ create table if not exists public.products (
   seo_title text,
   seo_description text,
   is_active boolean not null default false,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz default now()
 );
 
 create table if not exists public.product_images (

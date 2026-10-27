@@ -18,7 +18,8 @@
     "migration": "dotenv -e .env -- npx tsx scripts/run-catalogue-migration.ts",
     "check:quantity": "dotenv -e .env -- npx tsx scripts/check-quantity-column.ts",
     "test:email": "dotenv -e .env -- npx tsx scripts/test-gmail-smtp.ts",
-    "seed:evergreen-photos": "dotenv -e .env -- npx tsx scripts/seed-evergreen-new-photos.ts"
+    "seed:evergreen-photos": "dotenv -e .env -- npx tsx scripts/seed-evergreen-new-photos.ts",
+    "rotate:evergreen-photos": "dotenv -e .env -- npx tsx scripts/seed-evergreen-new-photos.ts --apply --update-images"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.583.0",
@@ -39,7 +40,8 @@
     "resend": "^3.2.0",
     "sharp": "^0.33.4",
     "ws": "^8.20.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",

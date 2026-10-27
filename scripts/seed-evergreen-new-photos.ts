@@ -25,9 +25,11 @@ import type { WebSocketLikeConstructor } from "@supabase/realtime-js";
 import ws from "ws";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, parse as parsePath } from "node:path";
+import sharp from "sharp";
 import { processAndUploadImage } from "../lib/s3";
 
 const APPLY = process.argv.includes("--apply");
+const UPDATE_IMAGES = process.argv.includes("--update-images") || process.argv.includes("--force-images");
 const ROOT = process.cwd();
 const IMAGE_DIR = join(ROOT, "Veneer_Evergreen");
 
@@ -156,6 +158,7 @@ async function main() {
 
   // --- Process each valid file ---
   let created = 0;
+  let updatedImages = 0;
   let skippedExisting = 0;
   let errors = 0;
 
@@ -177,31 +180,59 @@ async function main() {
       .eq("sku", sku)
       .maybeSingle();
 
-    if (existing) {
+    if (existing && !UPDATE_IMAGES) {
       log(`  ⚠ Already exists (id: ${existing.id}), skipping`);
       skippedExisting++;
       continue;
     }
 
     if (!APPLY) {
-      log(`  → Would create product + upload image`);
-      created++;
+      if (existing && UPDATE_IMAGES) {
+        log(`  → Would rotate image 90° clockwise (Faded top, Oiled bottom) & update S3 + Supabase (id: ${existing.id})`);
+        updatedImages++;
+      } else {
+        log(`  → Would create product + upload rotated image`);
+        created++;
+      }
       continue;
     }
 
     try {
-      // 1. Read and process image
-      const buffer = readFileSync(join(IMAGE_DIR, file));
-      log(`  📸 Processing image (${(buffer.length / 1024 / 1024).toFixed(1)} MB)...`);
+      // 1. Read and rotate image 90° clockwise (so Faded is on top, Oiled is at the bottom)
+      const rawBuffer = readFileSync(join(IMAGE_DIR, file));
+      log(`  📸 Rotating 90° clockwise (vertical layout) & processing image (${(rawBuffer.length / 1024 / 1024).toFixed(1)} MB)...`);
+      const rotatedBuffer = await sharp(rawBuffer).rotate(90).toBuffer();
 
       const { imageUrl, thumbnailUrl, blurDataUrl } = await processAndUploadImage(
-        buffer,
+        rotatedBuffer,
         "veneers",
         sku.toLowerCase()
       );
-      log(`  ✓ Image uploaded: ${imageUrl}`);
+      log(`  ✓ Image rotated & uploaded to S3: ${imageUrl}`);
 
-      // 2. Insert product (quantity column may not exist in live DB yet)
+      if (existing) {
+        // Update product_images table in Supabase (with ?v=vertical cache buster)
+        const { error: updErr } = await db
+          .from("product_images")
+          .update({
+            image_url: `${imageUrl}?v=vertical`,
+            thumbnail_url: `${thumbnailUrl}?v=vertical`,
+            blur_data_url: blurDataUrl
+          })
+          .eq("product_id", existing.id);
+
+        if (updErr) {
+          log(`  ✗ Image update error: ${updErr.message}`);
+          errors++;
+          continue;
+        }
+
+        log(`  ✓ Product image record updated for ${sku} (id: ${existing.id})`);
+        updatedImages++;
+        continue;
+      }
+
+      // 2. Insert product (for new records)
       const productPayload: Record<string, unknown> = {
         sku,
         name: productName,
@@ -231,8 +262,8 @@ async function main() {
       // 3. Insert product image
       const { error: imgErr } = await db.from("product_images").insert({
         product_id: product.id,
-        image_url: imageUrl,
-        thumbnail_url: thumbnailUrl,
+        image_url: `${imageUrl}?v=vertical`,
+        thumbnail_url: `${thumbnailUrl}?v=vertical`,
         blur_data_url: blurDataUrl,
         kind: "main",
         sort_order: 0
@@ -255,11 +286,12 @@ async function main() {
   // --- Summary ---
   log(`\n${"=".repeat(50)}`);
   log(`=== ${mode} complete ===`);
-  log(`  Created:  ${created}`);
-  log(`  Skipped (existing): ${skippedExisting}`);
-  log(`  Skipped (invalid):  ${skippedFiles.length}`);
-  log(`  Errors:   ${errors}`);
-  log(`  Total:    ${created + skippedExisting + skippedFiles.length + errors}`);
+  log(`  Created:        ${created}`);
+  log(`  Updated Images: ${updatedImages}`);
+  log(`  Skipped:        ${skippedExisting}`);
+  log(`  Invalid Files:  ${skippedFiles.length}`);
+  log(`  Errors:         ${errors}`);
+  log(`  Total:          ${created + updatedImages + skippedExisting + skippedFiles.length + errors}`);
 
   if (!APPLY) {
     log(`\nRe-run with --apply to write to database and upload images.`);

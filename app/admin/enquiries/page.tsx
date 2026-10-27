@@ -7,63 +7,26 @@ import { AdminStatusBadge } from "@/components/admin/AdminStatusBadge";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
 import { formatDate } from "@/lib/utils";
 
-type EnquiryStatus = "pending" | "contacted" | "closed";
-type EnquiryItem = {
-  id: string;
-  product_code: string;
-  product_name: string;
-  collection_name: string | null;
-  category_name: string | null;
-  quantity: string | null;
-  note: string | null;
-};
-type EnquirySession = {
-  id: string;
-  created_at: string;
-  full_name: string;
-  email?: string | null;
-  phone: string;
-  whatsapp: string | null;
-  firm: string | null;
-  city: string;
-  message: string | null;
-  status: EnquiryStatus;
-  enquiry_items: EnquiryItem[];
-};
+import { useEnquiriesStore, type EnquiryStatus } from "@/lib/stores/enquiries-store";
 
 export default function AdminEnquiriesPage() {
-  const [sessions, setSessions] = useState<EnquirySession[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const {
+    sessions,
+    loading,
+    error,
+    search,
+    setSearch,
+    statusFilter,
+    setStatusFilter,
+    expanded,
+    setExpanded,
+    fetchEnquiries,
+    updateStatus
+  } = useEnquiriesStore();
 
-  async function fetchEnquiries() {
-    setLoading(true);
-    setError("");
-    const response = await fetch("/api/admin/enquiries", { cache: "no-store" });
-    const json = (await response.json()) as { data?: EnquirySession[]; error?: string };
-    if (!response.ok) setError(json.error ?? "Could not load enquiries");
-    setSessions(json.data ?? []);
-    setLoading(false);
-  }
-
-  useEffect(() => { void fetchEnquiries(); }, []);
-
-  async function updateStatus(id: string, status: EnquiryStatus) {
-    const response = await fetch("/api/admin/enquiries", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status })
-    });
-    if (!response.ok) {
-      const json = (await response.json()) as { error?: string };
-      setError(json.error ?? "Could not update enquiry");
-      return;
-    }
-    await fetchEnquiries();
-  }
+  useEffect(() => {
+    void fetchEnquiries();
+  }, [fetchEnquiries]);
 
   const filtered = useMemo(() => sessions.filter((session) => {
     const haystack = `${session.full_name} ${session.email ?? ""} ${session.phone} ${session.city} ${session.firm ?? ""} ${session.enquiry_items.map((item) => `${item.product_code} ${item.product_name}`).join(" ")}`.toLowerCase();

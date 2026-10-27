@@ -10,45 +10,25 @@ import { CategoryForm } from "@/components/admin/CategoryForm";
 import { Button } from "@/components/ui/Button";
 import type { CatalogueRow, CategoryRow } from "@/lib/supabase/types";
 
+import { useCategoriesStore } from "@/lib/stores/categories-store";
+
 export default function AdminCategoriesPage() {
-  const [items, setItems] = useState<CategoryRow[]>([]);
-  const [catalogues, setCatalogues] = useState<CatalogueRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { categories: items, catalogues, loading, error, fetchCategories, deleteCategory } = useCategoriesStore();
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState<CategoryRow | null>(null);
 
-  async function fetchItems() {
-    setLoading(true);
-    setError("");
-    const [catRes, cataRes] = await Promise.all([
-      fetch("/api/admin/categories", { cache: "no-store" }),
-      fetch("/api/admin/catalogues", { cache: "no-store" })
-    ]);
-    const catJson = (await catRes.json()) as { data?: CategoryRow[]; error?: string };
-    const cataJson = (await cataRes.json()) as { data?: CatalogueRow[] };
-    if (!catRes.ok) setError(catJson.error ?? "Could not load categories");
-    setItems(catJson.data ?? []);
-    setCatalogues(cataJson.data ?? []);
-    setLoading(false);
-  }
-
-  useEffect(() => { void fetchItems(); }, []);
+  useEffect(() => {
+    void fetchCategories();
+  }, [fetchCategories]);
 
   function getCatalogueName(id: string | null) {
     if (!id) return "—";
     return catalogues.find((c) => c.id === id)?.name ?? "—";
   }
 
-  async function deleteItem(id: string) {
+  async function handleDelete(id: string) {
     if (!window.confirm("Delete this category?")) return;
-    const response = await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
-    if (!response.ok) {
-      const json = (await response.json()) as { error?: string };
-      setError(json.error ?? "Could not delete category");
-      return;
-    }
-    await fetchItems();
+    await deleteCategory(id);
   }
 
   return (
@@ -70,12 +50,12 @@ export default function AdminCategoriesPage() {
             <AdminTableCell><AdminStatusBadge status={category.is_active ? "active" : "hidden"} /></AdminTableCell>
             <AdminTableCell className="text-right">
               <button className="mr-2 cursor-pointer rounded-full p-2 hover:bg-surface" onClick={() => { setEditItem(category); setOpen(true); }} aria-label={`Edit ${category.name}`}><Edit className="h-4 w-4" /></button>
-              <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void deleteItem(category.id)} aria-label={`Delete ${category.name}`}><Trash2 className="h-4 w-4" /></button>
+              <button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50" onClick={() => void handleDelete(category.id)} aria-label={`Delete ${category.name}`}><Trash2 className="h-4 w-4" /></button>
             </AdminTableCell>
           </AdminTableRow>
         ))}
       </AdminTable>
-      {open ? <AdminModal onClose={() => setOpen(false)}><CategoryForm initial={editItem} onSaved={() => { setOpen(false); void fetchItems(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
+      {open ? <AdminModal onClose={() => setOpen(false)}><CategoryForm initial={editItem} onSaved={() => { setOpen(false); void fetchCategories(); }} onCancel={() => setOpen(false)} /></AdminModal> : null}
     </>
   );
 }

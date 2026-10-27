@@ -32,10 +32,20 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const payload = (await request.json()) as ProductPayload;
   const supabase = createAdminClient();
 
-  let productUpdate = { ...payload.product };
+  let productUpdate: Record<string, unknown> = {
+    ...payload.product,
+    updated_at: new Date().toISOString()
+  };
   let pendingSpecs = [...(payload.specs ?? [])];
 
   let { error } = await supabase.from("products").update(productUpdate).eq("id", params.id);
+
+  // Graceful fallback if updated_at column is not present in live Supabase table
+  if (error && error.message?.includes("updated_at") && "updated_at" in productUpdate) {
+    delete productUpdate.updated_at;
+    const retry = await supabase.from("products").update(productUpdate).eq("id", params.id);
+    error = retry.error;
+  }
 
   // Graceful fallback if quantity column is not present in live Supabase table
   if (error && error.message?.includes("quantity") && "quantity" in productUpdate) {

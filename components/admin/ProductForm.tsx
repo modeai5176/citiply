@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { Button } from "@/components/ui/Button";
-import { Input, Textarea } from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import { slugify } from "@/lib/admin/slug";
 import { cn } from "@/lib/utils";
 import type { CatalogueRow, CategoryRow, CollectionRow, ProductImageRow, ProductRow, ProductSpecRow } from "@/lib/supabase/types";
@@ -18,9 +18,7 @@ const productSchema = z.object({
   category_id: z.string().min(1, "Category is required"),
   collection_id: z.string().min(1, "Collection is required"),
   size: z.string().optional(),
-  color_tone: z.string().optional(),
   quantity: z.string().optional(),
-  short_description: z.string().optional(),
   is_active: z.boolean().default(true)
 });
 
@@ -38,9 +36,7 @@ function getProductFormDefaults(initial?: ProductRow | null): ProductFormValues 
     category_id: initial?.category_id ?? "",
     collection_id: initial?.collection_id ?? "",
     size: initial?.size ?? "",
-    color_tone: initial?.color_tone ?? "",
     quantity: initial?.quantity ?? "",
-    short_description: initial?.short_description ?? "",
     is_active: initial?.is_active ?? true
   };
 }
@@ -189,7 +185,6 @@ export function ProductForm({
   async function onSubmit(values: ProductFormValues) {
     setSaving(true);
     setError("");
-    const shortDescription = values.short_description?.trim() || null;
     const payload = {
       sku: values.sku.trim(),
       name: values.name.trim(),
@@ -197,13 +192,11 @@ export function ProductForm({
       category_id: values.category_id,
       collection_id: values.collection_id,
       size: values.size?.trim() || null,
-      color_tone: values.color_tone?.trim() || null,
       quantity: values.quantity?.trim() || null,
       applications: applications.map((item) => item.trim()).filter(Boolean),
-      short_description: shortDescription,
       brochure_url: brochureUrl || null,
       seo_title: values.name.trim(),
-      seo_description: shortDescription,
+      seo_description: initial?.seo_description ?? null,
       is_active: values.is_active
     };
 
@@ -372,15 +365,12 @@ export function ProductForm({
           ) : null}
         </label>
 
-        {/* Size, Color Tone, and Quantity in 3 Columns */}
-        <div className="grid gap-4 md:col-span-2 sm:grid-cols-3">
+        {/* Size and Quantity in 2 Columns */}
+        <div className="grid gap-4 md:col-span-2 sm:grid-cols-2">
           <Input label="Size" placeholder="e.g. 8x4 ft" {...form.register("size")} />
-          <Input label="Color tone" placeholder="e.g. Light Walnut" {...form.register("color_tone")} />
           <Input label="Quantity" placeholder="e.g. 50 sheets or In Stock" {...form.register("quantity")} />
         </div>
       </div>
-
-      <Textarea label="Short Description (also used as SEO description)" {...form.register("short_description")} />
 
       {/* Active / Inactive Switch */}
       <div className="flex items-center justify-between rounded-xl border border-border bg-surface p-4">
